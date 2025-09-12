@@ -30,12 +30,10 @@ class CasePage(Page):
                 label="Содержание", features=["bold", "italic", "link"]
             )),
         ], icon="user", label="О заказчике")),
-
         ("purpose", blocks.StructBlock([
             ("title", blocks.CharBlock(label="Заголовок", default="Цель внедрения")),
             ("content", blocks.RichTextBlock(label="Содержание")),
         ], icon="target", label="Цель внедрения")),
-
         ("automation_fields", blocks.StructBlock([
             ("title", blocks.CharBlock(label="Заголовок", default="Области автоматизации")),
             ("content", blocks.RichTextBlock(label="Содержание")),
@@ -44,7 +42,6 @@ class CasePage(Page):
                 label="Список областей"
             )),
         ], icon="cog", label="Области автоматизации")),
-
         ("metrics", blocks.StructBlock([
             ("title", blocks.CharBlock(label="Заголовок", default="Результаты внедрения")),
             ("metrics_list", blocks.ListBlock(
@@ -66,7 +63,6 @@ class CasePage(Page):
                 label="Список метрик"
             )),
         ], icon="chart-bar", label="Метрики эффективности")),
-
         ("problems", blocks.StructBlock([
             ("title", blocks.CharBlock(label="Заголовок", default="Проблемы и сложности")),
             ("content", blocks.RichTextBlock(label="Содержание")),
@@ -85,7 +81,6 @@ class CasePage(Page):
                 label="Этапы реализации"
             )),
         ], icon="list-ol", label="Ход реализации")),
-
         ("results", blocks.StructBlock([
             ("title", blocks.CharBlock(label="Заголовок", default="Результаты")),
             ("content", blocks.RichTextBlock(label="Содержание")),
@@ -94,7 +89,6 @@ class CasePage(Page):
                 label="Внедренные подсистемы"
             )),
         ], icon="check-circle", label="Результаты")),
-
         ("image", ImageChooserBlock(label="Изображение")),
         ("quote", blocks.BlockQuoteBlock(label="Цитата")),
     ], block_counts={
@@ -134,7 +128,7 @@ class CasesIndexPage(Page):
     intro = RichTextField("Введение", features=["bold", "italic", "link"], blank=True)
     content_panels = [*Page.content_panels, FieldPanel("intro")]  # noqa: RUF012
 
-    def get_context(self, request):
+    def get_context(self, request) -> dict[str, Page]:
         context = super().get_context(request)
         # Получаем все опубликованные кейсы
         cases = CasePage.objects.live().public().order_by("-first_published_at")

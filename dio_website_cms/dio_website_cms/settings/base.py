@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "home",
     "search",
     "cases",
+    "core",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -53,6 +54,8 @@ INSTALLED_APPS = [
 ]
 
 WAGTAILAPI_BASE_URL = "http://localhost:8000"
+
+WAGTAILIMAGES_IMAGE_MODEL = "wagtailimages.Image"
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -129,9 +132,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Moscow"
 
 USE_I18N = True
 

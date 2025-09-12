@@ -5,6 +5,7 @@ description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
     "django-cors-headers>=4.8.0",
+    "django-stubs[compatible-mypy]>=5.2.3",
     "wagtail>=7.1.1",
 ]
 
@@ -113,6 +114,7 @@ max-branches = 30
 
 # -- MyPy --
 [tool.mypy]
+plugins = ["mypy_django_plugin.main"]
 ignore_missing_imports = true
 exclude = [
     "src/migration",
@@ -120,6 +122,9 @@ exclude = [
     "__samples__",
     ".venv"
 ]
+
+[tool.django-stubs]
+django_settings_module = "myproject.settings"
 
 # -- Vulture --
 [tool.vulture]
