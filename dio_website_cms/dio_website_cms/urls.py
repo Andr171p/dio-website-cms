@@ -1,4 +1,4 @@
-from cases.api import router as cases_router
+# from casestudies.api import router as cases_router
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
@@ -12,7 +12,7 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
-    path("api/v2", cases_router.urls),
+    # path("api/v2", cases_router.urls),
     path("", include("wagtail.urls")),
 ]
 

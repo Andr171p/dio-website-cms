@@ -1,15 +1,22 @@
+from typing import Any, ClassVar
+
+from core.constants import MAX_CHARS_LENGTH, MAX_LABEL_LENGTH
 from django.db import models
+from django.http import HttpRequest
 from wagtail import blocks
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.models import Page
 from wagtail.search import index
+from wagtail.search.index import SearchField
 
 
-class CasePage(Page):
+class CaseStudyPage(Page):
     """Успешные внедрения, кейсы"""
-    customer_name = models.CharField("Имя заказчика", max_length=250, blank=True)
+    customer_name = models.CharField(
+        "Имя заказчика", max_length=MAX_CHARS_LENGTH, blank=True
+    )
     customer_logo = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -17,6 +24,12 @@ class CasePage(Page):
         on_delete=models.SET_NULL,
         related_name="+",
         verbose_name="Логотип заказчика"
+    )
+    industry = models.CharField(
+        "Отрасль заказчика",
+        max_length=MAX_LABEL_LENGTH,
+        blank=True,
+        help_text="Например: Нефтегазовая, Промышленность"
     )
     intro = RichTextField(
         "Краткое описание",
@@ -97,43 +110,72 @@ class CasePage(Page):
     }, use_json_field=True, blank=True, verbose_name="Содержание кейса")
 
     # Поля для поиска
-    search_fields = [  # noqa: RUF012
+    search_fields: ClassVar[list[SearchField]] = [
         *Page.search_fields,
         index.SearchField("customer_name"),
+        index.SearchField("industry"),
         index.SearchField("intro"),
         index.SearchField("content")
     ]
 
     # Панели редактирования
-    content_panels = [  # noqa: RUF012
+    content_panels: ClassVar[list[MultiFieldPanel | FieldPanel]] = [
         *Page.content_panels,
         MultiFieldPanel([
             FieldPanel("customer_name"),
-            FieldPanel("customer_logo")],
+            FieldPanel("customer_logo"),
+            FieldPanel("industry"),
+        ],
             heading="Информация о заказчике"),
         FieldPanel("intro"),
         FieldPanel("content")]
 
     # Настройки родительских/дочерних страниц
-    parent_page_types = ["cases.CasesIndexPage"]  # noqa: RUF012
+    parent_page_types: ClassVar[list[str]] = ["casestudies.CaseStudiesIndexPage"]
     subpage_types = []  # noqa: RUF012
 
     class Meta:
         verbose_name = "Кейс внедрения"
         verbose_name_plural = "Кейсы внедрений"
 
+    def __str__(self) -> str:
+        return f"{self.customer_name} - {self.title}"
 
-class CasesIndexPage(Page):
+
+class CaseStudiesIndexPage(Page):
     """Страница со списком всех кейсов"""
-    intro = RichTextField("Введение", features=["bold", "italic", "link"], blank=True)
-    content_panels = [*Page.content_panels, FieldPanel("intro")]  # noqa: RUF012
+    customer_name = models.CharField(
+        "Имя заказчика", max_length=MAX_CHARS_LENGTH, blank=True
+    )
+    customer_logo = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Логотип заказчика"
+    )
+    industry = models.CharField(
+        "Отрасль заказчика",
+        max_length=MAX_LABEL_LENGTH,
+        blank=True,
+        help_text="Например: Нефтегазовая, Промышленность"
+    )
+    intro = RichTextField(
+        "Краткое описание",
+        features=["bold", "italic"],
+        max_length=MAX_CHARS_LENGTH,
+    )
+    content_panels: ClassVar[list[FieldPanel]] = [*Page.content_panels, FieldPanel("intro")]
 
-    def get_context(self, request) -> dict[str, Page]:
+    def get_context(
+            self, request: HttpRequest, *args, **kwargs  # noqa: ARG002
+    ) -> dict[str, Any]:
         context = super().get_context(request)
         # Получаем все опубликованные кейсы
-        cases = CasePage.objects.live().public().order_by("-first_published_at")
-        context["cases"] = cases
+        casestudies = CaseStudyPage.objects.live().public().order_by("-first_published_at")
+        context["casestudies"] = casestudies
         return context
 
-    subpage_types = ["CasePage"]  # noqa: RUF012
+    subpage_types = ["CaseStudyPage"]  # noqa: RUF012
     parent_page_types = ["home.HomePage"]  # noqa: RUF012

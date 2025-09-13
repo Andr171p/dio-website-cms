@@ -1,13 +1,12 @@
 from typing import ClassVar
 
+from core.constants import MAX_CHARS_LENGTH, MAX_LABEL_LENGTH
 from django.db import models
 from wagtail import blocks
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.api import APIField
 from wagtail.fields import StreamField
 from wagtail.models import Page, PanelPlaceholder
-
-from dio_website_cms.core.constants import MAX_CHARS_LENGTH, MAX_LABEL_LENGTH
 
 from .blocks import ContactsBlock, FeedbackFormBlock
 
@@ -43,10 +42,10 @@ class HomePage(Page):
                 page_type="services.ServicePage"
             )))
         ], label="Секция предоставляемых услуг компании")),
-        ("cases_section", blocks.StructBlock([
+        ("casestudies_section", blocks.StructBlock([
             ("section_title", blocks.CharBlock(label="Заголовок секции")),
-            ("cases", blocks.ListBlock(blocks.PageChooserBlock(
-                page_type="cases.CasePage"
+            ("casestudies", blocks.ListBlock(blocks.PageChooserBlock(
+                page_type="casestudies.CaseStudyPage"
             )))
         ], label="Секция кейсов (внедрений)")),
         ("solution_section", blocks.StructBlock([
