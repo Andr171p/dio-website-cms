@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     "corsheaders",
 ]
 
-WAGTAILAPI_BASE_URL = "http://localhost:8000"
+WAGTAILAPI_BASE_URL = "http://localhost:8000/api"
 
 WAGTAILIMAGES_IMAGE_MODEL = "wagtailimages.Image"
 

@@ -1,7 +1,8 @@
 from typing import ClassVar
 
-from core.constants import MAX_CHARS_LENGTH, MAX_ICON_LENGTH, MAX_LABEL_LENGTH
+from core.constants import MAX_LABEL_LENGTH
 from django.db import models
+from wagtail.fields import RichTextField
 from wagtail.models import Page
 
 
@@ -14,11 +15,13 @@ class ServicePage(Page):
         ("education", "Обучение 1С"),
     ]
 
-    icon = models.CharField(
-        max_length=MAX_ICON_LENGTH,
+    hero_image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
         blank=True,
-        verbose_name="Иконка услуги",
-        help_text="Название иконки (например: cog, chart-line, users)"
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Фото-карточка услуги"
     )
     category = models.CharField(
         max_length=MAX_LABEL_LENGTH,
@@ -26,9 +29,8 @@ class ServicePage(Page):
         default="consulting",
         verbose_name="Категория услуг"
     )
-    short_description = models.CharField(
-        max_length=MAX_CHARS_LENGTH,
+    intro = RichTextField(
+        features=["bold", "italic", "link"],
+        verbose_name="Краткое описание услуги",
         blank=True,
-        verbose_name="Краткое описание",
-        help_text="Короткое описание для карточек и списков"
     )

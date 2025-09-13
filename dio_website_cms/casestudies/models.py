@@ -34,7 +34,7 @@ class CaseStudyPage(Page):
     intro = RichTextField(
         "Краткое описание",
         features=["bold", "italic"],
-        max_length=250
+        max_length=MAX_CHARS_LENGTH,
     )
     content = StreamField([
         ("about_customer", blocks.StructBlock([
@@ -131,8 +131,8 @@ class CaseStudyPage(Page):
         FieldPanel("content")]
 
     # Настройки родительских/дочерних страниц
-    parent_page_types: ClassVar[list[str]] = ["casestudies.CaseStudiesIndexPage"]
-    subpage_types = []  # noqa: RUF012
+    parent_page_types: ClassVar[list[str]] = ["casestudies.CaseStudyIndexPage"]
+    subpage_types: ClassVar[list[str]] = []
 
     class Meta:
         verbose_name = "Кейс внедрения"
@@ -142,7 +142,7 @@ class CaseStudyPage(Page):
         return f"{self.customer_name} - {self.title}"
 
 
-class CaseStudiesIndexPage(Page):
+class CaseStudyIndexPage(Page):
     """Страница со списком всех кейсов"""
     customer_name = models.CharField(
         "Имя заказчика", max_length=MAX_CHARS_LENGTH, blank=True
@@ -155,27 +155,28 @@ class CaseStudiesIndexPage(Page):
         related_name="+",
         verbose_name="Логотип заказчика"
     )
-    industry = models.CharField(
-        "Отрасль заказчика",
-        max_length=MAX_LABEL_LENGTH,
-        blank=True,
-        help_text="Например: Нефтегазовая, Промышленность"
-    )
     intro = RichTextField(
         "Краткое описание",
         features=["bold", "italic"],
         max_length=MAX_CHARS_LENGTH,
     )
-    content_panels: ClassVar[list[FieldPanel]] = [*Page.content_panels, FieldPanel("intro")]
+    # Поля заполняемые в админ панели
+    content_panels: ClassVar[list[FieldPanel]] = [
+        *Page.content_panels,
+        FieldPanel("customer_name"),
+        FieldPanel("customer_logo"),
+        FieldPanel("intro")
+    ]
+    # Ограничение типов дочерних страниц - только кейсы
+    subpage_types: ClassVar[list[str]] = ["casestudies.CaseStudyPage"]
+    # Определение места создания индекса
+    parent_page_types: ClassVar[list[str]] = ["home.HomePage"]
 
     def get_context(
             self, request: HttpRequest, *args, **kwargs  # noqa: ARG002
     ) -> dict[str, Any]:
         context = super().get_context(request)
         # Получаем все опубликованные кейсы
-        casestudies = CaseStudyPage.objects.live().public().order_by("-first_published_at")
+        casestudies = self.get_children().live().public().order_by("-first_published_at")
         context["casestudies"] = casestudies
         return context
-
-    subpage_types = ["CaseStudyPage"]  # noqa: RUF012
-    parent_page_types = ["home.HomePage"]  # noqa: RUF012
