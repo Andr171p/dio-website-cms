@@ -1,6 +1,5 @@
 from typing import ClassVar
 
-from core.constants import MAX_CHARS_LENGTH, MAX_LABEL_LENGTH
 from django.db import models
 from wagtail import blocks
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
@@ -10,21 +9,24 @@ from wagtail.models import Page, PanelPlaceholder
 
 from .blocks import ContactsBlock, FeedbackFormBlock
 
+MAX_HEADLINE_LENGTH = 100
+MAX_SUBHEADLINE_LENGTH = 250
+
 
 class HomePage(Page):
     """Лендинг сайта, главная страница"""
     hero_headline = models.CharField(
-        max_length=MAX_LABEL_LENGTH,
+        max_length=MAX_HEADLINE_LENGTH,
         null=True,
         blank=True,
         verbose_name="Главный заголовок",
         help_text="Основной заголовок в верхней секции"
     )
     hero_subheadline = models.CharField(
-        max_length=MAX_CHARS_LENGTH,
+        max_length=MAX_SUBHEADLINE_LENGTH,
         blank=True,
         verbose_name="Подзаголовок",
-        help_text="Дополнительный текст пол основным заголовком"
+        help_text="Дополнительный текст под основным заголовком"
     )
     hero_background_image = models.ForeignKey(
         "wagtailimages.Image",
@@ -41,25 +43,25 @@ class HomePage(Page):
             ("services", blocks.ListBlock(blocks.PageChooserBlock(
                 page_type="services.ServicePage"
             )))
-        ], label="Секция предоставляемых услуг компании")),
+        ], label="Предоставляемые услуги компании")),
         ("casestudies_section", blocks.StructBlock([
             ("section_title", blocks.CharBlock(label="Заголовок секции")),
             ("casestudies", blocks.ListBlock(blocks.PageChooserBlock(
                 page_type="casestudies.CaseStudyPage"
             )))
-        ], label="Секция кейсов (внедрений)")),
+        ], label="Кейсы (внедрения)")),
         ("solution_section", blocks.StructBlock([
             ("section_title", blocks.CharBlock(label="Заголовок секции")),
             ("solutions", blocks.ListBlock(blocks.PageChooserBlock(
                 page_type="solutions.SolutionPage"
             )))
-        ], label="Секция решений компании")),
+        ], label="Решения")),
         ("news_section", blocks.StructBlock([
             ("section_title", blocks.CharBlock(label="Новостной заголовок")),
             ("news", blocks.ListBlock(blocks.PageChooserBlock(
-                page_type="news.NewsPage"
+                page_type="news.NewsIndexPage"
             )))
-        ])),
+        ], label="Новости")),
         ("contacts_section", ContactsBlock(label="Контакты компании")),
         ("feedback_form_section", FeedbackFormBlock(label="Форма обратной связи"))
     ], blank=True, use_json_field=True)

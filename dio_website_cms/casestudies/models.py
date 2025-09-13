@@ -131,7 +131,7 @@ class CaseStudyPage(Page):
         FieldPanel("content")]
 
     # Настройки родительских/дочерних страниц
-    parent_page_types: ClassVar[list[str]] = ["casestudies.CaseStudyIndexPage"]
+    parent_page_types: ClassVar[list[str]] = ["CaseStudyIndexPage"]
     subpage_types: ClassVar[list[str]] = []
 
     class Meta:
@@ -168,7 +168,7 @@ class CaseStudyIndexPage(Page):
         FieldPanel("intro")
     ]
     # Ограничение типов дочерних страниц - только кейсы
-    subpage_types: ClassVar[list[str]] = ["casestudies.CaseStudyPage"]
+    subpage_types: ClassVar[list[str]] = ["CaseStudyPage"]
     # Определение места создания индекса
     parent_page_types: ClassVar[list[str]] = ["home.HomePage"]
 
