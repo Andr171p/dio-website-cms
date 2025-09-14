@@ -110,6 +110,7 @@ class NewsIndexPage(Page):
         *Page.content_panels,
         FieldPanel("image"),
         FieldPanel("headline"),
+        FieldPanel("news_per_page"),
     ]
     # Дочерние страницы
     subpage_types: ClassVar[list[str]] = ["NewsPage"]
