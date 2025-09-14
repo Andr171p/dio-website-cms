@@ -72,7 +72,7 @@ class HomePage(Page):
             FieldPanel("hero_headline"),
             FieldPanel("hero_subheadline"),
             FieldPanel("hero_background_image"),
-        ], heading="Hero секция"),
+        ], heading="Главная секция"),
         FieldPanel("content_blocks"),
     ]
     # Поля отображаемые в API
