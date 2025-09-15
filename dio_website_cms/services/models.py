@@ -1,6 +1,5 @@
 from typing import ClassVar
 
-from core.constants import MAX_LABEL_LENGTH
 from django.db import models
 from wagtail.fields import RichTextField
 from wagtail.models import Page
@@ -24,7 +23,7 @@ class ServicePage(Page):
         verbose_name="Фото-карточка услуги"
     )
     category = models.CharField(
-        max_length=MAX_LABEL_LENGTH,
+        max_length=100,
         choices=SERVICE_CATEGORY_CHOICES,
         default="consulting",
         verbose_name="Категория услуг"

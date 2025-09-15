@@ -1,11 +1,13 @@
-from typing import ClassVar
+from typing import Any, ClassVar
 
 from django.db import models
-from wagtail import blocks
-from wagtail.admin.panels import FieldPanel
+from modelcluster.fields import ParentalKey
+from wagtail.admin.panels import FieldPanel, InlinePanel, Panel
+from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
-from wagtail.fields import StreamField
-from wagtail.snippets.models import register_snippet
+from wagtail.fields import RichTextField
+
+from .forms import FeedbackForm
 
 
 @register_setting
@@ -21,36 +23,27 @@ class SiteSettings(BaseSiteSetting):
     )
 
 
-@register_snippet
-class NavigationMenu(models.Model):
-    """Навигационное меню"""
-    title = models.CharField(max_length=100)
-    menu_items = StreamField([
-        ("page_link", blocks.PageChooserBlock()),
-        ("external_link", blocks.StructBlock([
-            ("title", blocks.CharBlock(required=True)),
-            ("url", blocks.URLBlock(required=True))
-        ])),
-        ("dropdown", blocks.StructBlock([
-            ("title", blocks.CharBlock(required=True)),
-            ("submenu_items", blocks.StreamBlock([
-                ("page_link", blocks.PageChooserBlock()),
-                ("external_link", blocks.StructBlock([
-                    ("title", blocks.CharBlock(required=True)),
-                    ("url", blocks.URLBlock(required=True))
-                ]))
-            ]))
-        ]))
-    ], use_json_field=True, blank=True)
-    # Поля для отображения в админ панели
-    panels: ClassVar[list[FieldPanel]] = [
-        FieldPanel("title"),
-        FieldPanel("menu_items"),
+class FormField(AbstractFormField):
+    page = ParentalKey(
+        "ContactPage",
+        on_delete=models.CASCADE,
+        related_name="form_fields"
+    )
+
+
+class ContactPage(AbstractEmailForm):
+    intro = RichTextField(blank=True, features=["bold", "link", "ol", "ul"])
+    thanks = RichTextField(blank=True, features=["bold", "link"])
+
+    content_panels: ClassVar[list[Panel]] = [
+        *AbstractEmailForm.content_panels,
+        FieldPanel("intro"),
+        InlinePanel("form_fields", label="FormFields"),
+        FieldPanel("thanks"),
     ]
 
-    def __str__(self) -> str:
-        return str(self.title)
+    def get_form_class(self) -> type[FeedbackForm]:  # noqa: PLR6301
+        return FeedbackForm
 
-    class Meta:
-        verbose_name = "Навигационное меню"
-        verbose_name_plural = "Навигационные меню"
+    def get_form(self, *args, **kwargs) -> Any:
+        return super().get_form(*args, **kwargs)

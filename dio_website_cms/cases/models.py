@@ -1,6 +1,5 @@
 from typing import Any, ClassVar
 
-from core.constants import MAX_CHARS_LENGTH, MAX_LABEL_LENGTH
 from django.db import models
 from django.http import HttpRequest
 from wagtail import blocks
@@ -15,7 +14,7 @@ from wagtail.search.index import SearchField
 class CaseStudyPage(Page):
     """Успешные внедрения, кейсы"""
     customer_name = models.CharField(
-        "Имя заказчика", max_length=MAX_CHARS_LENGTH, blank=True
+        "Имя заказчика", max_length=100, blank=True
     )
     customer_logo = models.ForeignKey(
         "wagtailimages.Image",
@@ -27,14 +26,14 @@ class CaseStudyPage(Page):
     )
     industry = models.CharField(
         "Отрасль заказчика",
-        max_length=MAX_LABEL_LENGTH,
+        max_length=50,
         blank=True,
         help_text="Например: Нефтегазовая, Промышленность"
     )
     intro = RichTextField(
         "Краткое описание",
         features=["bold", "italic"],
-        max_length=MAX_CHARS_LENGTH,
+        max_length=250,
     )
     content = StreamField([
         ("about_customer", blocks.StructBlock([
@@ -145,7 +144,7 @@ class CaseStudyPage(Page):
 class CaseStudyIndexPage(Page):
     """Страница со списком всех кейсов"""
     customer_name = models.CharField(
-        "Имя заказчика", max_length=MAX_CHARS_LENGTH, blank=True
+        "Имя заказчика", max_length=250, blank=True
     )
     customer_logo = models.ForeignKey(
         "wagtailimages.Image",
@@ -158,7 +157,7 @@ class CaseStudyIndexPage(Page):
     intro = RichTextField(
         "Краткое описание",
         features=["bold", "italic"],
-        max_length=MAX_CHARS_LENGTH,
+        max_length=250,
     )
     # Поля заполняемые в админ панели
     content_panels: ClassVar[list[FieldPanel]] = [
@@ -178,5 +177,5 @@ class CaseStudyIndexPage(Page):
         context = super().get_context(request)
         # Получаем все опубликованные кейсы
         casestudies = self.get_children().live().public().order_by("-first_published_at")
-        context["casestudies"] = casestudies
+        context["cases"] = casestudies
         return context

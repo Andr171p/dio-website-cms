@@ -26,8 +26,8 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 INSTALLED_APPS = [
     "home",
     "search",
-    "casestudies",
-    "core",
+    "cases",
+    "base",
     "feedback",
     "news",
     "services",
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "wagtail.api.v2",
     "rest_framework",
     "corsheaders",
+    "wagtailmenus",
 ]
 
 WAGTAILAPI_BASE_URL = "http://localhost:8000/api"
@@ -95,6 +96,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "wagtailmenus.context_processors.wagtailmenus"
             ],
         },
     },

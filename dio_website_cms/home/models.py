@@ -46,8 +46,8 @@ class HomePage(Page):
         ], label="Предоставляемые услуги компании")),
         ("casestudies_section", blocks.StructBlock([
             ("section_title", blocks.CharBlock(label="Заголовок секции")),
-            ("casestudies", blocks.ListBlock(blocks.PageChooserBlock(
-                page_type="casestudies.CaseStudyPage"
+            ("cases", blocks.ListBlock(blocks.PageChooserBlock(
+                page_type="cases.CaseStudyPage"
             )))
         ], label="Кейсы (внедрения)")),
         ("solution_section", blocks.StructBlock([

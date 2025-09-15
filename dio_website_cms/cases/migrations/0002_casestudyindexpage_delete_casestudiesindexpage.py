@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('casestudies', '0001_initial'),
+        ('cases', '0001_initial'),
         ('wagtailcore', '0095_groupsitepermission'),
         ('wagtailimages', '0027_image_description'),
     ]
