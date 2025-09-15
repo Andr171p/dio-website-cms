@@ -9,12 +9,15 @@ from wagtail.models import Page, PanelPlaceholder
 
 from .blocks import ContactsBlock, FeedbackFormBlock
 
+HOME_PAGE_COUNT = 1
 MAX_HEADLINE_LENGTH = 100
 MAX_SUBHEADLINE_LENGTH = 250
 
 
 class HomePage(Page):
     """Лендинг сайта, главная страница"""
+    max_count = HOME_PAGE_COUNT
+
     hero_headline = models.CharField(
         max_length=MAX_HEADLINE_LENGTH,
         null=True,

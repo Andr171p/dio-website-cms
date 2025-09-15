@@ -59,6 +59,12 @@ INSTALLED_APPS = [
     "wagtailmenus",
 ]
 
+# Настройки меню
+WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (
+    ("header", "Header menu"),
+    ("footer", "Footer menu"),
+)
+
 WAGTAILAPI_BASE_URL = "http://localhost:8000/api"
 
 WAGTAILIMAGES_IMAGE_MODEL = "wagtailimages.Image"
