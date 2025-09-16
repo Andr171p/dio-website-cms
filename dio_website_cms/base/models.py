@@ -2,9 +2,9 @@ from django.db import models
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, PublishingPanel
 from wagtail.contrib.settings.models import BaseGenericSetting, register_setting
 from wagtail import blocks
-from wagtail.fields import StreamField
-from wagtail.blocks import PageChooserBlock, CharBlock, URLBlock, StructBlock, ListBlock, TextBlock
-from wagtail.models import DraftStateMixin, RevisionMixin, PreviewableMixin
+from wagtail.fields import StreamField, RichTextField
+from wagtail.blocks import PageChooserBlock, CharBlock
+from wagtail.models import DraftStateMixin, RevisionMixin, PreviewableMixin,Page
 
 # ========== HEADER SETTINGS ==========
 @register_setting
@@ -90,12 +90,18 @@ class HeaderSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGener
 # ========== FOOTER SETTINGS ==========
 # base/models.py или где определена ваша модель
 
-
-
 @register_setting
 class FooterSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGenericSetting):
     """Настройки футера сайта"""
-
+    logo = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Логотип сайта",
+        help_text="Логотип для footer. Рекомендуемый размер: 40x40px"
+    )
     # Основные настройки
     copyright_text = models.CharField(
         max_length=200,
@@ -114,43 +120,55 @@ class FooterSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGener
 
     # Социальные сети
     social_links = StreamField([
-        ("social", StructBlock([
-            ("platform", CharBlock(max_length=50, label="Платформа")),
-            ("url", URLBlock(label="Ссылка")),
-            ("icon", CharBlock(max_length=50, label="Иконка (например, facebook, twitter)")),
+        ("social", blocks.StructBlock([
+            ("platform", blocks.CharBlock(max_length=50, label="Платформа")),
+            ("href", blocks.CharBlock(max_length=200, label="Ссылка (например, https://facebook.com или #contact)")),
+            ("icon", blocks.CharBlock(max_length=50, label="Иконка (например, facebook, twitter)")),
         ], label="Социальная сеть"))
     ], blank=True, use_json_field=True, verbose_name="Социальные сети")
 
-    # Секции футера
-    company_links = StreamField([
-        ("link", StructBlock([
-            ("title", CharBlock(max_length=100, label="Заголовок")),
-            ("url", URLBlock(label="Ссылка", required=False)),
-            ("anchor", CharBlock(max_length=100, label="Якорь (например, #about)", required=False)),
-        ], label="Ссылка компании"))
-    ], blank=True, use_json_field=True, verbose_name="Ссылки компании")
+    # Секции ссылок
+    company_section = StreamField([
+        ("item", blocks.StructBlock([
+            ("title", blocks.CharBlock(max_length=100, label="Заголовок секции", required=False)),
+            ("links", blocks.ListBlock(blocks.StructBlock([
+                ("text", blocks.CharBlock(max_length=100, label="Текст ссылки")),
+                ("href", blocks.CharBlock(max_length=200, label="Ссылка (например, /about или #contact)", blank=True)),
+            ])))
+        ], label="Секция компании"))
+    ], blank=True, use_json_field=True, verbose_name="Секции компании")
 
-    services_links = StreamField([
-        ("link", StructBlock([
-            ("title", CharBlock(max_length=100, label="Заголовок")),
-            ("url", URLBlock(label="Ссылка", required=False)),
-            ("anchor", CharBlock(max_length=100, label="Якорь (например, #services)", required=False)),
-        ], label="Ссылка услуги"))
-    ], blank=True, use_json_field=True, verbose_name="Ссылки услуг")
+    solutions_section = StreamField([
+        ("item", blocks.StructBlock([
+            ("title", blocks.CharBlock(max_length=100, label="Заголовок секции", required=False)),
+            ("links", blocks.ListBlock(blocks.StructBlock([
+                ("text", blocks.CharBlock(max_length=100, label="Текст ссылки")),
+                ("href", blocks.CharBlock(max_length=200, label="Ссылка (например, /solutions или #solutions)", blank=True)),
+            ])))
+        ], label="Секция решений"))
+    ], blank=True, use_json_field=True, verbose_name="Секции решений")
 
-    industries_links = StreamField([
-        ("link", StructBlock([
-            ("title", CharBlock(max_length=100, label="Заголовок")),
-            ("url", URLBlock(label="Ссылка", required=False)),
-            ("anchor", CharBlock(max_length=100, label="Якорь", required=False)),
-        ], label="Ссылка отрасли"))
-    ], blank=True, use_json_field=True, verbose_name="Ссылки отраслей")
+    services_section = StreamField([
+        ("item", blocks.StructBlock([
+            ("title", blocks.CharBlock(max_length=100, label="Заголовок секции", required=False)),
+            ("links", blocks.ListBlock(blocks.StructBlock([
+                ("text", blocks.CharBlock(max_length=100, label="Текст ссылки")),
+                ("href", blocks.CharBlock(max_length=200, label="Ссылка (например, /services или #services)", blank=True)),
+            ])))
+        ], label="Секция услуг"))
+    ], blank=True, use_json_field=True, verbose_name="Секции услуг")
 
-    certifications = StreamField([
-        ("cert", StructBlock([
-            ("title", CharBlock(max_length=100, label="Название сертификации")),
-        ], label="Сертификация"))
-    ], blank=True, use_json_field=True, verbose_name="Сертификации")
+    # Кнопка "Связаться с нами"
+    contact_button_text = models.CharField(
+        max_length=50,
+        default="Связаться с нами",
+        verbose_name="Текст кнопки"
+    )
+    contact_button_href = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Ссылка кнопки (например, #contact или /contact)"
+    )
 
     # Панели админки
     content_panels = [
@@ -159,10 +177,11 @@ class FooterSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGener
             FieldPanel("company_address"),
             FieldPanel("working_hours"),
             FieldPanel("social_links"),
-            FieldPanel("company_links"),
-            FieldPanel("services_links"),
-            FieldPanel("industries_links"),
-            FieldPanel("certifications"),
+            FieldPanel("company_section"),
+            FieldPanel("solutions_section"),
+            FieldPanel("services_section"),
+            FieldPanel("contact_button_text"),
+            FieldPanel("contact_button_href"),
         ], heading="Настройки футера"),
     ]
 
@@ -181,10 +200,21 @@ class FooterSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGener
         return {"settings": self}
 
 
+
 # ========== CONTACT SETTINGS ==========
 @register_setting
 class ContactSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGenericSetting):
     """Настройки контактов"""
+    section_title = models.CharField(
+        max_length=100,
+        default="Связаться с нами",
+        verbose_name="Заголовок секции"
+    )
+    section_description = models.TextField(
+        default="Готовы обсудить автоматизацию вашего бизнеса? Свяжитесь с нашими экспертами для получения персональной консультации.",
+        verbose_name="Описание секции"
+    )
+    # Контактная информация
     primary_phone = models.CharField(
         max_length=20,
         blank=True,
@@ -207,28 +237,49 @@ class ContactSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGene
         blank=True,
         verbose_name="Адрес"
     )
-    map_embed_code = models.TextField(
-        blank=True,
-        verbose_name="Код карты",
-        help_text="HTML код для встраивания карты"
+    working_hours = models.TextField(
+        default="Пн-Пт: 9:00 - 18:00, Сб-Вс: по договоренности",
+        verbose_name="Режим работы"
+    )
+    map_placeholder_text = models.TextField(
+        default="г. Москва, ул. Тверская, д. 15",
+        verbose_name="Текст под картой"
+    )
+    # Услуги
+    services = StreamField([
+        ("service", CharBlock(max_length=100, label="Название услуги"))
+    ], blank=True, use_json_field=True, verbose_name="Список услуг")
+    # Форма
+    form_title = models.CharField(
+        max_length=100,
+        default="Оставить заявку",
+        verbose_name="Заголовок формы"
+    )
+    privacy_policy_text = models.TextField(
+        default="Нажимая кнопку, вы соглашаетесь с <a href='/privacy-policy/'>политикой обработки персональных данных</a>",
+        verbose_name="Текст политики конфиденциальности"
     )
 
     content_panels = [
         MultiFieldPanel([
+            FieldPanel("section_title"),
+            FieldPanel("section_description"),
             FieldPanel("primary_phone"),
             FieldPanel("secondary_phone"),
             FieldPanel("primary_email"),
             FieldPanel("secondary_email"),
             FieldPanel("address"),
-            FieldPanel("map_embed_code"),
-        ], heading="Контактная информация"),
+            FieldPanel("working_hours"),
+            FieldPanel("map_placeholder_text"),
+            FieldPanel("services"),
+            FieldPanel("form_title"),
+            FieldPanel("privacy_policy_text"),
+        ], heading="Настройки контактов"),
     ]
 
     publish_panels = [
         PublishingPanel(),
     ]
-
-
 
     class Meta:
         verbose_name = "Настройки контактов"
@@ -242,12 +293,14 @@ class ContactSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGene
 
 
 @register_setting
-class SiteSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGenericSetting):
+class SiteSettings(BaseGenericSetting):
     """Настройки сайта"""
-    name = models.CharField(max_length=100, 
-                            verbose_name="Название компании",
-                            default="Название компании", 
-                            blank=True  )
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Название компании",
+        default="Название компании",
+        blank=True
+    )
     icon = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -256,19 +309,23 @@ class SiteSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGeneric
         related_name="+",
         verbose_name="Логотип компании",
     )
-    address = models.TextField(max_length=100, verbose_name="г.Тюмень",blank=True,)
+    address = models.TextField(
+        max_length=100,
+        verbose_name="г.Тюмень",
+        blank=True,
+    )
 
     content_panels = [
-        FieldPanel("name"),
-        FieldPanel("icon"),
-        FieldPanel("address"),
+        MultiFieldPanel([
+            FieldPanel("name"),
+            FieldPanel("icon"),
+            FieldPanel("address"),
+        ], heading="Основные настройки"),
     ]
 
     publish_panels = [
         PublishingPanel(),
     ]
-
-
 
     class Meta:
         verbose_name = "Настройки сайта"
@@ -278,3 +335,37 @@ class SiteSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGeneric
 
     def get_preview_context(self, request, mode_name):
         return {"settings": self}
+    
+
+
+class ContactPage(Page):
+    """Страница контактов"""
+
+    # Поля для контактов
+    address = models.TextField(blank=True, verbose_name="Адрес")
+    phone = models.CharField(max_length=20, blank=True, verbose_name="Телефон")
+    email = models.EmailField(blank=True, verbose_name="Электронная почта")
+    map_info = models.TextField(blank=True, verbose_name="Инструкции для карты (например, Embed-код)")
+    contact_form_text = models.TextField(blank=True, verbose_name="Текст для формы")
+    legal_name = models.CharField(max_length=200, blank=True, verbose_name="Юридическое название")
+    inn = models.CharField(max_length=12, blank=True, verbose_name="ИНН")
+    ogrn = models.CharField(max_length=13, blank=True, verbose_name="ОГРН")
+
+    # Панели для админки
+    content_panels = Page.content_panels + [
+        MultiFieldPanel([
+            FieldPanel("address"),
+            FieldPanel("phone"),
+            FieldPanel("email"),
+        ], heading="Контактная информация"),
+        FieldPanel("map_info"),
+        FieldPanel("contact_form_text"),
+        MultiFieldPanel([
+            FieldPanel("legal_name"),
+            FieldPanel("inn"),
+            FieldPanel("ogrn"),
+        ], heading="Юридические данные"),
+    ]
+
+    # Указываем шаблон
+    template = "contact/contact_page.html"

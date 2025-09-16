@@ -12,7 +12,7 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
-    path("settings/", include("wagtail.contrib.settings.urls", namespace="wagtailsettings")),
+    path("settings/", include("wagtail.contrib.settings.urls")),
 ]
 
 # Добавляем маршруты для статических и медиафайлов в режиме DEBUG
