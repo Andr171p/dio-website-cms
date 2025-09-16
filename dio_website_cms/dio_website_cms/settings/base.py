@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "news",
     "services",
     "solutions",
+    "chat",
     # Установленные приложения
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
@@ -97,7 +98,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "wagtailmenus.context_processors.wagtailmenus"
+                "wagtailmenus.context_processors.wagtailmenus",
             ],
         },
     },
@@ -105,7 +106,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "dio_website_cms.wsgi.application"
 
-
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+}
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -116,7 +124,15 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    }
+}
 
+# Если используете Wagtail, добавьте также:
+WAGTAIL_CACHE = False
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

@@ -1,3 +1,4 @@
+from chat.views import ChatView
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
@@ -13,6 +14,7 @@ urlpatterns = [
     path("search/", search_views.search, name="search"),
     path("settings/", include("wagtail.contrib.settings.urls")),
     path("", include("wagtail.urls")),
+    path("chat/", ChatView.as_view(), name="chat"),
 ]
 
 
