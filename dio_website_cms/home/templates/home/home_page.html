@@ -3,12 +3,171 @@
 
 {% block title %}{{ page.title }} | Мой сайт{% endblock %}
 
+{% block extra_css %}
+<style>
+.hero-slide {
+    transition: opacity 0.5s ease-in-out;
+}
+.carousel-dot {
+    transition: all 0.3s ease;
+}
+.nav-block {
+    cursor: pointer;
+}
+.nav-block:hover {
+    transform: scale(1.05);
+}
+</style>
+{% endblock %}
+
 {% block content %}
-  <!-- Hero секция -->
-  <section class="hero min-h-screen bg-gray-100 flex items-center justify-center text-center">
-    <div class="relative z-10">
-      {% if page.hero_headline %}<h1 class="text-4xl font-bold text-gray-900 mb-4">{{ page.hero_headline }}</h1>{% endif %}
-      {% if page.hero_subheadline %}<p class="text-lg text-gray-700">{{ page.hero_subheadline }}</p>{% endif %}
+<!-- Hero секция -->
+<section class="hero relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Основная карусель -->
+    <div class="hero-carousel w-full h-full">
+        {% for slide in page.hero_slides %}
+        <div class="hero-slide absolute inset-0 transition-opacity duration-500 ease-in-out opacity-0 {% if forloop.first %}opacity-100{% endif %}">
+            {% image slide.value.background_image width-1920 as bg_img %}
+            <div class="absolute inset-0 bg-cover bg-center" 
+                 style="background-image: url('{{ bg_img.url }}');"></div>
+            <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+            
+            <div class="relative z-10 text-white text-center max-w-4xl mx-auto px-4">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ slide.value.headline }}</h1>
+                {% if slide.value.subheadline %}
+                <p class="text-lg md:text-xl mb-6">{{ slide.value.subheadline }}</p>
+                {% endif %}
+                {% if slide.value.link %}
+                <a href="{{ slide.value.link.url }}" class="btn btn-primary">Подробнее</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
     </div>
-  </section>
+
+    <!-- Навигационные точки -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
+        {% for slide in page.hero_slides %}
+        <button class="carousel-dot w-3 h-3 rounded-full bg-white bg-opacity-50 transition-all duration-300 {% if forloop.first %}bg-opacity-100 w-6{% endif %}"
+                data-slide="{{ forloop.counter0 }}"></button>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Блоки навигации ниже hero -->
+<div class="navigation-blocks grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 py-8 px-4">
+    {% for slide in page.hero_slides %}
+    {% image slide.value.background_image width-400 as thumb_img %}
+    <div class="nav-block cursor-pointer transition-transform duration-300 hover:scale-105"
+         data-slide="{{ forloop.counter0 }}">
+        <div class="relative overflow-hidden rounded-lg h-32">
+            <img src="{{ thumb_img.url }}" alt="{{ slide.value.headline }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                <h3 class="text-white text-center font-semibold px-2">{{ slide.value.headline }}</h3>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.carousel-dot');
+    const navBlocks = document.querySelectorAll('.nav-block');
+    
+    // Если нет слайдов, выходим
+    if (slides.length === 0) return;
+    
+    let currentSlide = 0;
+    let autoSlideInterval;
+
+    function showSlide(index) {
+        console.log('Showing slide:', index, 'Total slides:', slides.length);
+        
+        // Скрыть все слайды
+        slides.forEach(slide => {
+            slide.style.opacity = '0';
+            slide.style.pointerEvents = 'none';
+        });
+        
+        // Сбросить все точки
+        dots.forEach(dot => {
+            dot.classList.remove('bg-opacity-100', 'w-6');
+            dot.classList.add('bg-opacity-50', 'w-3');
+        });
+
+        // Показать выбранный слайд
+        if (slides[index]) {
+            slides[index].style.opacity = '1';
+            slides[index].style.pointerEvents = 'auto';
+            
+            // Обновить точку
+            if (dots[index]) {
+                dots[index].classList.add('bg-opacity-100', 'w-6');
+                dots[index].classList.remove('bg-opacity-50', 'w-3');
+            }
+            
+            currentSlide = index;
+        }
+    }
+
+    function startAutoSlide() {
+        if (slides.length <= 1) return; // Не нужно автопереключение для одного слайда
+        
+        clearInterval(autoSlideInterval);
+        autoSlideInterval = setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }, 5000);
+    }
+
+    function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+    }
+
+    // Инициализация
+    showSlide(currentSlide);
+    
+    // Обработчики для точек
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', (e) => {
+            e.preventDefault();
+            stopAutoSlide();
+            showSlide(index);
+            startAutoSlide();
+        });
+    });
+
+    // Обработчики для навигационных блоков
+    navBlocks.forEach((block, index) => {
+        block.addEventListener('click', (e) => {
+            e.preventDefault();
+            stopAutoSlide();
+            showSlide(index);
+            startAutoSlide();
+        });
+    });
+
+    // Запустить автопереключение если есть больше одного слайда
+    if (slides.length > 1) {
+        startAutoSlide();
+        
+        // Останавливать автопереключение при наведении
+        const heroSection = document.querySelector('.hero');
+        if (heroSection) {
+            heroSection.addEventListener('mouseenter', stopAutoSlide);
+            heroSection.addEventListener('mouseleave', startAutoSlide);
+        }
+    }
+
+    // Добавим отладочную информацию
+    console.log('Carousel initialized:');
+    console.log('Slides found:', slides.length);
+    console.log('Dots found:', dots.length);
+    console.log('Nav blocks found:', navBlocks.length);
+});
+</script>
 {% endblock %}
