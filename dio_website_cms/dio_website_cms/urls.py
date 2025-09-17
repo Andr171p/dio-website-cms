@@ -13,8 +13,8 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("settings/", include("wagtail.contrib.settings.urls")),
-    path("", include("wagtail.urls")),
     path("chat/", ChatView.as_view(), name="chat"),
+    path("", include("wagtail.urls")),
 ]
 
 
