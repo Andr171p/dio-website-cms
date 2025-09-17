@@ -1,0 +1,157 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<section class="py-20 bg-gradient-to-br from-gray-50 to-white" id="news-section">
+    <div class="container mx-auto px-6">
+        <!-- Header -->
+        <div class="text-center mb-16 opacity-0 translate-y-10 transition-all duration-1000" data-animate="fadeInUp">
+            <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Новости</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Последние обновления, события и достижения нашей компании.
+            </p>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex flex-wrap justify-center gap-4 mb-12 opacity-0 translate-y-10 transition-all duration-1000" data-animate="fadeInUp" data-delay="1">
+            <a href="{% pageurl page %}" class="px-6 py-3 rounded-full font-medium transition-all duration-200 {% if not current_category %}bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg{% else %}bg-white text-gray-600 hover:text-blue-600 shadow-md hover:shadow-lg{% endif %}">
+                Все новости
+            </a>
+            {% for category, label in NEWS_CATEGORY_CHOICES %}
+                <a href="?category={{ category }}" class="px-6 py-3 rounded-full font-medium transition-all duration-200 {% if current_category == category %}bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg{% else %}bg-white text-gray-600 hover:text-blue-600 shadow-md hover:shadow-lg{% endif %}">
+                    {{ label }}
+                </a>
+            {% endfor %}
+        </div>
+
+        <!-- News Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for news_item in news %}
+            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 opacity-0 translate-y-10 scale-95" data-animate="slideIn" data-delay="{{ forloop.counter0|add:1 }}">
+                <!-- Image -->
+                <div class="relative overflow-hidden h-48">
+                    {% if news_item.image %}
+                    {% image news_item.image width-400 as news_img %}
+                    <img src="{{ news_img.url }}" alt="{{ news_item.headline }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    {% else %}
+                    <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">Нет изображения</div>
+                    {% endif %}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4">
+                        <div class="flex items-center text-white text-sm space-x-4">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                {{ news_item.publish_date|date:"d.m.Y" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors duration-200">
+                        <a href="{% pageurl news_item %}">{{ news_item.headline }}</a>
+                    </h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                        {{ news_item.intro }}
+                    </p>
+                    <a href="{% pageurl news_item %}" class="flex items-center text-blue-600 hover:text-blue-700 font-semibold text-sm transition-all duration-200 hover:translate-x-2">
+                        <span>Читать далее</span>
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center text-gray-600">
+                <p>Новостей пока нет. Проверьте позже или добавьте их в админке.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if news.has_other_pages %}
+        <div class="text-center mt-12 opacity-0 translate-y-10 transition-all duration-1000" data-animate="fadeInUp" data-delay="2">
+            <div class="flex justify-center gap-2">
+                {% if news.has_previous %}
+                <a href="?page={{ news.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="px-4 py-2 bg-white text-gray-600 hover:bg-gray-100 rounded-lg shadow-md transition-all duration-200">
+                    ← Предыдущая
+                </a>
+                {% endif %}
+                {% for num in news.paginator.page_range %}
+                <a href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}" class="px-4 py-2 {% if news.number == num %}bg-blue-600 text-white{% else %}bg-white text-gray-600 hover:bg-gray-100{% endif %} rounded-lg shadow-md transition-all duration-200">
+                    {{ num }}
+                </a>
+                {% endfor %}
+                {% if news.has_next %}
+                <a href="?page={{ news.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="px-4 py-2 bg-white text-gray-600 hover:bg-gray-100 rounded-lg shadow-md transition-all duration-200">
+                    Следующая →
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(50px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    
+    [data-animate="fadeInUp"].active,
+    [data-animate="slideIn"].active {
+        animation: fadeInUp 0.8s forwards;
+    }
+    
+    [data-animate="slideIn"].active {
+        animation: slideIn 0.6s forwards;
+    }
+    
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    function initAnimations() {
+        const section = document.getElementById('news-section');
+        if (!section) return;
+
+        const animateElements = section.querySelectorAll('[data-animate]:not([data-animated])');
+        animateElements.forEach((el, index) => {
+            if (isInViewport(el)) {
+                const delay = parseInt(el.getAttribute('data-delay') || '0') * 100;
+                setTimeout(() => {
+                    el.classList.add('active');
+                    el.dataset.animated = 'true';
+                }, delay);
+            }
+        });
+    }
+
+    initAnimations();
+    window.addEventListener('scroll', initAnimations);
+});
+</script>   

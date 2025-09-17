@@ -1,0 +1,129 @@
+
+{% load wagtailcore_tags wagtailimages_tags static  %}
+<!-- Секция новостей -->
+<section class="news-section py-20 bg-gradient-to-br from-gray-50 to-white">
+    <div class="container mx-auto px-6">
+        <!-- Header -->
+        <div class="text-center mb-16 opacity-0 translate-y-10 transition-all duration-1000" data-animate="fadeInUp">
+            <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Новости</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Последние события и достижения компании.
+            </p>
+        </div>
+
+        <!-- News Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for news_item in page.get_news %}
+            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 opacity-0 translate-y-10 scale-95" data-animate="slideIn" data-delay="{{ forloop.counter }}">
+                <!-- Image -->
+                <div class="relative overflow-hidden h-8">
+                    {% if news_item.image %}
+                    {% image news_item.image fill-600x900 format-webp as news_img %}
+                    <img src="{{ news_img.url }}" alt="{{ news_item.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4">
+                        <div class="flex items-center text-white text-sm space-x-4">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                {{ news_item.date|date:"d.m.Y" }}
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ news_item.read_time }} мин
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Content -->
+                <div class="p-6">
+                    {% if news_item.image %}
+                    {% image news_item.image fill-400x300 format-webp as news_img %}
+                    <img src="{{ news_img.url }}" alt="{{ news_item.title }}" class="">
+                    <p class="text-gray-600 text-sm mb-4">{{ news_item.date }}</p>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors duration-200">
+                        <a href="{% pageurl news_item %}">{{ news_item.title }}</a>
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-4">{{ news_item.excerpt }}</p>
+                    <a href="{% pageurl news_item %}" class="text-blue-600 hover:text-blue-700 font-medium text-sm">
+                        Читать далее →
+                    </a>
+                     {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Кнопка "Все новости" -->
+        {% with news_index=page.get_news_index %}
+        
+        {% if news_index %}
+        <div class="text-center mt-12">
+            <a href="{% pageurl news_index %}" class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200">
+                Все новости
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+            </a>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</section>
+
+<!-- Оставьте ваш CSS и JavaScript без изменений -->
+<style>
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(50px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    [data-animate="fadeInUp"].active, [data-animate="slideIn"].active {
+        animation: fadeInUp 0.8s forwards;
+    }
+    [data-animate="slideIn"].active {
+        animation: slideIn 0.6s forwards;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    function initAnimations() {
+        const section = document.querySelector('.news-section');
+        if (!section) return;
+
+        const animateElements = section.querySelectorAll('[data-animate]:not([data-animated])');
+        animateElements.forEach((el, index) => {
+            if (isInViewport(el)) {
+                const delay = parseInt(el.getAttribute('data-delay') || '0') * 100;
+                setTimeout(() => {
+                    el.classList.add('active');
+                    el.dataset.animated = 'true';
+                }, delay);
+            }
+        });
+    }
+
+    initAnimations();
+    window.addEventListener('scroll', initAnimations);
+});
+</script>
+

@@ -1,141 +1,96 @@
-from typing import Any, ClassVar
-
-from django.core.paginator import PageNotAnInteger, Paginator
 from django.db import models
-from django.http import HttpRequest
-from wagtail import blocks
+from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import StreamField
-from wagtail.images.blocks import ImageChooserBlock
-from wagtail.models import Page, PanelPlaceholder
-
-MAX_CATEGORY_LENGTH = 250
-PARAGRAPH_FEATURES: list[str] = [
-    "h2", "h3", "h4", "bold", "italic", "link", "ol", "ul", "code", "blockquote"
-]
-DEFAULT_NEWS_PER_PAGE = 6
-FIRST_PAGE = 1
-NEWS_CATEGORY_CHOICES: list[tuple] = [
-    ("company", "Новости компании"),
-    ("tech", "Технологии"),
-    ("projects", "Проекты"),
-    ("events", "События"),
-    ("awards", "Награды"),
-]
-
+from wagtail.fields import RichTextField
+from wagtail import blocks
+from wagtail.search import index
+from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 class NewsPage(Page):
-    """Новостная страница"""
-    publish_date = models.DateField(auto_now_add=True, verbose_name="Дата публикации")
+    """Страница отдельной новости"""
+    
+    date = models.DateField("Дата публикации", default=timezone.now)
+    read_time = models.PositiveSmallIntegerField("Время чтения (мин)", default=3)
+    excerpt = models.CharField("Краткое описание", max_length=200)
     image = models.ForeignKey(
-        "wagtailimages.Image",
+        'wagtailimages.Image',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="+",
-        verbose_name="Превью"
+        related_name='+',
+        verbose_name="Изображение"
     )
-    headline = models.CharField(blank=True, verbose_name="Новостной заголовок")
-    intro = models.TextField(
-        blank=True, verbose_name="Краткое описание", help_text="1-3 предложения для анонса"
-    )
-    # Конструктор новостного контента
-    content = StreamField([
-        ("paragraph", blocks.RichTextBlock(
-            features=PARAGRAPH_FEATURES,
-            label="Абзац текста",
-            template="blocks/paragraph_block.html",
-        )),
-        ("image", ImageChooserBlock(
-            label="Изображение", template="blocks/image_block.html"
-        )),
-        ("quote", blocks.BlockQuoteBlock(
-            label="Цитата", template="blocks/quote_block.html"
-        )),
-        ("embed", blocks.StaticBlock(
-            label="Видео", template="blocks/embed_block.html"
-        )),
-        ("divider", blocks.StaticBlock(
-            label="Разделитель", template="blocks/divider_block.html"
-        ))
-    ], use_json_field=True, verbose_name="Содержание новости", blank=True)
-    # Мета информация
-    category = models.CharField(
-        max_length=MAX_CATEGORY_LENGTH,
-        choices=NEWS_CATEGORY_CHOICES,
-        default="company",
-        verbose_name="Категория"
-    )
-    is_important = models.BooleanField(default=False, verbose_name="Важная новость")
-    # Поля редактируемые админом
-    content_panels: ClassVar[list[PanelPlaceholder]] = [
-        *Page.content_panels,
+    content = RichTextField("Содержание")
+
+    content_panels = Page.content_panels + [
         MultiFieldPanel([
-            FieldPanel("headline"),
-            FieldPanel("intro"),
-            FieldPanel("category"),
-            FieldPanel("is_important"),
+            FieldPanel('date'),
+            FieldPanel('read_time'),
+            FieldPanel('excerpt'),
+            FieldPanel('image'),
         ], heading="Основная информация"),
-        FieldPanel("content"),
+        FieldPanel('content'),
     ]
-    # Родительская страница
-    parent_page_types: ClassVar[list[str]] = ["NewsIndexPage"]
-    subpage_types: ClassVar[list[str]] = []
+
+    search_fields = Page.search_fields + [
+        index.SearchField('excerpt'),
+        index.SearchField('content'),
+    ]
 
     class Meta:
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
 
-    def __str__(self) -> str:
-        return f"{self.headline} - {self.title}"
-
 
 class NewsIndexPage(Page):
-    """Страница со списком всех новостей"""
-    publish_date = models.DateField(auto_now_add=True, verbose_name="Дата публикации")
-    image = models.ForeignKey(
-        "wagtailimages.Image",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
-        verbose_name="Превью"
-    )
-    headline = models.CharField(blank=True, verbose_name="Новостной заголовок")
-    news_per_page = models.PositiveIntegerField(
-        default=DEFAULT_NEWS_PER_PAGE, verbose_name="Количество новостей на странице"
-    )
-    # Поля заполняемые админом
-    content_panels: ClassVar[list[PanelPlaceholder]] = [
-        *Page.content_panels,
-        FieldPanel("image"),
-        FieldPanel("headline"),
-        FieldPanel("news_per_page"),
-    ]
-    # Дочерние страницы
-    subpage_types: ClassVar[list[str]] = ["NewsPage"]
-    # Родительская страница
-    parent_page_types: ClassVar[list[str]] = ["home.HomePage"]
+    """Главная страница новостей"""
+    intro = RichTextField("Введение", features=['bold', 'italic', 'link'], blank=True)
+    items_per_page = models.PositiveIntegerField("Новостей на странице", default=9)
 
-    def get_context(
-            self, request: HttpRequest, *args, **kwargs  # noqa: ARG002
-    ) -> dict[str, Any]:
+    content_panels = Page.content_panels + [
+        FieldPanel('intro'),
+        FieldPanel('items_per_page'),
+    ]
+
+    def get_context(self, request):
         context = super().get_context(request)
-        # Получаем все опубликованные новости
-        news = NewsPage.objects.live().descendant_of(self).order_by("-publish_date")
-        # Фильтрация по категориям
-        category = request.GET.get("category")
-        if category:
-            news = news.filter(category=category)
-        if not category:
-            news = news.order_by("-is_important", "-publish_date")
-        # Пагинация результатов
-        page = request.GET.get("page")
-        paginator = Paginator(news, self.news_per_page)
+        news = NewsPage.objects.live().order_by('-date')
+        
+        # Пагинация
+        paginator = Paginator(news, self.items_per_page)
+        page = request.GET.get('page')
+        
         try:
             news = paginator.page(page)
         except PageNotAnInteger:
-            news = paginator.page(FIRST_PAGE)
-        context["news"] = news
-        context["current_category"] = category
+            news = paginator.page(1)
+        except EmptyPage:
+            news = paginator.page(paginator.num_pages)
+            
+        context['news'] = news
         return context
+
+    class Meta:
+        verbose_name = "Лента новостей"
+        verbose_name_plural = "Ленты новостей"
+
+
+# Блок для отображения новостей на главной
+class NewsBlock(blocks.StructBlock):
+    """Блок для отображения новостей на главной странице"""
+    title = blocks.CharBlock(
+        max_length=100,
+        required=True,
+        label="Заголовок секции новостей"
+    )
+    show_count = blocks.IntegerBlock(
+        default=3,
+        min_value=1,
+        max_value=12,
+        label="Количество новостей для показа"
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = "Блок новостей"
