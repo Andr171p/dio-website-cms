@@ -1,6 +1,5 @@
 from typing import ClassVar
 
-import requests
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,14 +10,19 @@ from .storage import get_history_chat, save_messages
 
 
 def get_response(payload: dict) -> dict:
-    response = requests.post(
-        url=f"/api/v1/chat/{payload['id']}/completion", json=payload, timeout=5
-    )
+    # response = requests.post(
+    #     url=f"/api/v1/chat/{payload['id']}/completion", json=payload, timeout=5
+    # )
 
-    result = response.json()
-    if response.status_code != 200:
-        raise Exception(f"API returned status {response.status_code}: {response.text}")
-    return result
+    # result = response.json()
+    # if response.status_code != 200:
+    #     raise Exception(f"API returned status {response.status_code}: {response.text}")
+    # return result
+    return {
+        "id": payload["id"],
+        "role": "ai",
+        "content": "hi",
+    }
 
 
 def get_content(request) -> list | dict:
@@ -57,6 +61,5 @@ class ChatView(APIView):
         payload = {"id": session_id, "role": "human", "content": content}
 
         api_response = get_response(payload)
-        save_messages([payload, api_response], session_id)
 
-        return Response(get_history_chat(session_id), status=status.HTTP_200_OK)
+        return Response(api_response, status=status.HTTP_200_OK)
