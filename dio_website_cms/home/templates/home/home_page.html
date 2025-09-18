@@ -71,12 +71,12 @@
 {% block content %}
 <!-- Hero секция -->
 <div class="hero-container mx-auto container pt-24">
-    <section class="hero relative w-full h-full flex items-start justify-start overflow-hidden">
+    <section class="hero relative w-full h-full flex items-start justify-start overflow-hidden rounded-xl ">
         <!-- Основная карусель -->
-        <div class="hero-carousel w-full">
+        <div class="hero-carousel w-full ">
             {% for slide in page.hero_slides %}
             <div class="hero-slide {% if forloop.first %}active{% endif %}">
-                {% image slide.value.background_image width-1920 as bg_img %}
+                {% image slide.value.background_image width-1920  as bg_img %}
                 <!-- Проверка загрузки изображения -->
                 {% if bg_img.url %}
                 <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ bg_img.url }}');"></div>
@@ -85,7 +85,7 @@
                     Изображение не найдено
                 </div>
                 {% endif %}
-                <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+                <div class="absolute inset-0 bg-black bg-opacity-60 "></div>
                 
                 <div class="relative text-left max-w-4xl pl-6 py-12 hero-content">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-blue-900 mb-6 leading-tight">{{ slide.value.headline }}</h1>
@@ -134,12 +134,14 @@
     </div>
 </div>
 <!-- Включение секции новостей -->
-{% include "home/news.html" %}
 <!-- Включение секции статистики -->
 {% include "home/statistics_section.html" with statistic_pages=page.statistic_pages %}
 
-{% include "home/case.html"  %}
+{% include "home/news.html" %}
 
+{% include "home/cases_section.html"  %}
+
+{% include "certificates/certificates_page.html"  %}
 {% endblock %}
 
 {% block extra_js %}

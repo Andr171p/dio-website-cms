@@ -1,27 +1,132 @@
 {% load static wagtailcore_tags wagtailuserbar wagtailimages_tags wagtailsettings_tags django_htmx %}
+
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{{ page.title }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{% if page.search_description %}{{ page.search_description }}{% else %}Официальный сайт компании{% endif %}{% endblock %}">
+  <meta name="keywords" content="{% block meta_keywords %}{% if page.keywords %}{{ page.keywords }}{% endif %}{% endblock %}">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="{% block og_title %}{{ page.title }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{% if page.search_description %}{{ page.search_description }}{% endif %}{% endblock %}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  {% if page.og_image %}
+  <meta property="og:image" content="{% pageurl page.og_image %}">
+  {% endif %}
+  
+  <!-- Favicon -->
+  <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+  
+  <title>{% block title %}{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %} | Название компании{% endblock %}</title>
+
+  <!-- Preload critical resources -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  
+  <!-- Tailwind CSS with fallback -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  
+  <!-- Preload critical fonts -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
+  
+  <!-- Schema.org markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Название компании",
+    "url": "{{ request.scheme }}://{{ request.get_host }}/"
+  }
+  </script>
+  
+  {% block extra_meta %}{% endblock %}
   {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-white text-gray-900">
+
+<body class="bg-white text-gray-900 font-sans antialiased min-h-screen flex flex-col" 
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-content" class="skip-link sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg">
+    Перейти к основному содержимому
+  </a>
+
   {% wagtailuserbar %}
 
+  <!-- Header -->
   {% include "base/header.html" %}
 
-  <main>
+  <!-- Main content -->
+  <main id="main-content" class="flex-grow">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Дополнительные секции -->
+  <!-- Additional sections -->
   {% include "base/contact.html" %}
   {% include "base/footer.html" %}
   {% include "base/chat.html" %}
 
+  <!-- Loading indicator for HTMX -->
+  <div id="htmx-indicator" class="fixed top-0 left-0 right-0 h-1 bg-blue-600 opacity-0 transition-opacity duration-300 z-50" 
+       style="display: none;"></div>
+
+  <!-- Back to top button -->
+  <button id="back-to-top" class="fixed bottom-8 right-8 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 opacity-0 transform translate-y-10 z-40"
+          aria-label="Вернуться наверх">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+    </svg>
+  </button>
+
+  <!-- Scripts -->
+  <script>
+    // Basic feature detection
+    document.documentElement.classList.remove('no-js');
+    document.documentElement.classList.add('js');
+    
+    // Environment variables
+    window.APP_CONFIG = {
+      DEBUG: {% if debug %}true{% else %}false{% endif %},
+      CSRF_TOKEN: "{{ csrf_token }}",
+      STATIC_URL: "{% static '' %}",
+      BASE_URL: "{{ request.scheme }}://{{ request.get_host }}"
+    };
+  </script>
+
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
+  
+  <!-- Alpine.js for interactive components -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js"></script>
+  
+  <!-- Custom JavaScript -->
+  <script src="{% static 'js/main.js' %}" defer></script>
+  
   {% block extra_js %}{% endblock %}
+  
+  <!-- Performance monitoring -->
+  {% if not debug %}
+  <script>
+    // Basic performance monitoring
+    window.addEventListener('load', function() {
+      setTimeout(function(){
+        const perfData = window.performance.timing;
+        const loadTime = perfData.loadEventEnd - perfData.navigationStart;
+        
+        if (loadTime > 3000) {
+          console.warn('Page load time:', loadTime + 'ms');
+        }
+      }, 0);
+    });
+  </script>
+  {% endif %}
 </body>
 </html>

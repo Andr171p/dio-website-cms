@@ -1,20 +1,20 @@
 {% load wagtailcore_tags wagtailimages_tags wagtailsettings_tags static %}
 
-<header class="fixed top-0 w-full z-50 transition-all duration-300 {% if scrolled %}bg-white/95 backdrop-blur-md shadow-lg{% else %}bg-transparent{% endif %}" id="header">
+<header class="fixed top-0 w-full z-50 transition-all duration-300 bg-gradient-to-r from-red-700 to-gray-800" id="header">
   <div class="container mx-auto px-6 py-4">
     <div class="flex items-center justify-between">
       <!-- Logo -->
       {% get_settings use_default_site=True as settings %}
-      <a href="/" class="flex items-center space-x-3 group">
+      <a href="/" class="flex items-center space-x-3">
         {% if settings.base.HeaderSettings.logo %}
           {% image settings.base.HeaderSettings.logo width-40 as logo %}
-          <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-red-800 rounded-lg flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
+          <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
             <img src="{{ logo.url }}" alt="{{ settings.base.HeaderSettings.site_title|default:'Логотип сайта' }}" class="w-full h-full object-cover">
           </div>
         {% endif %}
         <div>
-          {% if settings.base.HeaderSettings.site_title %}<h1 class="font-bold text-xl text-gray-900 transition-transform duration-200 group-hover:scale-105">{{ settings.base.HeaderSettings.site_title }}</h1>{% endif %}
-          {% if settings.base.HeaderSettings.site_subtitle %}<p class="text-sm text-gray-600">{{ settings.base.HeaderSettings.site_subtitle }}</p>{% endif %}
+          {% if settings.base.HeaderSettings.site_title %}<h1 class="font-bold text-xl text-white">{{ settings.base.HeaderSettings.site_title }}</h1>{% endif %}
+          {% if settings.base.HeaderSettings.site_subtitle %}<p class="text-sm text-white">{{ settings.base.HeaderSettings.site_subtitle }}</p>{% endif %}
         </div>
       </a>
 
@@ -25,7 +25,7 @@
             <div class="relative group" data-menu-index="{{ forloop.counter0 }}">
               {% if item.value.page_link %}
                 <a href="{{ item.value.href|default:item.value.page_link.url|default:'#' }}" 
-                   class="flex items-center text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 py-2 menu-item"
+                   class="flex items-center text-white hover:text-blue-600 font-medium transition-colors duration-200 py-2 menu-item"
                    data-has-submenu="{% if item.value.submenu %}true{% else %}false{% endif %}">
                   {{ item.value.name }}
                   {% if item.value.submenu %}
@@ -36,7 +36,7 @@
                 </a>
               {% else %}
                 <a href="{{ item.value.href|default:'#' }}" 
-                   class="flex items-center text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200 py-2 menu-item"
+                   class="flex items-center text-white hover:text-blue-600 font-medium transition-colors duration-200 py-2 menu-item"
                    data-has-submenu="{% if item.value.submenu %}true{% else %}false{% endif %}">
                   {{ item.value.name }}
                   {% if item.value.submenu %}
@@ -49,9 +49,9 @@
               
               <!-- Подменю -->
               {% if item.value.submenu %}
-                <div class="absolute top-full left-0 bg-white shadow-lg rounded-lg mt-2 py-2 w-48 z-50 submenu hidden">
+                <div class="absolute top-full left-0 bg-white shadow-lg rounded-lg mt-2 py-2 w-48 z-50 submenu hidden group-hover:block">
                   {% for sub in item.value.submenu %}
-                    <a href="{{ sub.href|default:sub.page_link.url|default:'#' }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+                    <a href="{{ sub.href|default:sub.page_link.url|default:'#' }}" class="block px-4 py-2 text-white hover:bg-blue-50 hover:text-blue-600 rounded transition-colors duration-200">
                       {{ sub.name }}
                     </a>
                   {% endfor %}
@@ -63,14 +63,14 @@
 
         <!-- CTA Button -->
         {% if settings.base.HeaderSettings.consultation_button_text %}
-          <a href="#contact" class="bg-gradient-to-r from-red-600 to-gray-700 hover:from-red-700 hover:to-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200">
+          <a href="#contact" class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200">
             {{ settings.base.HeaderSettings.consultation_button_text }}
           </a>
         {% endif %}
       </nav>
 
       <!-- Mobile Menu Button -->
-      <button class="lg:hidden text-gray-700 transition-transform duration-200 hover:scale-110" onclick="toggleMobileMenu()">
+      <button class="lg:hidden text-gray-700 transition-colors duration-200 hover:text-blue-600" onclick="toggleMobileMenu()">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
         </svg>
@@ -96,7 +96,7 @@
               {% if item.value.submenu %}
                 <div class="pl-4 mt-2 space-y-2">
                   {% for sub in item.value.submenu %}
-                    <a href="{{ sub.href|default:sub.page_link.url|default:'#' }}" class="block text-gray-700 hover:text-blue-600 py-1">
+                    <a href="{{ sub.href|default:sub.page_link.url|default:'#' }}" class="block text-gray-700 hover:text-blue-600 hover:bg-blue-50 py-2 px-3 rounded transition-colors duration-200">
                       {{ sub.name }}
                     </a>
                   {% endfor %}
@@ -111,7 +111,7 @@
           </div>
         {% endif %}
         {% if settings.base.HeaderSettings.consultation_button_text %}
-          <a href="#contact" class="bg-gradient-to-r from-red-600 to-gray-700 text-white px-6 py-3 rounded-lg font-medium mt-2 flex items-center justify-center space-x-2">
+          <a href="#contact" class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-6 py-3 rounded-lg font-medium mt-2 flex items-center justify-center space-x-2">
             <span>{{ settings.base.HeaderSettings.consultation_button_text }}</span>
           </a>
         {% endif %}
@@ -179,13 +179,12 @@ function closeMobileMenu() {
   mobileMenu.classList.add('hidden');
 }
 
-// Инициализация при загрузке страницы
+// Динамическая проверка скролла
 document.addEventListener('DOMContentLoaded', function() {
   setupMenuHover();
   
-  // Обработчик скролла для изменения стиля хедера
+  const header = document.getElementById('header');
   window.addEventListener('scroll', function() {
-    const header = document.getElementById('header');
     if (window.scrollY > 50) {
       header.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-lg');
     } else {

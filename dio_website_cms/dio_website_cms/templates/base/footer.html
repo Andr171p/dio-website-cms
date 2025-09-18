@@ -18,11 +18,11 @@
             {% endif %}
             <div>
               <h3 class="font-bold text-xl">{{ settings.base.HeaderSettings.site_title|default:"ДИО-Консалт" }}</h3>
-              <p class="text-gray-400 text-sm">Официальный партнер 1С</p>
+              <p class="text-white text-sm">Официальный партнер 1С</p>
             </div>
           </div>
           
-          <p class="text-gray-400 leading-relaxed mb-6">
+          <p class="text-white leading-relaxed mb-6">
             Более 15 лет мы помогаем компаниям автоматизировать бизнес-процессы 
             и повышать эффективность работы с помощью современных IT-решений.
           </p>
@@ -30,7 +30,7 @@
           <!-- Contact Info -->
           <div class="space-y-3">
             {% if settings.base.FooterSettings.company_address %}
-            <div class="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors duration-200">
+            <div class="flex items-center space-x-3 text-white hover:text-white transition-colors duration-200">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -39,7 +39,7 @@
             </div>
             {% endif %}
             {% if settings.base.FooterSettings.working_hours %}
-            <div class="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors duration-200">
+            <div class="flex items-center space-x-3 text-white hover:text-white transition-colors duration-200">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
@@ -54,7 +54,7 @@
               {% for social in settings.base.FooterSettings.social_links %}
                 <a
                   href="{{ social.value.href }}"
-                  class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110"
+                  class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-white hover:text-white transition-colors duration-200 hover:scale-110"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -94,7 +94,7 @@
               <ul class="space-y-3">
                 {% for link in item.value.links %}
                   <li>
-                    <a href="{{ link.href|default:'#' }}" class="text-gray-400 hover:text-white transition-colors duration-200">
+                    <a href="{{ link.href|default:'#' }}" class="text-white hover:text-white transition-colors duration-200">
                       
                       {{link.text}}
                     </a>
@@ -113,7 +113,7 @@
               <ul class="space-y-3">
                 {% for link in item.value.links %}
                   <li>
-                    <a href="{{ link.value.href|default:'#' }}" class="text-gray-400 hover:text-white transition-colors duration-200">
+                    <a href="{{ link.value.href|default:'#' }}" class="text-white hover:text-white transition-colors duration-200">
                       {{ link.value.text }}
                     </a>
                   </li>
@@ -131,7 +131,7 @@
               <ul class="space-y-3">
                 {% for link in item.value.links %}
                   <li>
-                    <a href="{{ link.value.href|default:'#' }}" class="text-gray-400 hover:text-white transition-colors duration-200">
+                    <a href="{{ link.value.href|default:'#' }}" class="text-white hover:text-white transition-colors duration-200">
                       {{ link.value.text }}
                     </a>
                   </li>
@@ -148,10 +148,10 @@
   <div class="border-t border-gray-800 py-6">
     <div class="container mx-auto px-6">
       <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-        <div class="text-gray-400 text-sm">
+        <div class="text-white text-sm">
           {{ settings.base.FooterSettings.copyright_text|default:"© 2025 Все права защищены" }}
         </div>
-        <div class="flex space-x-6 text-sm text-gray-400">
+        <div class="flex space-x-6 text-sm text-white">
           <a href="/privacy-policy/" class="hover:text-white transition-colors duration-200">Политика конфиденциальности</a>
           <a href="/terms/" class="hover:text-white transition-colors duration-200">Пользовательское соглашение</a>
           <a href="/sitemap/" class="hover:text-white transition-colors duration-200">Карта сайта</a>
