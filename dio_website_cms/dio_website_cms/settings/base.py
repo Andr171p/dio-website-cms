@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "news",
     "services",
     "solutions",
+    "chat",
     # Установленные приложения
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
