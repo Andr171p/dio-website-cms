@@ -1,31 +1,17 @@
-from typing import ClassVar
-
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from .serializers import ChatMessageSerializer
-from .storage import get_history_chat, save_messages
-
-
-def get_response(payload: dict) -> dict:
-    # response = requests.post(
-    #     url=f"/api/v1/chat/{payload['id']}/completion", json=payload, timeout=5
-    # )
-
-    # result = response.json()
-    # if response.status_code != 200:
-    #     raise Exception(f"API returned status {response.status_code}: {response.text}")
-    # return result
-    return {
-        "id": payload["id"],
-        "role": "ai",
-        "content": "hi",
-    }
+from .rest import add_document, delete_document, get_ai_response, upload_document
+from .serializers import AddDocumentSerializer, ChatMessageSerializer, DeleteDocumentSerializer
 
 
-def get_content(request) -> list | dict:
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def chat(request) -> Response:
     serializer = ChatMessageSerializer(data=request.data)
 
     if not serializer.is_valid():
@@ -38,28 +24,47 @@ def get_content(request) -> list | dict:
     content = serializer.validated_data["content"]
     payload = {"id": session_id, "role": "human", "content": content}
 
-    api_response = get_response(payload)
-    save_messages([payload, api_response], session_id)
+    api_response = get_ai_response(payload)
 
-    return get_history_chat(session_id)
+    return Response(api_response, status=status.HTTP_200_OK)
 
 
-class ChatView(APIView):
-    permission_classes: ClassVar[list] = [IsAuthenticated]
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def add_document_(request) -> Response:
+    serializer = AddDocumentSerializer(data=request.data)
 
-    def post(self, request) -> Response:  # noqa: PLR6301
-        serializer = ChatMessageSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(
+            {"error": "Invalid input", "details": serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    text = serializer.validated_data["text"]
+    return Response(add_document(text), status=status.HTTP_201_CREATED)
 
-        if not serializer.is_valid():
-            return Response(
-                {"error": "Invalid input", "details": serializer.errors},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
-        session_id = request.COOKIES.get("sessionid")
-        content = serializer.validated_data["content"]
-        payload = {"id": session_id, "role": "human", "content": content}
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def upload_document_(request) -> Response:
+    if "file" not in request.FILES:
+        return Response({"error": "No file provided"}, status=status.HTTP_400_BAD_REQUEST)
+    file_obj = request.FILES["file"]
 
-        api_response = get_response(payload)
+    return Response(upload_document(file_obj), status=status.HTTP_201_CREATED)
 
-        return Response(api_response, status=status.HTTP_200_OK)
+
+@csrf_exempt
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_document_(request) -> Response:
+    serializer = DeleteDocumentSerializer(data=request.data)
+
+    if not serializer.is_valid():
+        return Response(
+            {"error": "Invalid input", "details": serializer.errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    ids = serializer.validated_data["ids"]
+    return Response(delete_document(ids), status=status.HTTP_204_NO_CONTENT)

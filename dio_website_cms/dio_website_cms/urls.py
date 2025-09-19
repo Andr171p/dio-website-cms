@@ -1,4 +1,4 @@
-from chat.views import ChatView
+from chat import views
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
@@ -13,7 +13,10 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("settings/", include("wagtail.contrib.settings.urls")),
-    path("chat/", ChatView.as_view(), name="chat"),
+    path("chat/", views.chat, name="chat"),
+    path("documents/", views.add_document_, name="add document"),
+    path("documents/upload/", views.upload_document_, name="upload document"),
+    path("documents/", views.delete_document_, name="delete document"),
     path("", include("wagtail.urls")),
 ]
 
