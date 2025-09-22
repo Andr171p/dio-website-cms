@@ -14,9 +14,9 @@ urlpatterns = [
     path("search/", search_views.search, name="search"),
     path("settings/", include("wagtail.contrib.settings.urls")),
     path("chat/", views.chat, name="chat"),
-    path("documents/", views.add_document_, name="add document"),
+    path("documents/add/", views.add_document_, name="add document"),
     path("documents/upload/", views.upload_document_, name="upload document"),
-    path("documents/", views.delete_document_, name="delete document"),
+    path("documents/delete/", views.delete_document_, name="delete document"),
     path("", include("wagtail.urls")),
 ]
 

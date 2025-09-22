@@ -11,7 +11,7 @@ class ChatMessageSerializer(serializers.Serializer):
 
 
 class AddDocumentSerializer(serializers.Serializer):
-    text = serializers.DictField(required=True)
+    text = serializers.CharField(required=True)
 
     class Meta:
         fields: ClassVar[list] = ["text"]

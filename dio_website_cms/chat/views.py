@@ -1,6 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, parser_classes, permission_classes
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -46,6 +47,7 @@ def add_document_(request) -> Response:
 
 @csrf_exempt
 @api_view(["POST"])
+@parser_classes([MultiPartParser, FormParser])
 @permission_classes([IsAuthenticated])
 def upload_document_(request) -> Response:
     if "file" not in request.FILES:
