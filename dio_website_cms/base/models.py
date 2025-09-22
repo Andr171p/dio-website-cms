@@ -3,83 +3,190 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel, PublishingPanel
 from wagtail.contrib.settings.models import BaseGenericSetting, register_setting
 from wagtail import blocks
 from wagtail.fields import StreamField, RichTextField
-from wagtail.blocks import PageChooserBlock, CharBlock
+from wagtail.blocks import  PageChooserBlock, CharBlock, URLBlock, TextBlock, StructBlock, ListBlock, ChoiceBlock, BooleanBlock
 from wagtail.models import DraftStateMixin, RevisionMixin, PreviewableMixin,Page
 
 # ========== HEADER SETTINGS ==========
 @register_setting
 class HeaderSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGenericSetting):
     """Настройки хедера сайта"""
+
+    class Meta:
+        verbose_name = "Настройки хедера"
+        verbose_name_plural = "Настройки хедеров"
+
+    # Основные поля
     logo = models.ForeignKey(
-        "wagtailimages.Image",
+        'wagtailimages.Image',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="+",
-        verbose_name="Логотип сайта",
-        help_text="Логотип для header. Рекомендуемый размер: 40x40px"
+        related_name='+',
+        help_text='Логотип сайта (рекомендуемый размер: 40x40px)'
     )
     site_title = models.CharField(
-        max_length=100,
+        max_length=255,
         blank=True,
-        verbose_name="Название сайта",
-        help_text="Название, которое отображается в header"
-    )
-    site_subtitle = models.CharField(
-        max_length=100,
-        blank=True,
-        verbose_name="Подзаголовок сайта",
-        help_text="Подзаголовок, отображаемый под названием сайта"
-    )
-    phone_number = models.CharField(
-        max_length=20,
-        blank=True,
-        verbose_name="Телефон",
-        help_text="Основной телефон для связи"
-    )
-    email = models.EmailField(
-        blank=True,
-        verbose_name="Email",
-        help_text="Основной email для связи"
+        default='',
+        help_text='Название сайта, отображаемое рядом с логотипом'
     )
     consultation_button_text = models.CharField(
-        max_length=50,
-        blank=True,
-        verbose_name="Текст кнопки консультации",
-        help_text="Текст для кнопки консультации",
-        default="Консультация"
+        max_length=255,
+        default='Оставить заявку',
+        help_text='Текст кнопки консультации'
     )
-    
-    # Навигационное меню с подменю
+    consultation_button_url = models.URLField(
+        blank=True,
+        help_text='URL для кнопки консультации'
+    )
+
+    # Поле для элементов навигации (StreamField)
     nav_items = StreamField([
-        ("nav_item", blocks.StructBlock([
-            ("name", blocks.CharBlock(max_length=50, label="Название пункта")),
-            ("href", blocks.CharBlock(max_length=100, label="Ссылка (например, /about или #contact)", blank=True)),
-            ("page_link", PageChooserBlock(label="Ссылка на страницу Wagtail", required=False)),
-            ("submenu", blocks.ListBlock(blocks.StructBlock([
-                ("name", blocks.CharBlock(max_length=50, label="Название подпункта")),
-                ("href", blocks.CharBlock(max_length=100, label="Ссылка подпункта", blank=True)),
-                ("page_link", PageChooserBlock(label="Ссылка на страницу Wagtail", required=False)),
-            ]), label="Подменю", blank=True, max_num=5)),
-        ], label="Пункт меню"))
-    ], blank=True, use_json_field=True, verbose_name="Пункты меню")
+        ('nav_item', StructBlock([
+            ('name', CharBlock(
+                max_length=255,
+                required=True,
+                label='Название пункта*',
+                help_text='Название пункта меню'
+            )),
+            ('page', PageChooserBlock(
+                required=False,
+                label='Страница',
+                help_text='Выберите страницу для ссылки'
+            )),
+            ('external_url', URLBlock(
+                required=False,
+                label='Внешняя ссылка',
+                help_text='Укажите внешний URL, если страница не выбрана'
+            )),
+            ('menu_type', ChoiceBlock(
+                choices=[
+                    ('none', 'Без подменю'),
+                    ('simple', 'Простое подменю'),
+                    ('grouped', 'Группированное подменю с карточкой')
+                ],
+                default='none',
+                label='Тип меню*',
+                help_text='Выберите тип подменю: без подменю, простое подменю или группированное подменю с карточкой'
+            )),
+            ('simple_dropdown_items', ListBlock(
+                StructBlock([
+                    ('name', CharBlock(
+                        max_length=255,
+                        required=True,
+                        label='Название подпункта*',
+                        help_text='Название подпункта'
+                    )),
+                    ('page', PageChooserBlock(
+                        required=False,
+                        label='Страница',
+                        help_text='Выберите страницу для ссылки'
+                    )),
+                    ('external_url', URLBlock(
+                        required=False,
+                        label='Внешняя ссылка',
+                        help_text='Укажите внешний URL, если страница не выбрана'
+                    ))
+                ]),
+                required=False,
+                label='Простые элементы подменю',
+                help_text='Используется, если выбран тип "Простое подменю"'
+            )),
+            ('dropdown_groups', ListBlock(
+                StructBlock([
+                    ('group_title', CharBlock(
+                        max_length=255,
+                        required=True,
+                        label='Название группы*',
+                        help_text='Например: Автоматизация бизнеса'
+                    )),
+                    ('items', ListBlock(
+                        StructBlock([
+                            ('name', CharBlock(
+                                max_length=255,
+                                required=True,
+                                label='Название подпункта*',
+                                help_text='Название подпункта'
+                            )),
+                            ('page', PageChooserBlock(
+                                required=False,
+                                label='Страница',
+                                help_text='Выберите страницу для ссылки'
+                            )),
+                            ('external_url', URLBlock(
+                                required=False,
+                                label='Внешняя ссылка',
+                                help_text='Укажите внешний URL, если страница не выбрана'
+                            )),
+                            ('description', TextBlock(
+                                required=False,
+                                label='Описание',
+                                help_text='Краткое описание подпункта'
+                            )),
+                            ('icon_svg', TextBlock(
+                                required=False,
+                                label='SVG код иконки',
+                                help_text='Вставьте SVG код для иконки'
+                            ))
+                        ]),
+                        required=False,
+                        label='Элементы подменю'
+                    ))
+                ]),
+                required=False,
+                label='Группы выпадающего меню',
+                help_text='Используется, если выбран тип "Группированное подменю"',
+                max_num=3  # Ограничение до 3 групп
+            )),
+            ('card_link', StructBlock([
+                ('enabled', blocks.BooleanBlock(
+                    default=False,
+                    required=False,
+                    label='Включить карточку',
+                    help_text='Включить карточку ссылки'
+                )),
+                ('title', CharBlock(
+                    max_length=255,
+                    required=False,
+                    label='Название карточки',
+                    help_text='Название карточки'
+                )),
+                ('description', TextBlock(
+                    required=False,
+                    label='Описание карточки',
+                    help_text='Описание карточки'
+                )),
+                ('page', PageChooserBlock(
+                    required=False,
+                    label='Страница',
+                    help_text='Выберите страницу для ссылки'
+                )),
+                ('external_url', URLBlock(
+                    required=False,
+                    label='Внешняя ссылка',
+                    help_text='Укажите внешний URL, если страница не выбрана'
+                )),
+                ('button_text', CharBlock(
+                    max_length=255,
+                    default='Подробнее',
+                    required=False,
+                    label='Текст кнопки*',
+                    help_text='Текст кнопки на карточке'
+                ))
+            ], required=False, label='Карточка ссылки'))
+        ], icon='list-ul', label='Пункт меню'))
+    ], use_json_field=True, blank=True, null=True)
 
     panels = [
         MultiFieldPanel([
             FieldPanel("logo"),
             FieldPanel("site_title"),
-            FieldPanel("site_subtitle"),
-            FieldPanel("phone_number"),
-            FieldPanel("email"),
             FieldPanel("consultation_button_text"),
+            FieldPanel("consultation_button_url"),
             FieldPanel("nav_items"),
         ], heading="Основные настройки header"),
-        PublishingPanel(),  # Добавляем панель публикации
+        PublishingPanel(),
     ]
-
-    class Meta:
-        verbose_name = "Настройки хедера"
-        verbose_name_plural = "Настройки хедеров"
 
     def get_preview_template(self, request, mode_name):
         return "base.html"

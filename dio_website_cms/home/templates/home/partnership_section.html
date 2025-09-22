@@ -1,0 +1,33 @@
+<!-- home/templates/home/partnership_section.html -->
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% if page.partnership_section %}
+    {% for block in page.partnership_section %}
+        {% if block.block_type == 'partnership' %}
+            <section class="section">
+                <div class="container">
+                    <div class="w-layout-grid grid_2-col gap-xxlarge mobile-l-1-col">
+                        <div id="w-node-{{ block.id }}-header" class="header margin-bottom_none">
+                            <h3 class="heading_h3">{{ block.value.headline }}</h3>
+                            <p class="subheading">{{ block.value.subheadline }}</p>
+                        </div>
+                        <div class="w-layout-grid grid_3-col is-y-center gap-small">
+                            {% for logo in block.value.logos %}
+                                <div class="logo logo-massive">
+                                    {% image logo.logo width-300 height-150 as img %}
+                                    {% if logo.link %}
+                                        <a href="{{ logo.link }}" target="_blank" rel="noopener" style="display: inline-block;">
+                                            <img src="{{ img.url }}" width="800" height="50" alt="Partner logo" class="image_cover">
+                                        </a>
+                                    {% else %}
+                                        <img src="{{ img.url }}" width="80" height="50" alt="Partner logo" class="image_cover">
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% endfor %}
+{% endif %}

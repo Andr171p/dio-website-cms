@@ -188,19 +188,19 @@ td, th {
 }
 
 .w-icon-slider-right:before {
-  content: "⤵";
+  content: "";
 }
 
 .w-icon-slider-left:before {
-  content: "⤵";
+  content: "";
 }
 
 .w-icon-nav-menu:before {
-  content: "⤵";
+  content: "";
 }
 
 .w-icon-arrow-down:before, .w-icon-dropdown-toggle:before {
-  content: "⤵";
+  content: "";
 }
 
 .w-icon-file-upload-remove:before {
@@ -373,7 +373,7 @@ pre.w-code-block code {
   visibility: unset !important;
   opacity: 1 !important;
   vertical-align: middle !important;
-  display: inline-block !important;
+  display: none !important;
 }
 
 h1, h2, h3, h4, h5, h6 {

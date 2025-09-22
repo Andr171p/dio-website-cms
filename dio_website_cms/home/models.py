@@ -11,35 +11,10 @@ from wagtail import blocks
 from news.models import NewsBlock
 from .blocks import ContactsBlock, FeedbackFormBlock
 
-MAX_HEADLINE_LENGTH = 100
+MAX_HEADLINE_LENGTH = 500
 MAX_SUBHEADLINE_LENGTH = 250
 
-# Блок для слайдов hero-секции
-class HeroSlideBlock(blocks.StructBlock):
-    """Блок для слайдов hero-секции"""
-    headline = blocks.CharBlock(
-        max_length=MAX_HEADLINE_LENGTH,
-        required=True,
-        label="Заголовок слайда"
-    )
-    subheadline = blocks.CharBlock(
-        max_length=MAX_SUBHEADLINE_LENGTH,
-        required=False,
-        label="Подзаголовок слайда"
-    )
-    background_image = ImageChooserBlock(
-        required=True,
-        label="Фоновое изображение",
-        help_text="Рекомендуемый размер: 1920x1080px"
-    )
-    link = blocks.PageChooserBlock(
-        required=False,
-        label="Ссылка слайда"
-    )
 
-    class Meta:
-        icon = 'image'
-        label = "Слайд героя"
 
 # Блок для отображения кейсов на главной
 class CaseStudyBlock(blocks.StructBlock):
@@ -188,9 +163,125 @@ class AchievementBlock(blocks.StructBlock):
         icon = 'star'
         label = "Достижение"
 
+# Блок для слайдов hero-секции
+class HeroSlideBlock(blocks.StructBlock):
+    """Блок для слайдов hero-секции с несколькими изображениями"""
+    headline = blocks.CharBlock(
+        max_length=MAX_HEADLINE_LENGTH,
+        required=True,
+        label="Заголовок слайда"
+    )
+    subheadline = blocks.CharBlock(
+        max_length=MAX_SUBHEADLINE_LENGTH,
+        required=False,
+        label="Подзаголовок слайда"
+    )
+    images = blocks.ListBlock(
+        ImageChooserBlock(
+            required=True,
+            label="Изображение",
+            help_text="Рекомендуемый размер: 1920x1080px"
+        ),
+        min_num=1,
+        max_num=3,
+        label="Изображения слайда (до 3)",
+        help_text="Добавьте до 3 изображений для разных видов: фон, команда, индивидуальное использование"
+    )
+    link = blocks.PageChooserBlock(
+        required=False,
+        label="Ссылка слайда"
+    )
+
+    class Meta:
+        icon = 'image'
+        label = "Слайд героя"
+
+# Блок для кнопок
+class ButtonBlock(blocks.StructBlock):
+    """Блок для кнопок в header"""
+    text = blocks.CharBlock(
+        max_length=50,
+        required=True,
+        label="Текст кнопки"
+    )
+    url = blocks.URLBlock(
+        required=True,
+        label="Ссылка кнопки"
+    )
+    is_secondary = blocks.BooleanBlock(
+        required=False,
+        default=False,
+        label="Вторичная кнопка"
+    )
+
+    class Meta:
+        icon = 'link'
+        label = "Кнопка"
+
+# Блок для header-секции
+class HeaderBlock(blocks.StructBlock):
+    """Блок для hero-секции с каруселью"""
+    slides = blocks.StreamBlock([
+        ("slide", HeroSlideBlock()),
+    ], required=True, label="Слайды")
+    buttons = blocks.ListBlock(
+        ButtonBlock(),
+        required=False,
+        label="Кнопки"
+    )
+
+    class Meta:
+        icon = 'view'
+        label = "Header (Hero Section)"
+
+# Блок для логотипов партнёров
+class PartnerLogoBlock(blocks.StructBlock):
+    """Блок для логотипа партнёра"""
+    logo = ImageChooserBlock(
+        required=True,
+        label="Логотип партнёра",
+        help_text="Рекомендуемый размер: 54x16px"
+    )
+    link = blocks.URLBlock(
+        required=False,
+        label="Ссылка на партнёра"
+    )
+
+    class Meta:
+        icon = 'image'
+        label = "Логотип партнёра"
+
+# Блок для секции партнёрств
+class PartnershipBlock(blocks.StructBlock):
+    """Блок для секции с партнёрствами"""
+    headline = blocks.CharBlock(
+        max_length=MAX_HEADLINE_LENGTH,
+        required=True,
+        label="Заголовок секции"
+    )
+    subheadline = blocks.CharBlock(
+        max_length=MAX_SUBHEADLINE_LENGTH,
+        required=True,
+        label="Подзаголовок секции"
+    )
+    logos = blocks.ListBlock(
+        PartnerLogoBlock(),
+        min_num=1,
+        max_num=6,
+        label="Логотипы партнёров",
+        help_text="Добавьте до 6 логотипов"
+    )
+
+    class Meta:
+        icon = 'group'
+        label = "Секция партнёрств"
+
 # Обновлённая HomePage
 class HomePage(Page):
-    """Лендинг сайта, главная страница с каруселью"""
+    """Лендинг сайта, главная страница с каруселью и header"""
+    header_section = StreamField([
+        ("header", HeaderBlock(label="Header секция"))
+    ], blank=True, use_json_field=True, verbose_name="Header секция")
     hero_slides = StreamField([
         ("slide", HeroSlideBlock(label="Слайд"))
     ], blank=True, use_json_field=True, verbose_name="Слайды героя")
@@ -210,8 +301,14 @@ class HomePage(Page):
     awards = StreamField([
         ("achievement", AchievementBlock())
     ], blank=True, use_json_field=True, verbose_name="Награды и достижения")
+    partnership_section = StreamField([
+        ("partnership", PartnershipBlock(label="Секция партнёрств"))
+    ], blank=True, use_json_field=True, verbose_name="Секция партнёрств")
 
     content_panels = Page.content_panels + [
+        MultiFieldPanel([
+            FieldPanel("header_section"),
+        ], heading="Header секция"),
         MultiFieldPanel([
             FieldPanel("hero_slides"),
         ], heading="Главная карусель"),
@@ -230,15 +327,20 @@ class HomePage(Page):
         MultiFieldPanel([
             FieldPanel("awards"),
         ], heading="Награды и достижения"),
+        MultiFieldPanel([
+            FieldPanel("partnership_section"),
+        ], heading="Секция партнёрств"),
     ]
 
     api_fields = [
+        APIField("header_section"),
         APIField("hero_slides"),
         APIField("case_study_section"),
         APIField("achievements"),
         APIField("partners"),
         APIField("certificates"),
         APIField("awards"),
+        APIField("partnership_section"),
     ]
 
     def get_cases(self, count=6):
@@ -249,25 +351,22 @@ class HomePage(Page):
     def get_context(self, request, *args, **kwargs):
         from cases.models import CaseStudyPage
         
-        # Получаем последние опубликованные кейсы
         context = super().get_context(request, *args, **kwargs)
         context['cases'] = self.get_cases()
 
-        # Получаем все отрасли для фильтров
         try:
             from cases.models import INDUSTRY_CHOICES
             context['INDUSTRY_CHOICES'] = INDUSTRY_CHOICES
         except (ImportError, Exception):
             context['INDUSTRY_CHOICES'] = []
 
-        # Разделяем достижения для отображения
         context["main_achievements"] = [block for block in self.achievements if block.block_type == "main_achievement"]
         context["additional_achievements"] = [block for block in self.achievements if block.block_type == "additional_achievement"]
 
-        # Добавляем данные из новых блоков
         context["partners"] = self.partners
         context["certificates"] = self.certificates
         context["awards"] = self.awards
+        context["partnership_section"] = self.partnership_section
 
         return context
 
