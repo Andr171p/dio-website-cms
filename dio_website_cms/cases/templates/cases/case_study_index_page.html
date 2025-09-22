@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-{% block extra_head %}
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-{% endblock %}
+
 
 {% block content %}
 <section id="cases-section" class="bg-gradient-to-b from-blue-900 to-blue-800 text-white py-24">
@@ -123,11 +121,9 @@
         
     </div>
 </section>
-<!-- 
+
 <style>
-body {
-    font-family: 'Inter', sans-serif;
-}
+
 .prose h1, h1 {
     font-weight: 700;
 }
@@ -167,4 +163,4 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-animate]:not([data-animated])").forEach(item => observer.observe(item));
 });
 </script>
-{% endblock %} -->
+{% endblock %}
