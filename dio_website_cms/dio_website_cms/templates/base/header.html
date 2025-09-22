@@ -1,63 +1,113 @@
 {% load wagtailcore_tags wagtailimages_tags wagtailsettings_tags static %}
 
-<header class="fixed top-0 w-full z-50 transition-all duration-300 bg-gradient-to-r from-red-700 to-gray-800" id="header">
+<header class="fixed top-0 w-full z-50 transition-all duration-300 bg-gradient-to-br from-gray-900 to-blue-800" id="header">
   <div class="container mx-auto px-6 py-4">
-    <div class="flex items-center justify-between">
-      <!-- Logo -->
-      {% get_settings use_default_site=True as settings %}
-      <a href="/" class="flex items-center space-x-3">
-        {% if settings.base.HeaderSettings.logo %}
-          {% image settings.base.HeaderSettings.logo width-40 as logo %}
-          <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-            <img src="{{ logo.url }}" alt="{{ settings.base.HeaderSettings.site_title|default:'Логотип сайта' }}" class="w-full h-full object-cover">
-          </div>
-        {% endif %}
-        <div>
-          {% if settings.base.HeaderSettings.site_title %}<h1 class="font-bold text-xl text-white">{{ settings.base.HeaderSettings.site_title }}</h1>{% endif %}
-          {% if settings.base.HeaderSettings.site_subtitle %}<p class="text-sm text-white">{{ settings.base.HeaderSettings.site_subtitle }}</p>{% endif %}
-        </div>
-      </a>
-
-      <!-- Desktop Navigation -->
-      <nav class="hidden lg:flex items-center space-x-8 relative" id="desktop-menu">
+    <div class="flex items-center justify-between relative">
+      <!-- Левая часть навигации -->
+      <nav class="hidden lg:flex items-center space-x-8 relative flex-1 justify-start" id="desktop-menu-left">
         {% if settings.base.HeaderSettings.nav_items %}
           {% for item in settings.base.HeaderSettings.nav_items %}
-            <div class="relative group" data-menu-index="{{ forloop.counter0 }}">
-              {% if item.value.page_link %}
-                <a href="{{ item.value.href|default:item.value.page_link.url|default:'#' }}" 
-                   class="flex items-center text-white hover:text-blue-600 font-medium transition-colors duration-200 py-2 menu-item"
-                   data-has-submenu="{% if item.value.submenu %}true{% else %}false{% endif %}">
-                  {{ item.value.name }}
-                  {% if item.value.submenu %}
-                    <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                    </svg>
-                  {% endif %}
-                </a>
-              {% else %}
-                <a href="{{ item.value.href|default:'#' }}" 
-                   class="flex items-center text-white hover:text-blue-600 font-medium transition-colors duration-200 py-2 menu-item"
-                   data-has-submenu="{% if item.value.submenu %}true{% else %}false{% endif %}">
-                  {{ item.value.name }}
-                  {% if item.value.submenu %}
-                    <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                    </svg>
-                  {% endif %}
-                </a>
-              {% endif %}
-              
-              <!-- Подменю -->
-              {% if item.value.submenu %}
-                <div class="absolute top-full left-0 bg-white shadow-lg rounded-lg mt-2 py-2 w-48 z-50 submenu hidden group-hover:block">
-                  {% for sub in item.value.submenu %}
-                    <a href="{{ sub.href|default:sub.page_link.url|default:'#' }}" class="block px-4 py-2 text-black hover:bg-blue-50 hover:text-blue-600 rounded transition-colors duration-200">
-                      {{ sub.name }}
-                    </a>
-                  {% endfor %}
-                </div>
-              {% endif %}
+            {% if forloop.counter0|divisibleby:2 %} {# Четные элементы слева #}
+              <div class="relative group" data-menu-index="{{ forloop.counter0 }}">
+                {% if item.value.page_link %}
+                  <a href="{{ item.value.href|default:item.value.page_link.url|default:'#' }}" 
+                     class="flex items-center text-white hover:text-blue-600 font-medium transition-colors duration-200 py-2 menu-item"
+                     data-has-submenu="{% if item.value.submenu %}true{% else %}false{% endif %}">
+                    {{ item.value.name }}
+                    {% if item.value.submenu %}
+                      <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                      </svg>
+                    {% endif %}
+                  </a>
+                {% else %}
+                  <a href="{{ item.value.href|default:'#' }}" 
+                     class="flex items-center text-white hover:text-blue-600 font-medium transition-colors duration-200 py-2 menu-item"
+                     data-has-submenu="{% if item.value.submenu %}true{% else %}false{% endif %}">
+                    {{ item.value.name }}
+                    {% if item.value.submenu %}
+                      <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                      </svg>
+                    {% endif %}
+                  </a>
+                {% endif %}
+                
+                <!-- Подменю -->
+                {% if item.value.submenu %}
+                  <div class="absolute top-full left-0 bg-white shadow-lg rounded-lg mt-2 py-2 w-48 z-50 submenu hidden group-hover:block">
+                    {% for sub in item.value.submenu %}
+                      <a href="{{ sub.href|default:sub.page_link.url|default:'#' }}" class="block px-4 py-2 text-black hover:bg-blue-50 hover:text-blue-600 rounded transition-colors duration-200">
+                        {{ sub.name }}
+                      </a>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </nav>
+
+      <!-- Logo в центре -->
+      {% get_settings use_default_site=True as settings %}
+      <div class="absolute left-1/2 transform -translate-x-1/2 z-10">
+        <a href="/" class="flex items-center space-x-3">
+          {% if settings.base.HeaderSettings.logo %}
+            {% image settings.base.HeaderSettings.logo width-254 height-928 as logo %}
+            <div class="w-75 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
+              <img src="{{ logo.url }}" alt="{{ settings.base.HeaderSettings.site_title|default:'Логотип сайта' }}" class="w-full h-full object-cover">
             </div>
+          {% endif %}
+          <div>
+            {% if settings.base.HeaderSettings.site_title %}<h1 class="font-bold text-xl text-red-600">{{ settings.base.HeaderSettings.site_title }}</h1>{% endif %}
+            {% if settings.base.HeaderSettings.site_subtitle %}<p class="text-sm text-red-600">{{ settings.base.HeaderSettings.site_subtitle }}</p>{% endif %}
+          </div>
+        </a>
+      </div>
+
+      <!-- Правая часть навигации -->
+      <nav class="hidden lg:flex items-center space-x-8 relative flex-1 justify-end" id="desktop-menu-right">
+        {% if settings.base.HeaderSettings.nav_items %}
+          {% for item in settings.base.HeaderSettings.nav_items %}
+            {% if not forloop.counter0|divisibleby:2 %} {# Нечетные элементы справа #}
+              <div class="relative group" data-menu-index="{{ forloop.counter0 }}">
+                {% if item.value.page_link %}
+                  <a href="{{ item.value.href|default:item.value.page_link.url|default:'#' }}" 
+                     class="flex items-center text-white hover:text-blue-600 font-medium transition-colors duration-200 py-2 menu-item"
+                     data-has-submenu="{% if item.value.submenu %}true{% else %}false{% endif %}">
+                    {{ item.value.name }}
+                    {% if item.value.submenu %}
+                      <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                      </svg>
+                    {% endif %}
+                  </a>
+                {% else %}
+                  <a href="{{ item.value.href|default:'#' }}" 
+                     class="flex items-center text-white hover:text-blue-600 font-medium transition-colors duration-200 py-2 menu-item"
+                     data-has-submenu="{% if item.value.submenu %}true{% else %}false{% endif %}">
+                    {{ item.value.name }}
+                    {% if item.value.submenu %}
+                      <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                      </svg>
+                    {% endif %}
+                  </a>
+                {% endif %}
+                
+                <!-- Подменю -->
+                {% if item.value.submenu %}
+                  <div class="absolute top-full right-0 bg-white shadow-lg rounded-lg mt-2 py-2 w-48 z-50 submenu hidden group-hover:block">
+                    {% for sub in item.value.submenu %}
+                      <a href="{{ sub.href|default:sub.page_link.url|default:'#' }}" class="block px-4 py-2 text-black hover:bg-blue-50 hover:text-blue-600 rounded transition-colors duration-200">
+                        {{ sub.name }}
+                      </a>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
           {% endfor %}
         {% endif %}
 
@@ -70,7 +120,7 @@
       </nav>
 
       <!-- Mobile Menu Button -->
-      <button class="lg:hidden text-gray-700 transition-colors duration-200 hover:text-blue-600" onclick="toggleMobileMenu()">
+      <button class="lg:hidden text-white transition-colors duration-200 hover:text-blue-600" onclick="toggleMobileMenu()">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
         </svg>
@@ -85,18 +135,18 @@
           {% for item in settings.base.HeaderSettings.nav_items %}
             <div>
               {% if item.value.page_link %}
-                <a href="{{ item.value.href|default:item.value.page_link.url|default:'#' }}" class="text-gray-700 hover:text-blue-600 font-medium text-left py-2 block">
+                <a href="{{ item.value.href|default:item.value.page_link.url|default:'#' }}" class="text-white hover:text-blue-600 font-medium text-left py-2 block">
                   {{ item.value.name }}
                 </a>
               {% else %}
-                <a href="{{ item.value.href|default:'#' }}" class="text-gray-700 hover:text-blue-600 font-medium text-left py-2 block">
+                <a href="{{ item.value.href|default:'#' }}" class="text-white hover:text-blue-600 font-medium text-left py-2 block">
                   {{ item.value.name }}
                 </a>
               {% endif %}
               {% if item.value.submenu %}
                 <div class="pl-4 mt-2 space-y-2">
                   {% for sub in item.value.submenu %}
-                    <a href="{{ sub.href|default:sub.page_link.url|default:'#' }}" class="block text-gray-700 hover:text-blue-600 hover:bg-blue-50 py-2 px-3 rounded transition-colors duration-200">
+                    <a href="{{ sub.href|default:sub.page_link.url|default:'#' }}" class="block text-white hover:text-blue-600 hover:bg-blue-900 py-2 px-3 rounded transition-colors duration-200">
                       {{ sub.name }}
                     </a>
                   {% endfor %}
@@ -106,7 +156,7 @@
           {% endfor %}
         {% endif %}
         {% if settings.base.HeaderSettings.phone_number %}
-          <div class="flex items-center space-x-2 py-2 text-gray-700">
+          <div class="flex items-center space-x-2 py-2 text-white">
             <span class="font-semibold">{{ settings.base.HeaderSettings.phone_number }}</span>
           </div>
         {% endif %}
@@ -124,7 +174,7 @@
 <script>
 let openSubmenu = null;
 let closeTimeout = null;
-const menuContainer = document.getElementById('desktop-menu');
+const menuContainer = document.getElementById('desktop-menu-left') || document.getElementById('desktop-menu-right');
 
 // Закрытие при клике вне меню
 document.addEventListener('mousedown', (event) => {

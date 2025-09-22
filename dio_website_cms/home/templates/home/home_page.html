@@ -5,162 +5,309 @@
 
 {% block extra_css %}
 <style>
-    /* Минимальные кастомные стили для карусели */
-    .hero-container {
-        position: relative !important;
-        height: 600px !important;
-        overflow: hidden !important;
-    }
-
-    .hero-carousel {
-        position: relative !important;
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    .hero-slide {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-        z-index: 1 !important;
-        transition: opacity 0.5s ease-in-out !important;
-    }
-
-    .hero-slide.active {
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        z-index: 10 !important;
-    }
-
-    .carousel-dot {
-        width: 12px !important;
-        height: 12px !important;
-        background-color: rgba(255, 255, 255, 0.7) !important;
-        opacity: 0.5 !important;
-        cursor: pointer !important;
-        border-radius: 50% !important;
-        transition: all 0.3s ease !important;
-    }
-
-    .carousel-dot.active {
-        opacity: 1 !important;
-        width: 24px !important;
-        height: 24px !important;
-    }
-
-    /* Стили для навигационных блоков */
-    .nav-block {
-        transition: all 0.3s ease;
+    /* Hero секция с космическим фоном */
+    .hero-section {
         position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: linear-gradient(135deg, #000000, #0a0a2a 40%, #000000);
     }
     
-    .nav-block:hover, .nav-block.active {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at center, rgba(10, 10, 40, 0.4) 0%, rgba(0, 0, 0, 0.8) 70%);
+        z-index: 2;
     }
     
-    /* Эффект затемнения как в основной карусели */
-    .nav-block.active::before {
-        content: '';
+    /* Космические элементы фона */
+    .cosmic-background {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    #stars-canvas {
         position: absolute;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(255, 255, 255, 0.6); /* Серый фон как в карусели */
-        z-index: 5;
-        border-radius: 0.75rem;
+        width: 100%;
+        height: 100%;
     }
-
-    .hero-content {
-        position: relative !important;
-        z-index: 20 !important;
-    }
-    .text-gold-500 { color: #FFD700; }
-    .gold-600 { color: #FFC107; }
     
-    /* Улучшение читаемости текста в навигационных блоках */
-    .nav-text {
-        color: #FFD700 !important;
-        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
-        font-weight: bold;
+    /* Параллакс слои */
+    .parallax-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+    
+    .layer-1 {
+        z-index: 3;
+    }
+    
+    .layer-2 {
+        z-index: 2;
+    }
+    
+    .layer-3 {
+        z-index: 1;
+    }
+    
+    /* Контент героя */
+    .hero-content {
         position: relative;
-        z-index: 10;
+        z-index: 20;
+        text-align: center;
+        max-width: 1200px;
+        padding: 2rem;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(to right, #ffffff, #aaccff, #4d94ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        line-height: 1.2;
+        text-shadow: 0 0 10px rgba(77, 148, 255, 0.5);
+    }
+    
+    @media (min-width: 768px) {
+        .hero-title {
+            font-size: 5rem;
+        }
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem;
+        color: #e2e8f0;
+        margin-bottom: 2.5rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+    
+    @media (min-width: 768px) {
+        .hero-subtitle {
+            font-size: 1.5rem;
+        }
+    }
+    
+    .accent-text {
+        color: #4d94ff;
+        text-shadow: 0 0 10px rgba(77, 148, 255, 0.7);
+    }
+    
+    /* Кнопки */
+    .hero-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    @media (min-width: 640px) {
+        .hero-buttons {
+            flex-direction: row;
+        }
+    }
+    
+    .btn-primary {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background: linear-gradient(to right, #4d78cc, #4d4dff);
+        color: white;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 15px rgba(77, 148, 255, 0.4);
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transform: rotate(45deg);
+        animation: shine 3s infinite;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 30px rgba(77, 148, 255, 0.7);
+    }
+    
+    .btn-secondary {
+        display: inline-block;
+        padding: 1rem 2rem;
+        border: 2px solid #4d94ff;
+        color: #4d94ff;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        background: transparent;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-shadow: 0 0 5px rgba(77, 148, 255, 0.3);
+        box-shadow: 0 0 10px rgba(77, 148, 255, 0.3);
+    }
+    
+    .btn-secondary:hover {
+        background-color: rgba(77, 148, 255, 0.1);
+        color: white;
+        box-shadow: 0 0 20px rgba(77, 148, 255, 0.5);
+    }
+    
+    @keyframes shine {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+    }
+    
+    /* Индикатор прокрутки */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #4d94ff;
+        cursor: pointer;
+        z-index: 30;
+    }
+    
+    .scroll-arrow {
+        animation: bounce 2s infinite;
+        filter: drop-shadow(0 0 5px rgba(77, 148, 255, 0.7));
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-10px);
+        }
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+    
+    /* Анимации появления */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    .animate-fade-in-up {
+        animation: fadeInUp 1s ease-out forwards;
+        opacity: 0;
+    }
+    
+    .animate-fade-in {
+        animation: fadeIn 1s ease-out forwards;
+        animation-delay: 0.5s;
+        opacity: 0;
+    }
+    
+    .animate-fade-in-delayed {
+        animation: fadeIn 1s ease-out forwards;
+        animation-delay: 1s;
+        opacity: 0;
+    }
+    
+    /* Параллакс секции */
+    .parallax-section {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .parallax-element {
+        position: absolute;
+        will-change: transform;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero секция -->
-<div class="hero-container mx-auto container pt-24 pr-5 pl-5">
-    <section class="hero relative w-full h-full flex items-start justify-start overflow-hidden rounded-xl ">
-        <!-- Основная карусель -->
-        <div class="hero-carousel w-full ">
-            {% for slide in page.hero_slides %}
-            <div class="hero-slide {% if forloop.first %}active{% endif %}">
-                {% image slide.value.background_image width-1920  as bg_img %}
-                <!-- Проверка загрузки изображения -->
-                {% if bg_img.url %}
-                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ bg_img.url }}');"></div>
-                {% else %}
-                <div class="absolute inset-0 bg-red-500 flex items-center justify-center text-white">
-                    Изображение не найдено
-                </div>
-                {% endif %}
-                <div class="absolute inset-0 bg-black bg-opacity-60 "></div>
-                
-                <div class="relative text-left max-w-4xl pl-6 py-12 hero-content">
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gold-500 mb-6 leading-tight">{{ slide.value.headline }}</h1>
-                    {% if slide.value.subheadline %}
-                    <div class="space-y-4 mb-8">
-                        <p class="text-lg md:text-xl text-white whitespace-pre-line">{{ slide.value.subheadline|safe }}</p>
-                    </div>
-                    {% endif %}
-                    {% if slide.value.link %}
-                    <a href="{{ slide.value.link.url }}" class="inline-block px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors duration-300">Подробнее</a>
-                    {% endif %}
-                </div>
-            </div>
-            {% empty %}
-            <div class="text-white text-center py-20">
-                <p class="text-lg">Нет слайдов для отображения.</p>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Навигационные точки -->
-        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex space-x-3 p-2 bg-black bg-opacity-30 rounded-full">
-            {% for slide in page.hero_slides %}
-            <button class="carousel-dot {% if forloop.first %}active{% endif %}" 
-                    data-slide="{{ forloop.counter0 }}"
-                    aria-label="Перейти к слайду {{ forloop.counter }}"></button>
-            {% endfor %}
-        </div>
-    </section>
-</div>
-
-<!-- Блоки навигации -->
-<div class="navigation-blocks container mx-auto pt-10 p-20">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {% for slide in page.hero_slides %}
-        {% image slide.value.background_image width-800 as thumb_img %}
-        <div class="nav-block cursor-pointer group {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}">
-            <div class="relative overflow-hidden rounded-xl h-48">
-                <img src="{{ thumb_img.url }}" alt="{{ slide.value.headline }}" 
-                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                     loading="lazy">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-black/20 to-transparent flex items-start p-4">
-                    <h3 class="text-red-800 text-lg md:text-xl font-bold mb-2 w-full text-left">{{ slide.value.headline }}</h3>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+<section id="hero" class="hero-section parallax-section">
+    <div class="hero-overlay"></div>
+    
+    <!-- Космический фон с Canvas -->
+    <div class="cosmic-background">
+        <canvas id="stars-canvas"></canvas>
+        
+        <!-- Слои для параллакса -->
+        <div class="parallax-layer layer-1" id="parallax-layer-1"></div>
+        <div class="parallax-layer layer-2" id="parallax-layer-2"></div>
+        <div class="parallax-layer layer-3" id="parallax-layer-3"></div>
     </div>
-</div>
+    
+    <div class="hero-content">
+        <h1 class="hero-title animate-fade-in-up">
+            РАСКРОЙТЕ
+            <br>
+            <span class="accent-text">КОСМИЧЕСКИЙ ПОТЕНЦИАЛ</span>
+        </h1>
+        
+        <p class="hero-subtitle animate-fade-in">
+            Откройте для себя решения следующего поколения, которые расширяют границы возможного.
+            Где инновации встречаются с бесконечностью космоса.
+        </p>
+        
+        <div class="hero-buttons animate-fade-in-delayed">
+            <button class="btn-primary">
+                Исследуйте вселенные
+            </button>
+            <button class="btn-secondary">
+                Узнать больше
+            </button>
+        </div>
+    </div>
+
+    <!-- Индикатор прокрутки -->
+    <div class="scroll-indicator" onclick="scrollToNextSection()">
+        <div class="scroll-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="7 13 12 18 17 13"></polyline>
+                <polyline points="7 6 12 11 17 6"></polyline>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- Остальная часть контента -->
 <!-- Включение секции новостей -->
 <!-- Включение секции статистики -->
 {% include "home/cases_section.html"  %}
@@ -173,123 +320,395 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('JavaScript loaded');
+// Создание космического фона с Canvas
+function createCosmicBackground() {
+    const canvas = document.getElementById('stars-canvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    
+    // Установка размеров canvas
+    canvas.width = width;
+    canvas.height = height;
+    
+    // Создание звезд
+    const stars = [];
+    const shootingStars = [];
+    const starCount = 400;
+    
+    // Инициализация обычных звезд
+    for (let i = 0; i < starCount; i++) {
+        stars.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 1.5,
+            speed: Math.random() * 0.2,
+            brightness: Math.random(),
+            twinkleSpeed: Math.random() * 0.05,
+            layer: Math.floor(Math.random() * 3) + 1 // Слой для параллакса
+        });
+    }
+    
+    // Инициализация падающих звезд
+    createShootingStars(shootingStars, 5, width, height);
+    
+    // Анимация
+    function animate() {
+        requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, width, height);
+        
+        // Рисование звездного поля
+        drawStars(ctx, stars, width, height);
+        
+        // Рисование падающих звезд
+        drawShootingStars(ctx, shootingStars, width, height);
+        
+        // Рисование туманностей
+        drawNebulae(ctx, width, height);
+    }
+    
+    animate();
+    
+    // Обработка изменения размера окна
+    window.addEventListener('resize', function() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Обновление позиций звезд
+        for (let i = 0; i < stars.length; i++) {
+            stars[i].x = Math.random() * width;
+            stars[i].y = Math.random() * height;
+        }
+        
+        // Сброс падающих звезд
+        shootingStars.length = 0;
+        createShootingStars(shootingStars, 5, width, height);
+    });
+    
+    // Создание параллакс элементов
+    createParallaxElements();
+}
 
+// Создание падающих звезд
+function createShootingStars(shootingStars, count, width, height) {
+    for (let i = 0; i < count; i++) {
+        shootingStars.push({
+            active: false,
+            x: 0,
+            y: 0,
+            speedX: 0,
+            speedY: 0,
+            life: 0,
+            tailLength: 0,
+            width: 0,
+            delay: Math.random() * 200 // Задержка перед появлением
+        });
+    }
+    
+    // Запуск анимации падающих звезд
+    animateShootingStars(shootingStars, width, height);
+}
+
+// Анимация падающих звезд
+function animateShootingStars(shootingStars, width, height) {
+    shootingStars.forEach((star, index) => {
+        if (star.delay > 0) {
+            star.delay--;
+            return;
+        }
+        
+        if (!star.active) {
+            // Создание новой падающей звезды
+            resetShootingStar(star, width, height);
+            return;
+        }
+        
+        // Обновление позиции
+        star.x += star.speedX;
+        star.y += star.speedY;
+        star.life--;
+        
+        // Если звезда закончила жизнь или вышла за пределы экрана
+        if (star.life <= 0 || star.x > width || star.y > height || star.x < 0 || star.y < 0) {
+            star.active = false;
+            star.delay = 50 + Math.random() * 150; // Случайная задержка перед следующим появлением
+        }
+    });
+    
+    // Продолжаем анимацию
+    setTimeout(() => {
+        requestAnimationFrame(() => animateShootingStars(shootingStars, width, height));
+    }, 1000 / 30); // ~30 FPS
+}
+
+// Сброс падающей звезды
+function resetShootingStar(star, width, height) {
+    // Начальная позиция - случайная точка в верхней части экрана
+    star.x = Math.random() * width;
+    star.y = Math.random() * height * 0.2;
+    
+    // Случайное направление вниз с небольшим смещением вправо
+    const angle = Math.PI / 2 + (Math.random() * 0.4 - 0.2); // Небольшой разброс углов
+    const speed = 5 + Math.random() * 5;
+    
+    star.speedX = Math.cos(angle) * speed;
+    star.speedY = Math.sin(angle) * speed;
+    star.life = 50 + Math.random() * 50;
+    star.tailLength = 30 + Math.random() * 40;
+    star.width = 1 + Math.random() * 1.5;
+    star.active = true;
+}
+
+// Рисование звезд
+function drawStars(ctx, stars, width, height) {
+    for (let i = 0; i < stars.length; i++) {
+        const star = stars[i];
+        
+        // Мерцание звезд
+        star.brightness += star.twinkleSpeed;
+        if (star.brightness > 1) {
+            star.brightness = 1;
+            star.twinkleSpeed = -star.twinkleSpeed;
+        } else if (star.brightness < 0.3) {
+            star.brightness = 0.3;
+            star.twinkleSpeed = -star.twinkleSpeed;
+        }
+        
+        // Рисование звезды
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.brightness})`;
+        ctx.fill();
+    }
+}
+
+// Рисование падающих звезд
+function drawShootingStars(ctx, shootingStars, width, height) {
+    for (let i = 0; i < shootingStars.length; i++) {
+        const star = shootingStars[i];
+        
+        if (!star.active) continue;
+        
+        // Рисование хвоста
+        const gradient = ctx.createLinearGradient(
+            star.x, star.y, 
+            star.x - star.speedX * 3, star.y - star.speedY * 3
+        );
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+        gradient.addColorStop(0.5, 'rgba(200, 220, 255, 0.5)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        
+        ctx.beginPath();
+        ctx.moveTo(star.x, star.y);
+        ctx.lineTo(star.x - star.speedX * 3, star.y - star.speedY * 3);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = star.width;
+        ctx.stroke();
+        
+        // Рисование головы звезды
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.width * 0.7, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.fill();
+    }
+}
+
+// Рисование туманностей
+function drawNebulae(ctx, width, height) {
+    // Рисование нескольких цветных туманностей
+    const nebulae = [
+        { x: width * 0.2, y: height * 0.3, radius: width * 0.4, color: 'rgba(65, 90, 220, 0.03)' },
+        { x: width * 0.7, y: height * 0.6, radius: width * 0.3, color: 'rgba(180, 65, 220, 0.03)' },
+        { x: width * 0.4, y: height * 0.7, radius: width * 0.5, color: 'rgba(65, 220, 150, 0.02)' }
+    ];
+    
+    for (const nebula of nebulae) {
+        const gradient = ctx.createRadialGradient(
+            nebula.x, nebula.y, 0,
+            nebula.x, nebula.y, nebula.radius
+        );
+        gradient.addColorStop(0, nebula.color);
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        
+        ctx.beginPath();
+        ctx.arc(nebula.x, nebula.y, nebula.radius, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+    }
+}
+
+// Создание элементов для параллакса
+function createParallaxElements() {
+    const layer1 = document.getElementById('parallax-layer-1');
+    const layer2 = document.getElementById('parallax-layer-2');
+    const layer3 = document.getElementById('parallax-layer-3');
+    
+    if (!layer1 || !layer2 || !layer3) return;
+    
+    // Создаем далекие звезды для слоя 3 (самый медленный параллакс)
+    for (let i = 0; i < 20; i++) {
+        const star = document.createElement('div');
+        star.className = 'parallax-element';
+        star.style.width = '2px';
+        star.style.height = '2px';
+        star.style.borderRadius = '50%';
+        star.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
+        star.style.boxShadow = '0 0 4px rgba(255, 255, 255, 0.5)';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        layer3.appendChild(star);
+    }
+    
+    // Создаем средние звезды для слоя 2
+    for (let i = 0; i < 15; i++) {
+        const star = document.createElement('div');
+        star.className = 'parallax-element';
+        star.style.width = '3px';
+        star.style.height = '3px';
+        star.style.borderRadius = '50%';
+        star.style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
+        star.style.boxShadow = '0 0 6px rgba(255, 255, 255, 0.7)';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        layer2.appendChild(star);
+    }
+    
+    // Создаем ближние звезды для слоя 1 (самый быстрый параллакс)
+    for (let i = 0; i < 10; i++) {
+        const star = document.createElement('div');
+        star.className = 'parallax-element';
+        star.style.width = '4px';
+        star.style.height = '4px';
+        star.style.borderRadius = '50%';
+        star.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+        star.style.boxShadow = '0 0 8px white';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        layer1.appendChild(star);
+    }
+}
+
+// Эффект параллакса при прокрутке
+function initParallax() {
+    const heroSection = document.querySelector('.hero-section');
+    if (!heroSection) return;
+    
+    window.addEventListener('scroll', function() {
+        const scrollPosition = window.pageYOffset;
+        const layers = [
+            document.getElementById('parallax-layer-1'),
+            document.getElementById('parallax-layer-2'),
+            document.getElementById('parallax-layer-3')
+        ];
+        
+        // Коэффициенты параллакса для каждого слоя
+        const coefficients = [0.4, 0.2, 0.1];
+        
+        layers.forEach((layer, index) => {
+            if (layer) {
+                const move = scrollPosition * coefficients[index];
+                layer.style.transform = `translateY(${move}px)`;
+            }
+        });
+    });
+}
+
+// Прокрутка к следующей секции
+function scrollToNextSection() {
+    const nextSection = document.querySelector('.cases-section, .news-section, .statistics-section');
+    if (nextSection) {
+        nextSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Инициализация при загрузке документа
+document.addEventListener('DOMContentLoaded', function() {
+    createCosmicBackground();
+    initParallax();
+    
+    // Ваш существующий код для карусели
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.carousel-dot');
     const navBlocks = document.querySelectorAll('.nav-block');
 
-    console.log('Found elements:', {
-        slides: slides.length,
-        dots: dots.length,
-        navBlocks: navBlocks.length
-    });
+    if (slides.length > 0) {
+        let currentSlide = 0;
+        let autoSlideInterval;
 
-    if (slides.length === 0) {
-        console.error('No slides found. Check page.hero_slides data.');
-        return;
-    }
-    if (dots.length === 0) {
-        console.error('No carousel dots found. Check HTML for .carousel-dot elements.');
-        return;
-    }
-    if (navBlocks.length === 0) {
-        console.error('No nav blocks found. Check HTML for .nav-block elements.');
-        return;
-    }
-
-    let currentSlide = 0;
-    let autoSlideInterval;
-
-    function showSlide(index) {
-        console.log('Showing slide:', index);
-
-        slides.forEach((slide, i) => {
-            slide.classList.remove('active');
-            console.log(`Slide ${i} hidden`);
-        });
-        dots.forEach((dot, i) => {
-            dot.classList.remove('active');
-            console.log(`Dot ${i} deactivated`);
-        });
-        navBlocks.forEach((block, i) => {
-            block.classList.remove('active');
-            console.log(`Nav block ${i} deactivated`);
-        });
-
-        if (slides[index]) {
-            slides[index].classList.add('active');
-            console.log(`Slide ${index} shown`);
-            if (dots[index]) {
-                dots[index].classList.add('active');
-                console.log(`Dot ${index} activated`);
-            }
-            if (navBlocks[index]) {
-                navBlocks[index].classList.add('active');
-                console.log(`Nav block ${index} activated`);
-            }
-            currentSlide = index;
-        } else {
-            console.error('Invalid slide index:', index);
-        }
-    }
-
-    function startAutoSlide() {
-        if (slides.length <= 1) {
-            console.log('Auto-slide disabled: only one slide');
-            return;
-        }
-        console.log('Starting auto-slide');
-        stopAutoSlide();
-        autoSlideInterval = setInterval(() => {
-            let nextSlide = (currentSlide + 1) % slides.length;
-            showSlide(nextSlide);
-        }, 5000);
-    }
-
-    function stopAutoSlide() {
-        console.log('Stopping auto-slide');
-        if (autoSlideInterval) {
-            clearInterval(autoSlideInterval);
-        }
-    }
-
-    showSlide(currentSlide);
-
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Dot clicked:', index);
-            stopAutoSlide();
-            showSlide(index);
-            startAutoSlide();
-        });
-    });
-
-    navBlocks.forEach((block, index) => {
-        block.addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log('Nav block clicked:', index);
-            stopAutoSlide();
-            showSlide(index);
-            startAutoSlide();
-        });
-    });
-
-    if (slides.length > 1) {
-        startAutoSlide();
-        const heroSection = document.querySelector('.hero');
-        if (heroSection) {
-            heroSection.addEventListener('mouseenter', () => {
-                console.log('Mouse entered hero section');
-                stopAutoSlide();
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
             });
-            heroSection.addEventListener('mouseleave', () => {
-                console.log('Mouse left hero section');
+            dots.forEach((dot, i) => {
+                dot.classList.remove('active');
+            });
+            navBlocks.forEach((block, i) => {
+                block.classList.remove('active');
+            });
+
+            if (slides[index]) {
+                slides[index].classList.add('active');
+                if (dots[index]) {
+                    dots[index].classList.add('active');
+                }
+                if (navBlocks[index]) {
+                    navBlocks[index].classList.add('active');
+                }
+                currentSlide = index;
+            }
+        }
+
+        function startAutoSlide() {
+            if (slides.length <= 1) return;
+            stopAutoSlide();
+            autoSlideInterval = setInterval(() => {
+                let nextSlide = (currentSlide + 1) % slides.length;
+                showSlide(nextSlide);
+            }, 5000);
+        }
+
+        function stopAutoSlide() {
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+            }
+        }
+
+        showSlide(currentSlide);
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                stopAutoSlide();
+                showSlide(index);
                 startAutoSlide();
             });
+        });
+
+        navBlocks.forEach((block, index) => {
+            block.addEventListener('click', (e) => {
+                e.preventDefault();
+                stopAutoSlide();
+                showSlide(index);
+                startAutoSlide();
+            });
+        });
+
+        if (slides.length > 1) {
+            startAutoSlide();
+            const heroSection = document.querySelector('.hero');
+            if (heroSection) {
+                heroSection.addEventListener('mouseenter', () => {
+                    stopAutoSlide();
+                });
+                heroSection.addEventListener('mouseleave', () => {
+                    startAutoSlide();
+                });
+            }
         }
     }
 });
