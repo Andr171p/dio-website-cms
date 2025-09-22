@@ -1,5 +1,6 @@
 from wagtail import blocks
 from wagtail.embeds.blocks import EmbedBlock
+from wagtail.images.blocks import ImageChooserBlock
 
 
 class FeedbackFormBlock(blocks.StructBlock):
@@ -49,3 +50,24 @@ class ContactsBlock(blocks.StructBlock):
     class Meta:
         icon = "group"
         label = "Блок контактов"
+
+
+class HeroCarouselSlideBlock(blocks.StructBlock):
+    """Блок для слайда карусели в секции hero"""
+    headline = blocks.CharBlock(max_length=100, required=True, label="Заголовок")
+    subheadline = blocks.CharBlock(max_length=250, required=False, label="Подзаголовок")
+    background_image = ImageChooserBlock(required=True, label="Фоновое изображение", help_text="Рекомендуемый размер: 1920x1080px")
+    button_text = blocks.CharBlock(required=True, default="Подробнее", label="Текст кнопки")
+    button_link = blocks.URLBlock(required=True, label="Ссылка кнопки")
+
+    class Meta:
+        icon = "image"
+        template = "home/blocks/hero_carousel_slide.html"
+
+class HeroCarouselBlock(blocks.StreamBlock):
+    """Карусельная секция hero"""
+    slide = HeroCarouselSlideBlock(label="Слайд")
+
+    class Meta:
+        icon = "carousel"
+        template = "home/blocks/hero_carousel.html"

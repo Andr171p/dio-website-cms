@@ -24,7 +24,6 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
-    # Приложения/модули
     "home",
     "search",
     "cases",
@@ -32,7 +31,9 @@ INSTALLED_APPS = [
     "news",
     "services",
     "solutions",
+    "chat",
     # Установленные приложения
+    "wagtail.contrib.settings",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -56,14 +57,17 @@ INSTALLED_APPS = [
     "wagtail.api.v2",
     "rest_framework",
     "corsheaders",
-    "wagtailmenus",
+    'django_htmx',
+    "tailwind"
+    # "wagtailmenus",
+    
 ]
 
-# Настройки меню
-WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (
-    ("header", "Header menu"),
-    ("footer", "Footer menu"),
-)
+# # Настройки меню
+# WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (
+#     ("header", "Header menu"),
+#     ("footer", "Footer menu"),
+# )
 
 WAGTAILAPI_BASE_URL = "http://localhost:8000/api"
 
@@ -79,6 +83,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -103,7 +108,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "wagtailmenus.context_processors.wagtailmenus"
+                "wagtail.contrib.settings.context_processors.settings",
+                # "wagtailmenus.context_processors.wagtailmenus"
             ],
         },
     },
