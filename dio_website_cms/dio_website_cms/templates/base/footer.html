@@ -2,184 +2,182 @@
 
 {% get_settings use_default_site=True as settings %}
 
-<footer class="bg-gray-900 text-white">
-  <!-- Main Footer -->
-  <div class="py-16">
-    <div class="container mx-auto px-6">
-      <div class="grid lg:grid-cols-5 gap-8">
-        <!-- Company Info -->
-        <div class="lg:col-span-2">
-          <div class="flex items-center space-x-3 mb-6">
-            {% if settings.base.HeaderSettings.logo %}
-              {% image settings.base.HeaderSettings.logo width-48 as logo %}
-              <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
-                <img src="{{ logo.url }}" alt="{{ settings.base.HeaderSettings.site_title|default:'Логотип' }}" class="w-full h-full object-cover">
-              </div>
-            {% endif %}
-            <div>
-              <h3 class="font-bold text-xl">{{ settings.base.HeaderSettings.site_title|default:"ДИО-Консалт" }}</h3>
-              <p class="text-white text-sm">Официальный партнер 1С</p>
-            </div>
-          </div>
-          
-          <p class="text-white leading-relaxed mb-6">
-            Более 15 лет мы помогаем компаниям автоматизировать бизнес-процессы 
-            и повышать эффективность работы с помощью современных IT-решений.
-          </p>
+<footer class="footer is-inverse">
+    <div class="container">
+        <!-- Main Footer Links -->
+        <div class="w-layout-grid grid_4-col gap-small">
+            <!-- Услуги -->
+            <ul role="list" class="margin-bottom_none w-list-unstyled">
+                <li><h2 class="heading_h6 text-color_secondary">Услуги</h2></li>
+                {% if settings.base.FooterSettings.services_section %}
+                    {% for item in settings.base.FooterSettings.services_section %}
+                        {% for link in item.value.links %}
+                            <li>
+                                <a href="{{ link.value.href|default:'#' }}" class="footer_link on-inverse w-inline-block">
+                                    <div>{{ link.value.text }}</div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Аудит</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Внедрение</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Поддержка</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Обучение</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Консалтинг</div></a></li>
+                {% endif %}
+            </ul>
 
-          <!-- Contact Info -->
-          <div class="space-y-3">
-            {% if settings.base.FooterSettings.company_address %}
-            <div class="flex items-center space-x-3 text-white hover:text-white transition-colors duration-200">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              </svg>
-              <span>{{ settings.base.FooterSettings.company_address }}</span>
-            </div>
-            {% endif %}
-            {% if settings.base.FooterSettings.working_hours %}
-            <div class="flex items-center space-x-3 text-white hover:text-white transition-colors duration-200">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <span>{{ settings.base.FooterSettings.working_hours }}</span>
-            </div>
-            {% endif %}
-          </div>
+            <!-- Решения -->
+            <ul role="list" class="margin-bottom_none w-list-unstyled">
+                <li><h2 class="heading_h6 text-color_secondary">Решения</h2></li>
+                {% if settings.base.FooterSettings.solutions_section %}
+                    {% for item in settings.base.FooterSettings.solutions_section %}
+                        {% for link in item.value.links %}
+                            <li>
+                                <a href="{{ link.value.href|default:'#' }}" class="footer_link on-inverse w-inline-block">
+                                    <div>{{ link.value.text }}</div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Логистика</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Производство</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Торговля</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Услуги</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>ИТ</div></a></li>
+                {% endif %}
+            </ul>
 
-          <!-- Social Links -->
-          <div class="flex space-x-4 mt-6">
-            {% if settings.base.FooterSettings.social_links %}
-              {% for social in settings.base.FooterSettings.social_links %}
-                <a
-                  href="{{ social.value.href }}"
-                  class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-white hover:text-white transition-colors duration-200 hover:scale-110"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {% if social.value.icon == 'facebook' %}
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
-                  {% elif social.value.icon == 'twitter' %}
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                    </svg>
-                  {% elif social.value.icon == 'linkedin' %}
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                  {% else %}
-                    <span class="text-sm">{{ social.value.platform }}</span>
-                  {% endif %}
-                </a>
-              {% endfor %}
-            {% endif %}
-          </div>
+            <!-- О компании -->
+            <ul role="list" class="margin-bottom_none w-list-unstyled">
+                <li><h2 class="heading_h6 text-color_secondary">О компании</h2></li>
+                {% if settings.base.FooterSettings.company_section %}
+                    {% for item in settings.base.FooterSettings.company_section %}
+                        {% for link in item.value.links %}
+                            <li>
+                                <a href="{{ link.href|default:'#' }}" class="footer_link on-inverse w-inline-block">
+                                    <div>{{ link.text }}</div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>О нас</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Команда</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Карьера</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Сертификаты</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Партнеры</div></a></li>
+                {% endif %}
+            </ul>
 
-          <!-- Contact Button -->
-          {% if settings.base.FooterSettings.contact_button_href and settings.base.FooterSettings.contact_button_text %}
-            <a href="{{ settings.base.FooterSettings.contact_button_href }}" class="mt-6 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors duration-200">
-              {{ settings.base.FooterSettings.contact_button_text }}
+            <!-- Контакты -->
+            <ul role="list" class="margin-bottom_none w-list-unstyled">
+                <li><h2 class="heading_h6 text-color_secondary">Контакты</h2></li>
+                {% if settings.base.FooterSettings.contact_info %}
+                    {% for contact in settings.base.FooterSettings.contact_info %}
+                        <li>
+                            <a href="{{ contact.href|default:'#' }}" class="footer_link on-inverse w-inline-block">
+                                <div>{{ contact.text }}</div>
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li><a href="tel:{{ settings.base.FooterSettings.primary_phone|default:'#' }}" class="footer_link on-inverse w-inline-block"><div>Телефон</div></a></li>
+                    <li><a href="mailto:{{ settings.base.FooterSettings.primary_email|default:'#' }}" class="footer_link on-inverse w-inline-block"><div>Email</div></a></li>
+                    <li><a href="#map" class="footer_link on-inverse w-inline-block"><div>Офис</div></a></li>
+                    <li><a href="#contacts" class="footer_link on-inverse w-inline-block"><div>Карта</div></a></li>
+                    <li><a href="#" class="footer_link on-inverse w-inline-block"><div>Реквизиты</div></a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="footer_bottom-3-col">
+            <!-- Copyright -->
+            <div class="text-color_secondary">
+                {{ settings.base.FooterSettings.copyright_text|default:"Все права защищены © 2025" }}
+            </div>
+
+            <!-- Logo -->
+            <a href="/" class="logo w-inline-block">
+                <div class="nav_logo-icon">
+                    <svg width="100%" height="100%" viewBox="0 0 33 33" preserveAspectRatio="xMidYMid meet">
+                        <path d="M28,0H5C2.24,0,0,2.24,0,5v23c0,2.76,2.24,5,5,5h23c2.76,0,5-2.24,5-5V5c0-2.76-2.24-5-5-5ZM29,17c-6.63,0-12,5.37-12,12h-1c0-6.63-5.37-12-12-12v-1c6.63,0,12-5.37,12-12h1c0,6.63,5.37,12,12,12v1Z" fill="currentColor"></path>
+                    </svg>
+                </div>
+                <div data-brand-name="true" class="paragraph_xlarge margin-bottom_none text_all-caps">
+                    {{ settings.base.HeaderSettings.site_title|default:"ДИО КОНСАЛТ" }}
+                </div>
             </a>
-          {% endif %}
+
+            <!-- Social Links -->
+            <ul aria-label="Social media links" role="list" class="footer_icon-group w-list-unstyled">
+                {% if settings.base.FooterSettings.social_links %}
+                    {% for social in settings.base.FooterSettings.social_links %}
+                        <li class="margin-bottom_none">
+                            <a href="{{ social.value.href }}" target="_blank" rel="noopener noreferrer" class="footer_icon-link w-inline-block">
+                                {% if social.value.icon == 'facebook' %}
+                                    <svg width="100%" height="100%" viewBox="0 0 16 16">
+                                        <path d="M16,8.048a8,8,0,1,0-9.25,7.9V10.36H4.719V8.048H6.75V6.285A2.822,2.822,0,0,1,9.771,3.173a12.2,12.2,0,0,1,1.791.156V5.3H10.554a1.155,1.155,0,0,0-1.3,1.25v1.5h2.219l-.355,2.312H9.25v5.591A8,8,0,0,0,16,8.048Z" fill="currentColor"></path>
+                                    </svg>
+                                {% elif social.value.icon == 'instagram' %}
+                                    <svg width="100%" height="100%" viewBox="0 0 16 16">
+                                        <path d="M8,1.441c2.136,0,2.389.009,3.233.047a4.419,4.419,0,0,1,1.485.276,2.472,2.472,0,0,1,.92.6,2.472,2.472,0,0,1,.6.92,4.419,4.419,0,0,1,.276,1.485c.038.844.047,1.1.047,3.233s-.009,2.389-.047,3.233a4.419,4.419,0,0,1-.276,1.485,2.644,2.644,0,0,1-1.518,1.518,4.419,4.419,0,0,1-1.485.276c-.844.038-1.1.047-3.233.047s-2.389-.009-3.233-.047a4.419,4.419,0,0,1-1.485-.276,2.472,2.472,0,0,1-.92-.6,2.472,2.472,0,0,1-.6-.92,4.419,4.419,0,0,1-.276-1.485c-.038-.844-.047-1.1-.047-3.233s.009-2.389.047-3.233a4.419,4.419,0,0,1,.276-1.485,2.472,2.472,0,0,1,.6-.92,2.472,2.472,0,0,1,.92-.6,4.419,4.419,0,0,1,1.485-.276c.844-.038,1.1-.047,3.233-.047M8,0C5.827,0,5.555.009,4.7.048A5.868,5.868,0,0,0,2.76.42a3.908,3.908,0,0,0-1.417.923A3.908,3.908,0,0,0,.42,2.76,5.868,5.868,0,0,0,.048,4.7C.009,5.555,0,5.827,0,8s.009,2.445.048,3.3A5.868,5.868,0,0,0,.42,13.24a3.908,3.908,0,0,0,.923,1.417,3.908,3.908,0,0,0,1.417.923,5.868,5.868,0,0,0,1.942.372C5.555,15.991,5.827,16,8,16s2.445-.009,3.3-.048a5.868,5.868,0,0,0,1.942-.372,4.094,4.094,0,0,0,2.34-2.34,5.868,5.868,0,0,0,.372-1.942c.039-.853.048-1.125.048-3.3s-.009-2.445-.048-3.3A5.868,5.868,0,0,0,15.58,2.76a3.908,3.908,0,0,0-.923-1.417A3.908,3.908,0,0,0,13.24.42,5.868,5.868,0,0,0,11.3.048C10.445.009,10.173,0,8,0Z" fill="currentColor"></path>
+                                        <path d="M8,3.892A4.108,4.108,0,1,0,12.108,8,4.108,4.108,0,0,0,8,3.892Zm0,6.775A2.667,2.667,0,1,1,10.667,8,2.667,2.667,0,0,1,8,10.667Z" fill="currentColor"></path>
+                                        <circle cx="12.27" cy="3.73" r="0.96" fill="currentColor"></circle>
+                                    </svg>
+                                {% elif social.value.icon == 'twitter' or social.value.icon == 'x' %}
+                                    <svg width="100%" height="100%" viewBox="0 0 16 16">
+                                        <path d="M12.3723 1.16992H14.6895L9.6272 6.95576L15.5825 14.829H10.9196L7.26734 10.0539L3.08837 14.829H0.769833L6.18442 8.64037L0.471436 1.16992H5.2528L8.55409 5.53451L12.3723 1.16992ZM11.5591 13.4421H12.843L4.55514 2.48399H3.17733L11.5591 13.4421Z" fill="currentColor"></path>
+                                    </svg>
+                                {% elif social.value.icon == 'linkedin' %}
+                                    <svg width="100%" height="100%" viewBox="0 0 16 16">
+                                        <path d="M15.3,0H0.7C0.3,0,0,0.3,0,0.7v14.7C0,15.7,0.3,16,0.7,16h14.7c0.4,0,0.7-0.3,0.7-0.7V0.7 C16,0.3,15.7,0,15.3,0z M4.7,13.6H2.4V6h2.4V13.6z M3.6,5C2.8,5,2.2,4.3,2.2,3.6c0-0.8,0.6-1.4,1.4-1.4c0.8,0,1.4,0.6,1.4,1.4 C4.9,4.3,4.3,5,3.6,5z M13.6,13.6h-2.4V9.9c0-0.9,0-2-1.2-2c-1.2,0-1.4,1-1.4,2v3.8H6.2V6h2.3v1h0c0.3-0.6,1.1-1.2,2.2-1.2 c2.4,0,2.8,1.6,2.8,3.6V13.6z" fill="currentColor"></path>
+                                    </svg>
+                                {% elif social.value.icon == 'youtube' %}
+                                    <svg width="100%" height="100%" viewBox="0 0 16 16">
+                                        <path d="M15.8,4.8c-0.2-1.3-0.8-2.2-2.2-2.4C11.4,2,8,2,8,2S4.6,2,2.4,2.4C1,2.6,0.3,3.5,0.2,4.8C0,6.1,0,8,0,8 s0,1.9,0.2,3.2c0.2,1.3,0.8,2.2,2.2,2.4C4.6,14,8,14,8,14s3.4,0,5.6-0.4c1.4-0.3,2-1.1,2.2-2.4C16,9.9,16,8,16,8S16,6.1,15.8,4.8z M6,11V5l5,3L6,11z" fill="currentColor"></path>
+                                    </svg>
+                                {% else %}
+                                    <span class="social-text">{{ social.value.platform|default:social.value.icon }}</span>
+                                {% endif %}
+                                <div class="screen-reader">{{ social.value.platform|default:social.value.icon }}</div>
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <!-- Default social links -->
+                    <li class="margin-bottom_none"><a href="#" class="footer_icon-link w-inline-block"><svg width="100%" height="100%" viewBox="0 0 16 16"><path d="M16,8.048a8,8,0,1,0-9.25,7.9V10.36H4.719V8.048H6.75V6.285A2.822,2.822,0,0,1,9.771,3.173a12.2,12.2,0,0,1,1.791.156V5.3H10.554a1.155,1.155,0,0,0-1.3,1.25v1.5h2.219l-.355,2.312H9.25v5.591A8,8,0,0,0,16,8.048Z" fill="currentColor"></path></svg><div class="screen-reader">Facebook</div></a></li>
+                    <li class="margin-bottom_none"><a href="#" class="footer_icon-link w-inline-block"><svg width="100%" height="100%" viewBox="0 0 16 16"><path d="M8,1.441c2.136,0,2.389.009,3.233.047a4.419,4.419,0,0,1,1.485.276,2.472,2.472,0,0,1,.92.6,2.472,2.472,0,0,1,.6.92,4.419,4.419,0,0,1,.276,1.485c.038.844.047,1.1.047,3.233s-.009,2.389-.047,3.233a4.419,4.419,0,0,1-.276,1.485,2.644,2.644,0,0,1-1.518,1.518,4.419,4.419,0,0,1-1.485.276c-.844.038-1.1.047-3.233.047s-2.389-.009-3.233-.047a4.419,4.419,0,0,1-1.485-.276,2.472,2.472,0,0,1-.92-.6,2.472,2.472,0,0,1-.6-.92,4.419,4.419,0,0,1-.276-1.485c-.038-.844-.047-1.1-.047-3.233s.009-2.389.047-3.233a4.419,4.419,0,0,1,.276-1.485,2.472,2.472,0,0,1,.6-.92,2.472,2.472,0,0,1,.92-.6,4.419,4.419,0,0,1,1.485-.276c.844-.038,1.1-.047,3.233-.047M8,0C5.827,0,5.555.009,4.7.048A5.868,5.868,0,0,0,2.76.42a3.908,3.908,0,0,0-1.417.923A3.908,3.908,0,0,0,.42,2.76,5.868,5.868,0,0,0,.048,4.7C.009,5.555,0,5.827,0,8s.009,2.445.048,3.3A5.868,5.868,0,0,0,.42,13.24a3.908,3.908,0,0,0,.923,1.417,3.908,3.908,0,0,0,1.417.923,5.868,5.868,0,0,0,1.942.372C5.555,15.991,5.827,16,8,16s2.445-.009,3.3-.048a5.868,5.868,0,0,0,1.942-.372,4.094,4.094,0,0,0,2.34-2.34,5.868,5.868,0,0,0,.372-1.942c.039-.853.048-1.125.048-3.3s-.009-2.445-.048-3.3A5.868,5.868,0,0,0,15.58,2.76a3.908,3.908,0,0,0-.923-1.417A3.908,3.908,0,0,0,13.24.42,5.868,5.868,0,0,0,11.3.048C10.445.009,10.173,0,8,0Z" fill="currentColor"></path><path d="M8,3.892A4.108,4.108,0,1,0,12.108,8,4.108,4.108,0,0,0,8,3.892Zm0,6.775A2.667,2.667,0,1,1,10.667,8,2.667,2.667,0,0,1,8,10.667Z" fill="currentColor"></path><circle cx="12.27" cy="3.73" r="0.96" fill="currentColor"></circle></svg><div class="screen-reader">Instagram</div></a></li>
+                    <li class="margin-bottom_none"><a href="#" class="footer_icon-link w-inline-block"><svg width="100%" height="100%" viewBox="0 0 16 16"><path d="M12.3723 1.16992H14.6895L9.6272 6.95576L15.5825 14.829H10.9196L7.26734 10.0539L3.08837 14.829H0.769833L6.18442 8.64037L0.471436 1.16992H5.2528L8.55409 5.53451L12.3723 1.16992ZM11.5591 13.4421H12.843L4.55514 2.48399H3.17733L11.5591 13.4421Z" fill="currentColor"></path></svg><div class="screen-reader">X</div></a></li>
+                    <li class="margin-bottom_none"><a href="#" class="footer_icon-link w-inline-block"><svg width="100%" height="100%" viewBox="0 0 16 16"><path d="M15.3,0H0.7C0.3,0,0,0.3,0,0.7v14.7C0,15.7,0.3,16,0.7,16h14.7c0.4,0,0.7-0.3,0.7-0.7V0.7 C16,0.3,15.7,0,15.3,0z M4.7,13.6H2.4V6h2.4V13.6z M3.6,5C2.8,5,2.2,4.3,2.2,3.6c0-0.8,0.6-1.4,1.4-1.4c0.8,0,1.4,0.6,1.4,1.4 C4.9,4.3,4.3,5,3.6,5z M13.6,13.6h-2.4V9.9c0-0.9,0-2-1.2-2c-1.2,0-1.4,1-1.4,2v3.8H6.2V6h2.3v1h0c0.3-0.6,1.1-1.2,2.2-1.2 c2.4,0,2.8,1.6,2.8,3.6V13.6z" fill="currentColor"></path></svg><div class="screen-reader">LinkedIn</div></a></li>
+                {% endif %}
+            </ul>
         </div>
-
-        <!-- Company Section -->
-        {% if settings.base.FooterSettings.company_section %}
-          <div>
-            {% for item in settings.base.FooterSettings.company_section %}
-              <h4 class="font-bold text-lg mb-6">{{ item.value.title|default:'Компания' }}</h4>
-              <ul class="space-y-3">
-                {% for link in item.value.links %}
-                  <li>
-                    <a href="{{ link.href|default:'#' }}" class="text-white hover:text-white transition-colors duration-200">
-                      
-                      {{link.text}}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
-            {% endfor %}
-          </div>
-        {% endif %}
-
-        <!-- Solutions Section -->
-        {% if settings.base.FooterSettings.solutions_section %}
-          <div>
-            {% for item in settings.base.FooterSettings.solutions_section %}
-              <h4 class="font-bold text-lg mb-6">{{ item.value.title|default:'Решения' }}</h4>
-              <ul class="space-y-3">
-                {% for link in item.value.links %}
-                  <li>
-                    <a href="{{ link.value.href|default:'#' }}" class="text-white hover:text-white transition-colors duration-200">
-                      {{ link.value.text }}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
-            {% endfor %}
-          </div>
-        {% endif %}
-
-        <!-- Services Section -->
-        {% if settings.base.FooterSettings.services_section %}
-          <div>
-            {% for item in settings.base.FooterSettings.services_section %}
-              <h4 class="font-bold text-lg mb-6">{{ item.value.title|default:'Услуги' }}</h4>
-              <ul class="space-y-3">
-                {% for link in item.value.links %}
-                  <li>
-                    <a href="{{ link.value.href|default:'#' }}" class="text-white hover:text-white transition-colors duration-200">
-                      {{ link.value.text }}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
     </div>
-  </div>
-
-  <!-- Bottom Bar -->
-  <div class="border-t border-gray-800 py-6">
-    <div class="container mx-auto px-6">
-      <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-        <div class="text-white text-sm">
-          {{ settings.base.FooterSettings.copyright_text|default:"© 2025 Все права защищены" }}
-        </div>
-        <div class="flex space-x-6 text-sm text-white">
-          <a href="/privacy-policy/" class="hover:text-white transition-colors duration-200">Политика конфиденциальности</a>
-          <a href="/terms/" class="hover:text-white transition-colors duration-200">Пользовательское соглашение</a>
-          <a href="/sitemap/" class="hover:text-white transition-colors duration-200">Карта сайта</a>
-        </div>
-      </div>
-    </div>
-  </div>
 </footer>
 
 <!-- JavaScript для плавной прокрутки -->
 <script>
 function scrollToSection(sectionId) {
-  const element = document.querySelector(sectionId);
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' });
-  }
+    const element = document.querySelector(sectionId);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  const anchorLinks = document.querySelectorAll('a[href^="#"]');
-  anchorLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      const href = this.getAttribute('href');
-      if (href !== '#' && href.startsWith('#')) {
-        e.preventDefault();
-        scrollToSection(href);
-      }
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    anchorLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href !== '#' && href.startsWith('#')) {
+                e.preventDefault();
+                scrollToSection(href);
+            }
+        });
     });
-  });
 });
 </script>

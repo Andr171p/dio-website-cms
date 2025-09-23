@@ -1,122 +1,376 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-<div class="stats-section py-24 lg:py-32 bg-gradient-to-b from-blue-900 to-blue-800" id="stats-section">
-    <div class="container mx-auto px-6 lg:px-12">
-        <!-- Header -->
-        <div class="text-center mb-20 animate-on-load">
-            <h2 class="text-4xl lg:text-6xl font-extrabold text-white mb-6 bg-gradient-to-r from-indigo-700 to-blue-600 bg-clip-text text-transparent">
-                Наши достижения в цифрах
-            </h2>
-            <p class="text-xl lg:text-2xl text-white max-w-4xl mx-auto leading-relaxed">
-                Результаты многолетней работы в сфере автоматизации бизнеса и внедрения информационных систем.
-            </p>
-        </div>
-
-        <!-- Stats Grid (Основные достижения) -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {% for achievement in main_achievements %}
-            <div class="stat-item text-center group animate-on-load">
-                <!-- Icon -->
-                <div class="icon-wrapper w-20 h-20 bg-gradient-to-br from-indigo-60 to-blue-60 rounded-2xl flex items-center justify-center mx-auto mb-6 transition-all duration-300 group-hover:bg-indigo-200 group-hover:shadow-md">
-                    {% if achievement.value.icon %}
-                    {% image achievement.value.icon width-50 as icon_img %}
-                    <img src="{{ icon_img.url }}" alt="{{ achievement.value.label }}" class="w-10 h-10 text-white transition-transform duration-300 group-hover:scale-110">
-                    {% endif %}
-                </div>
-
-                <!-- Number -->
-                <div class="text-5xl lg:text-6xl font-bold text-white mb-3 transition-colors duration-200 group-hover:text-gold-600 counter-element" 
-                     data-value="{{ achievement.value.value }}" data-suffix="{{ achievement.value.suffix }}">
-                    0{{ achievement.value.suffix }}
-                </div>
-
-                <!-- Label -->
-                <h3 class="text-xl lg:text-2xl font-semibold text-white mb-2 transition-colors duration-200 group-hover:text-white">
-                    {{ achievement.value.label }}
-                </h3>
-
-                <!-- Description -->
-                <p class="text-white lg:text-lg leading-relaxed">{{ achievement.value.description|richtext|truncatechars:100 }}</p>
-
-                <!-- Animated underline -->
-                <div class="h-1 bg-indigo-200 rounded-full mx-auto mt-4 transition-all duration-500 group-hover:bg-gold-500 underline-element" 
-                     style="width: 60px;"></div>
+<section class="section is-secondary pt-1 pb-10  ">
+    <div class="container">
+        <div class="margin-top_large">
+            <!-- Header -->
+            <div class="divider margin-bottom_medium text-center">
+                <h2 class="heading_h4">Наши достижения в цифрах</h2>
+                <p class="paragraph_large text-color_secondary ">
+                    Результаты многолетней работы в сфере автоматизации бизнеса и внедрения информационных систем.
+                </p>
             </div>
-            {% endfor %}
-        </div>
 
-        <!-- Additional Achievements -->
-        {% if additional_achievements %}
-        <div class="grid md:grid-cols-3 gap-8 mt-20 pt-16 border-t border-indigo-100/50 animate-on-load">
-            {% for achievement in additional_achievements %}
-            <div class="text-center group">
-                <div class="text-3xl lg:text-4xl font-bold text-white mb-2 transition-transform duration-300 group-hover:scale-105 counter-element" 
-                     data-value="{{ achievement.value.value }}">
-                    {{ achievement.value.value }}
-                </div>
-                <h4 class="text-lg lg:text-xl font-semibold text-white mb-2 transition-colors duration-200 group-hover:text-gold-600">
-                    {{ achievement.value.title }}
-                </h4>
-                <p class="text-white text-sm lg:text-white">{{ achievement.value.description|richtext|truncatechars:80 }}</p>
+            <!-- Stats Grid (Основные достижения) -->
+            <ul role="list" class="grid_4-col tablet-2-col mobile-1-col gap-medium w-list-unstyled">
+                {% for achievement in main_achievements %}
+                <li class="stat-item text-center">
+                    
+
+                    <!-- Number -->
+                    <div class="heading_h3 text-color_primary margin-bottom_xsmall counter-element" 
+                         data-value="{{ achievement.value.value }}" data-suffix="{{ achievement.value.suffix }}">
+                        0{{ achievement.value.suffix }}
+                    </div>
+
+                    <!-- Label -->
+                    <h3 class="heading_h5 margin-bottom_xsmall">
+                        {{ achievement.value.label }}
+                    </h3>
+
+                    <!-- Description -->
+                    <!-- <p class="paragraph_small text-color_secondary">{{ achievement.value.description|richtext }}</p> -->
+
+                    
+                </li>
+                {% endfor %}
+            </ul>
+
+            <!-- Additional Achievements -->
+            {% if additional_achievements %}
+            <div class="margin-top_xlarge padding-top_large border-top_light">
+                <ul role="list" class="grid_3-col tablet-1-col gap-medium w-list-unstyled">
+                    {% for achievement in additional_achievements %}
+                    <li class="text-center">
+                        <div class="heading_h3 text-color_primary margin-bottom_xsmall counter-element" 
+                             data-value="{{ achievement.value.value }}">
+                            {{ achievement.value.value }}
+                        </div>
+                        <h4 class="heading_h6 margin-bottom_xsmall">
+                            {{ achievement.value.title }}
+                        </h4>
+                        <p class="paragraph_small text-color_secondary">{{ achievement.value.description|richtext }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
-            {% endfor %}
+            {% endif %}
         </div>
-        {% endif %}
     </div>
-</div>
+</section>
 
 <style>
-    .animate-on-load {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    
-    .animate-on-load.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .counter-element.animated {
-        color: #FFD700;
-    }
-    
-    .gold-500 { color: #FFD700; }
-    .gold-600 { color: #FFC107; }
+.counter-element {
+    transition: color 0.3s ease;
+}
+
+.counter-element.animated {
+    color: var(--accent-color);
+}
+
+
+.animate-on-scroll {
+    animation: countUp 0.8s ease-out forwards;
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Функция для анимации счетчиков
-    function animateValue(element, start, end, duration, suffix = '') {
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / (duration * 1000), 1);
-            const value = Math.floor(progress * (end - start) + start);
-            element.textContent = value + suffix;
+    function animateCounter(element, start, end, duration, suffix = '') {
+        let startTime = null;
+        
+        function updateCounter(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+            const currentValue = Math.floor(progress * (end - start) + start);
+            element.textContent = currentValue + suffix;
+            
             if (progress < 1) {
-                window.requestAnimationFrame(step);
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.classList.add('animated');
             }
-        };
-        window.requestAnimationFrame(step);
+        }
+        
+        requestAnimationFrame(updateCounter);
     }
 
-    // Показываем все элементы одновременно
-    const elementsToAnimate = document.querySelectorAll('.animate-on-load');
-    elementsToAnimate.forEach(element => {
-        element.classList.add('visible');
-    });
+    // Функция для проверки видимости элемента
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
+            rect.bottom >= 0
+        );
+    }
 
-    // Анимируем счетчики после небольшой задержки
-    setTimeout(() => {
+    // Запуск анимации при скролле
+    function handleScroll() {
         const counters = document.querySelectorAll('.counter-element');
         counters.forEach(counter => {
-            const value = parseInt(counter.getAttribute('data-value'));
-            const suffix = counter.getAttribute('data-suffix') || '';
-            animateValue(counter, 0, value, 2, suffix);
-            counter.classList.add('animated');
+            if (isElementInViewport(counter) && !counter.classList.contains('animated')) {
+                const value = parseInt(counter.getAttribute('data-value'));
+                const suffix = counter.getAttribute('data-suffix') || '';
+                counter.classList.add('animate-on-scroll');
+                animateCounter(counter, 0, value, 2, suffix);
+            }
         });
-    }, 300);
+    }
+
+    // Проверяем при загрузке и при скролле
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Проверить сразу при загрузке
+});
+</script>
+
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<section class="section is-secondary pt-1">
+    <div class="container">
+        <div class="margin-top_large">
+            <!-- Header -->
+            <div class="divider margin-bottom_medium text-center">
+                <h2 class="heading_h4">Наши достижения в цифрах</h2>
+                <p class="paragraph_large text-color_secondary">
+                    Результаты многолетней работы в сфере автоматизации бизнеса и внедрения информационных систем.
+                </p>
+            </div>
+
+            <!-- Main Content - Stats on left, testimonial on right -->
+            <div class="w-layout-grid grid_2-col tablet-1-col gap-xlarge">
+                <!-- Left Column - Statistics -->
+                <div>
+                    <!-- Main Achievements -->
+                    <ul role="list" class="grid_2-col mobile-1-col gap-medium w-list-unstyled">
+                        {% for achievement in main_achievements %}
+                        <li class="stat-item">
+                            <!-- Number -->
+                            <div class="heading_h3 text-color_primary margin-bottom_xsmall counter-element" 
+                                 data-value="{{ achievement.value.value }}" data-suffix="{{ achievement.value.suffix }}">
+                                0{{ achievement.value.suffix }}
+                            </div>
+
+                            <!-- Label -->
+                            <h3 class="heading_h5 margin-bottom_xsmall">
+                                {{ achievement.value.label }}
+                            </h3>
+
+                            <!-- Description -->
+                            <p class="paragraph_small text-color_secondary">{{ achievement.value.description|richtext }}</p>
+
+                            <!-- Divider -->
+                            <div class="divider margin-top_small" style="max-width: 60px;"></div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Additional Achievements -->
+                    {% if additional_achievements %}
+                    <div class="margin-top_xlarge padding-top_large border-top_light">
+                        <ul role="list" class="grid_2-col mobile-1-col gap-medium w-list-unstyled">
+                            {% for achievement in additional_achievements %}
+                            <li>
+                                <div class="heading_h3 text-color_primary margin-bottom_xsmall counter-element" 
+                                     data-value="{{ achievement.value.value }}">
+                                    {{ achievement.value.value }}
+                                </div>
+                                <h4 class="heading_h6 margin-bottom_xsmall">
+                                    {{ achievement.value.title }}
+                                </h4>
+                                <p class="paragraph_small text-color_secondary">{{ achievement.value.description|richtext }}</p>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Right Column - Testimonial -->
+                <div class="testimonial-card">
+                    <div class="card_body">
+                        <div class="flex_horizontal is-y-center gap-xsmall margin-bottom_small">
+                            <img width="64" height="64" alt="Екатерина Кузнецова" 
+                                 src="https://cdn.prod.website-files.com/68d0517d75ef0d388acbf76f/68d05623880d199c461dd270_a77e9196-83f4-460d-8172-312b03b35eb3.avif" 
+                                 loading="lazy" class="avatar">
+                            <div>
+                                <div class="paragraph_small margin-bottom_none">Екатерина Кузнецова</div>
+                                <div class="paragraph_small text-color_secondary margin-bottom_xxsmall">ТехноИнновации</div>
+                            </div>
+                        </div>
+                        <p class="paragraph_xlarge random-letters-element" 
+                           data-text="«Автоматизация отчетности позволила нам сэкономить время и избежать ошибок. Партнерство полностью оправдало наши ожидания.»">
+                            «Автоматизация отчетности позволила нам сэкономить время и избежать ошибок. Партнерство полностью оправдало наши ожидания.»
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.counter-element {
+    transition: color 0.3s ease;
+}
+
+.counter-element.animated {
+    color: var(--accent-color);
+}
+
+@keyframes countUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.random-letters-element {
+    position: relative;
+}
+
+.random-letters-element .letter {
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.random-letters-element.animated .letter {
+    color: inherit !important;
+}
+
+.testimonial-card {
+    background: var(--background-secondary);
+    border-radius: 12px;
+    padding: 2rem;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+}
+
+.avatar {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+@media (max-width: 767px) {
+    .testimonial-card {
+        position: static;
+        margin-top: 2rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Функция для генерации случайной кириллической буквы
+    function getRandomCyrillicChar() {
+        const cyrillicChars = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+        return cyrillicChars[Math.floor(Math.random() * cyrillicChars.length)];
+    }
+
+    // Функция для анимации пазла с плавной заменой букв
+    function puzzleLettersAnimation(element, finalText, duration = 1500) {
+        const textLength = finalText.length;
+        let currentText = finalText.split(''); // Сохраняем исходную структуру
+
+        // Инициализация текста с случайными буквами, где есть кириллица
+        for (let i = 0; i < textLength; i++) {
+            if (finalText[i].match(/[а-яА-ЯёЁ]/)) {
+                currentText[i] = getRandomCyrillicChar();
+            }
+        }
+        element.textContent = currentText.join('');
+
+        // Функция для плавной замены каждой буквы
+        function animateLetter(index, startTime) {
+            if (!startTime) startTime = performance.now();
+            const progress = Math.min((performance.now() - startTime) / (duration / textLength), 1);
+            const easedProgress = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2; // Плавная кривая
+
+            if (progress < 1 && finalText[index].match(/[а-яА-ЯёЁ]/)) {
+                const interpolatedChar = easedProgress >= 0.5 ? finalText[index] : getRandomCyrillicChar();
+                currentText[index] = interpolatedChar;
+                element.textContent = currentText.join('');
+                requestAnimationFrame((time) => animateLetter(index, startTime));
+            } else if (progress >= 1) {
+                currentText[index] = finalText[index]; // Убеждаемся, что финальная буква правильная
+            }
+        }
+
+        // Запускаем анимацию для каждой буквы с небольшой случайной задержкой
+        let completedLetters = 0;
+        for (let i = 0; i < textLength; i++) {
+            if (finalText[i].match(/[а-яА-ЯёЁ]/)) {
+                const delay = Math.random() * (duration / 2); // Случайная задержка для эффекта пазла
+                setTimeout(() => {
+                    animateLetter(i, null);
+                    completedLetters++;
+                    if (completedLetters === textLength) {
+                        element.classList.add('animated');
+                    }
+                }, delay);
+            } else {
+                currentText[i] = finalText[i]; // Сохраняем знаки препинания сразу
+            }
+        }
+    }
+
+    // Функция для анимации счетчиков
+    function animateCounter(element, start, end, duration, suffix = '') {
+        let startTime = null;
+
+        function updateCounter(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+            const currentValue = Math.floor(progress * (end - start) + start);
+            element.textContent = currentValue + suffix;
+
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.classList.add('animated');
+            }
+        }
+
+        requestAnimationFrame(updateCounter);
+    }
+
+    // Функция для проверки видимости элемента
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
+            rect.bottom >= 0
+        );
+    }
+
+    // Запуск анимации при скролле
+    function handleScroll() {
+        // Анимация счетчиков
+        const counters = document.querySelectorAll('.counter-element');
+        counters.forEach(counter => {
+            if (isElementInViewport(counter) && !counter.classList.contains('animated')) {
+                const value = parseInt(counter.getAttribute('data-value'));
+                const suffix = counter.getAttribute('data-suffix') || '';
+                counter.classList.add('animate-on-scroll');
+                animateCounter(counter, 0, value, 1.5, suffix); // Ускоренная анимация счетчиков
+            }
+        });
+
+        // Анимация отзыва (только один раз)
+        const testimonialElement = document.querySelector('.random-letters-element');
+        if (testimonialElement && isElementInViewport(testimonialElement) && !testimonialElement.classList.contains('animated')) {
+            const finalText = testimonialElement.getAttribute('data-text');
+            puzzleLettersAnimation(testimonialElement, finalText, 1500); // Ускоренная анимация
+        }
+    }
+
+    // Проверяем при загрузке и при скролле
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
 });
 </script>
