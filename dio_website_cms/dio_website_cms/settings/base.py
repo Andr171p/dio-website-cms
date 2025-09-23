@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     'django_htmx',
-    "tailwind"
+    "tailwind",
+    "wagtailai"
     # "wagtailmenus",
     
 ]

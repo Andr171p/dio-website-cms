@@ -11,6 +11,9 @@ from wagtail import blocks
 from news.models import NewsBlock
 from .blocks import ContactsBlock, FeedbackFormBlock
 
+from wagtailai.panels import AIPanel, ai_indexable
+
+
 MAX_HEADLINE_LENGTH = 500
 MAX_SUBHEADLINE_LENGTH = 250
 
@@ -251,7 +254,8 @@ class PartnerLogoBlock(blocks.StructBlock):
         icon = 'image'
         label = "Логотип партнёра"
 
-# Блок для секции партнёрств
+
+
 class PartnershipBlock(blocks.StructBlock):
     """Блок для секции с партнёрствами"""
     headline = blocks.CharBlock(
@@ -276,7 +280,10 @@ class PartnershipBlock(blocks.StructBlock):
         icon = 'group'
         label = "Секция партнёрств"
 
-# Обновлённая HomePage
+@ai_indexable(
+    AIPanel("header_section"),
+    include_meta=True
+)
 class HomePage(Page):
     """Лендинг сайта, главная страница с каруселью и header"""
     header_section = StreamField([

@@ -7,6 +7,7 @@ from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from wagtailai.panels import AIPanel, ai_indexable
 
 # Константы для отраслей
 INDUSTRY_CHOICES = [
@@ -100,7 +101,9 @@ class CaseStudyPage(Page):
         verbose_name = "Кейс"
         verbose_name_plural = "Кейсы"
 
-
+@ai_indexable(
+    AIPanel("into"),
+)
 class CaseStudyIndexPage(Page):
     """Главная страница кейсов"""
     intro = RichTextField("Введение", features=['bold', 'italic', 'link'], blank=True)
