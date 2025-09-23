@@ -296,44 +296,44 @@ class HomePage(Page):
             [
                 FieldPanel("header_section"),
             ],
-            heading="Header секция",
+            heading="Главный блок",
         ),
-        MultiFieldPanel(
-            [
-                FieldPanel("hero_slides"),
-            ],
-            heading="Главная карусель",
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("case_study_section"),
-            ],
-            heading="Секция кейсов",
-        ),
+        # MultiFieldPanel(
+        #     [
+        #         FieldPanel("hero_slides"),
+        #     ],
+        #     heading="Главная карусель",
+        # ),
+        # MultiFieldPanel(
+        #     [
+        #         FieldPanel("case_study_section"),
+        #     ],
+        #     heading="Секция кейсов",
+        # ),
         MultiFieldPanel(
             [
                 FieldPanel("achievements"),
             ],
             heading="Достижения",
         ),
-        MultiFieldPanel(
-            [
-                FieldPanel("partners"),
-            ],
-            heading="Партнёры",
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("certificates"),
-            ],
-            heading="Сертификаты",
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("awards"),
-            ],
-            heading="Награды и достижения",
-        ),
+        # MultiFieldPanel(
+        #     [
+        #         FieldPanel("partners"),
+        #     ],
+        #     heading="Партнёры",
+        # ),
+        # MultiFieldPanel(
+        #     [
+        #         FieldPanel("certificates"),
+        #     ],
+        #     heading="Сертификаты",
+        # ),
+        # MultiFieldPanel(
+        #     [
+        #         FieldPanel("awards"),
+        #     ],
+        #     heading="Награды и достижения",
+        # ),
         MultiFieldPanel(
             [
                 FieldPanel("partnership_section"),
@@ -406,6 +406,9 @@ class HomePage(Page):
         """Получить дочерние страницы определенного типа"""
         return self.get_children().type(model_class).live()
 
+    def get_preview_template(self, request, mode_name):
+        return "home/home_page.html"
+    
     class Meta:
         verbose_name = "Главная страница"
         verbose_name_plural = "Главные страницы"
