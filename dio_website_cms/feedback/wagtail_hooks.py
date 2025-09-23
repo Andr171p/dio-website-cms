@@ -9,7 +9,16 @@ class FeedbackMessageAdmin(admin.ModelAdmin):
     model = FeedbackMessage
     menu_label = "Обратная связь"
     menu_icon = "mail"
-    list_display = ("name", "email", "phone", "created_at", "is_processed")
+    list_display = (
+        "name",
+        "email",
+        "phone",
+        "company",
+        "service_of_interest",
+        "message",
+        "created_at",
+        "is_processed",
+    )
     list_filter = ("created_at", "is_processed")
     search_fields = ("name", "email", "message")
     list_editable = ("is_processed",)
@@ -20,5 +29,13 @@ class FeedbackMessageAdmin(admin.ModelAdmin):
     # Разрешаем только изменение поля is_processed
     def get_readonly_fields(self, request, obj=None):  # noqa: ARG002
         if obj:  # editing an existing object
-            return ["name", "email", "phone", "message", "created_at"]
+            return [
+                "name",
+                "email",
+                "phone",
+                "company",
+                "service_of_interest",
+                "message",
+                "created_at",
+            ]
         return self.readonly_fields

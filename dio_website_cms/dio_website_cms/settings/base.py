@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "solutions",
     "chat",
     "feedback",
+    "notification",
     # Установленные приложения
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     "wagtail",
     "modelcluster",
     "taggit",
+    "django_extensions",
     "django_filters",
     "django.contrib.admin",
     "django.contrib.auth",
