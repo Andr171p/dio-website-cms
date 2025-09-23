@@ -1,21 +1,68 @@
 {% extends "base.html" %}
-{% load static %}
+{% load wagtailcore_tags wagtailimages_tags static %}
 
-{% block body_class %}template-homepage{% endblock %}
+{% block title %}{{ page.title }} | Мой сайт{% endblock %}
 
 {% block extra_css %}
-
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-<link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
-{% endblock extra_css %}
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+{% endblock %}
 
 {% block content %}
+<!-- Hero секция -->
+{% if page.header_section %}
+    {% for block in page.header_section %}
+        {% if block.block_type == 'header' %}
+            <header class="section is-secondary ">
+                <div class="container">
+                    <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
+                        <div id="w-node-{{ block.id }}-header" class="header margin-bottom_none">
+                            {% for slide in block.value.slides %}
+                                <h1 class="heading_h1">{{ slide.value.headline }}</h1>
+                                <p class="subheading">{{ slide.value.subheadline }}</p>
+                                <div class="button-group">
+                                    {% if block.value.buttons %}
+                                        {% for button in block.value.buttons %}
+                                            <a href="{{ button.value.url }}" class="button{% if button.is_secondary %} is-secondary{% endif %} w-button">{{ button.text }}</a>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="w-layout-grid grid_2-col tablet-1-col gap-xsmall ">
+                            {% for slide in block.value.slides %}
+                                {% for image in slide.value.images %}
+                                    <div class="image-ratio_auto ratio_3x2_tablet-1 image-item " data-index="{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}">
+                                        {% image image width-1920 height-1080 as img %}
+                                        <img src="{{ img.url }}" 
+                                            {% if forloop.counter0 == 0 %}
+                                                width="280" height="346"
+                                            {% elif forloop.counter0 == 1 %}
+                                                width="280" height="613"
+                                            {% elif forloop.counter0 == 2 %}
+                                                width="280" height="251"
+                                            {% endif %}
+                                            alt="{{ slide.value.headline }} [image {{ forloop.counter0|add:1 }}]" 
+                                            loading="lazy" 
+                                            class="image_cover">
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </header>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 
-{% comment %}
-Delete the line below if you're just getting started and want to remove the welcome screen!
-{% endcomment %}
-{% include 'home/welcome_page.html' %}
+<!-- Остальная часть контента -->
+{% include "home/partnership_section.html" with page=page %}
+{% include "home/cases_section.html" %}
+{% include "home/news.html" %}
+{% include "home/statistics_section.html" with statistic_pages=page.statistic_pages %}
+{% include "certificates/certificates_page.html" %}
+{% endblock %}
 
-{% endblock content %}
+{% block extra_js %}
+    <script src="{% static 'js/header.js' %}"></script>
+{% endblock %}

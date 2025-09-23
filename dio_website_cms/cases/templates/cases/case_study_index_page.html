@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+
+
+{% block content %}
+<section id="cases-section" class="bg-gradient-to-b from-blue-900 to-blue-800 text-white py-24">
+    <div class="max-w-7xl mx-auto px-6 pt-40">
+        <!-- Заголовок + кнопка -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-16">
+            <h2 class="text-5xl font-extrabold tracking-tight">
+                Наши кейсы
+            </h2>
+            {% if value.show_view_all_button %}
+            {% with cases_index=page.get_cases_index %}
+            {% if cases_index %}
+            <a href="{% pageurl cases_index %}"
+               class="px-6 py-3 rounded-xl border border-white/50 text-white font-medium hover:bg-white hover:text-blue-900 transition">
+                Все кейсы →
+            </a>
+            {% endif %}
+            {% endwith %}
+            {% endif %}
+        </div>
+
+        <!-- Filters -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8 opacity-0 transition-opacity duration-700" data-animate="fadeInUp" data-delay="0.2">
+            <a href="{% pageurl page %}" class="px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 flex items-center {% if not current_industry %}bg-blue-600 text-white{% else %}bg-white text-gray-600 hover:text-blue-600 border border-gray-200 hover:border-blue-200{% endif %}">
+                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                Все проекты
+            </a>
+            {% for industry_id, industry_name in INDUSTRY_CHOICES %}
+            <a href="?industry={{ industry_id }}" class="px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 {% if current_industry == industry_id %}bg-blue-600 text-white{% else %}bg-white text-gray-600 hover:text-blue-600 border border-gray-200 hover:border-blue-200{% endif %}">
+                {{ industry_name }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- Cases Grid -->
+        <div class="space-y-10">
+            {% for case in cases %}
+            <div class="relative bg-blue-700/40 hover:bg-blue-700/60 transition-all duration-300 rounded-3xl shadow-xl p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 hover:scale-[1.01] opacity-0 animate-fadeInUp" data-delay="{{ forloop.counter0|add:0.3 }}">
+                <!-- Логотип -->
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    {% if case.specific.customer_logo %}
+                        {% image case.specific.customer_logo width-120 height-120 as case_img %}
+                        <img src="{{ case_img.url }}" alt="{{ case.title }}" 
+                             class="w-20 h-20 md:w-24 md:h-24 rounded-xl object-contain bg-white shadow">
+                    {% endif %}
+                </div>
+
+                <!-- Контент -->
+                <div class="flex-1">
+                    {% if case.specific.get_industry_display %}
+                    <span class="inline-block text-xs px-3 py-1 bg-blue-500 text-white rounded-full mb-3">
+                        {{ case.specific.get_industry_display }}
+                    </span>
+                    {% endif %}
+                    <h3 class="text-2xl font-semibold leading-snug mb-3">
+                        {{ case.title }}
+                    </h3>
+                    <p class="text-blue-100 text-lg leading-relaxed mb-5">
+                        {{ case.specific.intro|striptags }}
+                    </p>
+                    <a href="{% pageurl case %}" 
+                       class="inline-block px-6 py-3 bg-white text-blue-900 rounded-xl font-semibold hover:bg-blue-200 transition">
+                        Подробнее →
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-12 opacity-0 animate-fadeInUp" data-delay="0.3">
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-blue-100 text-blue-600 rounded-full mb-3">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-200 mb-1">Проектов пока нет</h3>
+                <p class="text-blue-100 max-w-md mx-auto">Скоро здесь появятся наши кейсы и проекты</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if cases.has_other_pages %}
+        <div class="text-center mt-10 opacity-0 transition-opacity duration-700" data-animate="fadeInUp" data-delay="0.4">
+            <div class="inline-flex items-center gap-1 bg-white rounded-lg shadow-sm p-1 border border-gray-200">
+                {% if cases.has_previous %}
+                <a href="?page={{ cases.previous_page_number }}{% if current_industry %}&industry={{ current_industry }}{% endif %}" class="flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors duration-200">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Назад
+                </a>
+                {% endif %}
+                
+                {% for num in cases.paginator.page_range %}
+                    {% if cases.number == num %}
+                    <span class="px-3 py-1.5 text-sm font-medium bg-blue-600 text-white rounded-md shadow-sm">{{ num }}</span>
+                    {% elif num > cases.number|add:-3 and num < cases.number|add:3 %}
+                    <a href="?page={{ num }}{% if current_industry %}&industry={{ current_industry }}{% endif %}" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-700 rounded-md transition-colors duration-200">
+                        {{ num }}
+                    </a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if cases.has_next %}
+                <a href="?page={{ cases.next_page_number }}{% if current_industry %}&industry={{ current_industry }}{% endif %}" class="flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors duration-200">
+                    Вперед
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        
+    </div>
+</section>
+
+<style>
+
+.prose h1, h1 {
+    font-weight: 700;
+}
+.prose {
+    color: #4B5563;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeInUp {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+.line-clamp-2, .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.line-clamp-2 { -webkit-line-clamp: 2; }
+.line-clamp-3 { -webkit-line-clamp: 3; }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                const delay = parseInt(element.getAttribute('data-delay') || '0') * 100;
+                setTimeout(() => {
+                    element.classList.add("animate-fadeInUp");
+                }, delay);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll("[data-animate]:not([data-animated])").forEach(item => observer.observe(item));
+});
+</script>
+{% endblock %}

@@ -1,7 +1,11 @@
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
+<<<<<<< HEAD
 from rest_framework.decorators import api_view, parser_classes, permission_classes
 from rest_framework.parsers import FormParser, MultiPartParser
+=======
+from rest_framework.decorators import api_view, permission_classes
+>>>>>>> b17fa042fdb595f90e37f79bb887188aa444b013
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -47,7 +51,10 @@ def add_document_(request) -> Response:
 
 @csrf_exempt
 @api_view(["POST"])
+<<<<<<< HEAD
 @parser_classes([MultiPartParser, FormParser])
+=======
+>>>>>>> b17fa042fdb595f90e37f79bb887188aa444b013
 @permission_classes([IsAuthenticated])
 def upload_document_(request) -> Response:
     if "file" not in request.FILES:
@@ -69,4 +76,8 @@ def delete_document_(request) -> Response:
             status=status.HTTP_400_BAD_REQUEST,
         )
     ids = serializer.validated_data["ids"]
+<<<<<<< HEAD
     return Response(delete_document(ids), status=status.HTTP_204_NO_CONTENT)
+=======
+    return Response(delete_document(ids), status=status.HTTP_204_NO_CONTENT)
+>>>>>>> b17fa042fdb595f90e37f79bb887188aa444b013

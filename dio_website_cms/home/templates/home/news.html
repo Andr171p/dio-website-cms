@@ -1,0 +1,148 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<!-- Секция новостей -->
+<section class="section overflow_hidden ">
+    <div class="container">
+        <!-- Header -->
+        <div id="w-node-{{ block.id }}-header" class="header is-align-center w-node-news-header">
+            <div class="eyebrow">Последние новости</div>
+            <h2 class="heading_h2">Оставайтесь в курсе событий</h2>
+            <p class="subheading max-w-2xl mx-auto">
+                Следите за последними достижениями и новостями компании ДИО-Консалт.
+            </p>
+        </div>
+
+        <!-- News Grid -->
+        <div class="w-layout-grid grid_3-col gap-medium">
+            {% for news_item in page.get_news %}
+            <article class="card opacity-0 translate-y-8" data-animate="fadeInUp" data-delay="{{ forloop.counter0|add:0.1 }}">
+                <div class="card_body_small">
+                    <!-- Image -->
+                    <div class="image-ratio_3x2 margin-bottom_small rounded-lg overflow-hidden">
+                        {% if news_item.image %}
+                        {% image news_item.image fill-400x300 format-webp loading="lazy" class="image_cover transition-transform duration-500 hover:scale-105" alt=news_item.title %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Date and Read Time -->
+                    <div class="flex items-center justify-between mb-3 text-l font-extrabold tracking-tight">
+                        <span class="flex items-center ">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            {{ news_item.date|date:"d.m.Y" }}
+                        </span>
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            {{ news_item.read_time }} мин
+                        </span>
+                    </div>
+
+                    <!-- Content -->
+                    <h3 class="heading_h4 font-extrabold tracking-tight">
+                        <a href="{% pageurl news_item %}" class="">
+                            {{ news_item.headline }}
+                        </a>
+                    </h3>
+                    <p class="subheading">{{ news_item.intro }}</p>
+                    
+                    <a href="{% pageurl news_item %}" class="mt-auto inline-block px-6 py-3 rounded-xl font-semibold  transition">
+                        Читать <div data-w-id="2b28e7cf-8fb8-937e-4b41-1dbf03b0a1f1" class="button_icon"><svg data-w-id="2b28e7cf-8fb8-937e-4b41-1dbf03b0a1f0" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 16 16" fill="none"><path data-w-id="2b28e7cf-8fb8-937e-4b41-1dbf03b0a1ef" d="M2 8H14.5M14.5 8L8.5 2M14.5 8L8.5 14" stroke="currentColor"></path></svg></div> 
+                    </a>
+                    
+                </div>
+            </article>
+            {% empty %}
+            <div class="col-span-full text-center py-12 opacity-0" data-animate="fadeInUp" data-delay="0.1">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">Новостей пока нет</h3>
+                <p class="text-gray-500 max-w-md mx-auto">Скоро здесь появятся свежие новости компании.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Кнопка "Все новости" -->
+        {% with news_index=page.get_news_index %}
+        {% if news_index %}
+        <div class="text-center mt-12" data-animate="fadeInUp" data-delay="0.2">
+            <a href="{% pageurl news_index %}" class="button is-secondary w-button">
+                Все новости
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</section>
+
+<style>
+    
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(50px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    [data-animate].active {
+        animation: fadeInUp 0.3s ease-out forwards;
+    }
+    [data-animate="slideIn"].active {
+        animation: slideIn 0.3s ease-out forwards;
+    }
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                const delay = parseFloat(element.getAttribute('data-delay') || '0') * 1000;
+                setTimeout(() => {
+                    element.classList.add('active');
+                    element.dataset.animated = 'true';
+                }, delay);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '50px 0px' });
+
+    document.querySelectorAll('[data-animate]:not([data-animated])').forEach((el) => {
+        observer.observe(el);
+    });
+
+    // Lazy load images
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    const imageObserver = new IntersectionObserver((items, observer) => {
+        items.forEach((item) => {
+            if (item.isIntersecting) {
+                const img = item.target;
+                img.src = img.dataset.src || img.src;
+                observer.unobserve(img);
+            }
+        });
+    }, { threshold: 0.1 });
+    images.forEach((img) => imageObserver.observe(img));
+});
+</script>

@@ -7,6 +7,7 @@ dependencies = [
     "django-cors-headers>=4.8.0",
     "django-extensions>=4.1",
     "django-stubs[compatible-mypy]>=5.2.3",
+    "django-tailwind>=4.2.0",
     "wagtail>=7.1.1",
     "wagtailmenus>=4.0.4",
 ]
