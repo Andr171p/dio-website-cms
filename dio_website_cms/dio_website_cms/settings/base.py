@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'django_htmx',
     "tailwind",
-    "wagtailai"
+    
     # "wagtailmenus",
     
 ]

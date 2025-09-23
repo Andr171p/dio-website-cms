@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </h3>
 
                             <!-- Description -->
-                            <p class="paragraph_small text-color_secondary">{{ achievement.value.description|richtext }}</p>
+                            <!-- <p class="paragraph_small text-color_secondary">{{ achievement.value.description|richtext }}</p> -->
 
                             <!-- Divider -->
                             <div class="divider margin-top_small" style="max-width: 60px;"></div>
@@ -187,15 +187,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
                 <!-- Right Column - Testimonial -->
-                <div class="testimonial-card">
+                <div class="testimonial-card card on-secondary w-node-_40dbe3e1-b810-1a50-0d31-082886e8dbe5-372e0d7f">
                     <div class="card_body">
-                        <div class="flex_horizontal is-y-center gap-xsmall margin-bottom_small">
+                        <p class="eyebrow">Отзывы клиентов</p>
+                        <div class="flex_horizontal is-y-center gap-xsmall margin-bottom_small ">
                             <img width="64" height="64" alt="Екатерина Кузнецова" 
                                  src="https://cdn.prod.website-files.com/68d0517d75ef0d388acbf76f/68d05623880d199c461dd270_a77e9196-83f4-460d-8172-312b03b35eb3.avif" 
                                  loading="lazy" class="avatar">
                             <div>
-                                <div class="paragraph_small margin-bottom_none">Екатерина Кузнецова</div>
-                                <div class="paragraph_small text-color_secondary margin-bottom_xxsmall">ТехноИнновации</div>
+                                <div class="paragraph_small margin-bottom_none">Иванов Иван</div>
+                                <div class="paragraph_small text-color_secondary margin-bottom_xxsmall">Компания</div>
                             </div>
                         </div>
                         <p class="paragraph_xlarge random-letters-element" 
@@ -369,8 +370,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Проверяем при загрузке и при скролле
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
+    
 });
 </script>
