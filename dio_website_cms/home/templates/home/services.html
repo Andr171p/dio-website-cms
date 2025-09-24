@@ -15,7 +15,7 @@
                 {% if case.main_image %}
                     {% image case.main_image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
                 {% endif %}
-                <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/40 text-white">
+                <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/10 text-white">
                     <!-- Верхняя часть: Категория и технологии -->
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-3">
@@ -92,6 +92,6 @@
     justify-content: space-between;
 }
 .group:hover .card_body_small {
-    background-color: rgba(0, 0, 0, 0.7); /* Усиление затемнения при наведении */
+    background-color: rgba(255, 255, 255, 0.7); /* Усиление затемнения при наведении */
 }
-</style>
+</style>    
