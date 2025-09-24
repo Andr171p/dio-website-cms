@@ -3,14 +3,14 @@
 <section class="section">
     <div class="container">
         <!-- Заголовок -->
-        <div class="header text-center">
+        <div class="header ">
             <h2 class="heading_h1 max-width_large">Наши услуги</h2>
         </div>
 
         <!-- Сетка кейсов 2 колонки -->
         <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
             {% for case in page.get_cases %}
-            <a href="{{ case.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group">
+            <a href="{{ case.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
                 <!-- Фоновое изображение с анимацией -->
                 {% if case.main_image %}
                     {% image case.main_image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
@@ -84,7 +84,7 @@
 }
 .card {
     position: relative;
-    height: 400px; /* Фиксированная высота для согласованности */
+     /* Фиксированная высота для согласованности */
     overflow: hidden;
 }
 .card .card_body_small {
