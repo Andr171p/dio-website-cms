@@ -33,11 +33,8 @@ INSTALLED_APPS = [
     "services",
     "solutions",
     "chat",
-<<<<<<< HEAD
     "feedback",
     "notification",
-=======
->>>>>>> b17fa042fdb595f90e37f79bb887188aa444b013
     # Установленные приложения
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
@@ -51,6 +48,7 @@ INSTALLED_APPS = [
     "wagtail.search",
     "wagtail.admin",
     "wagtail",
+    "wagtailmenus",
     "modelcluster",
     "taggit",
     "django_extensions",
@@ -64,10 +62,8 @@ INSTALLED_APPS = [
     "wagtail.api.v2",
     "rest_framework",
     "corsheaders",
-    'django_htmx',
-    "tailwind"
-    # "wagtailmenus",
-    
+    "django_htmx",
+    "tailwind",
 ]
 
 # # Настройки меню
@@ -90,7 +86,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
-    'django_htmx.middleware.HtmxMiddleware',
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -115,12 +111,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-<<<<<<< HEAD
                 "wagtailmenus.context_processors.wagtailmenus",
-=======
-                "wagtail.contrib.settings.context_processors.settings",
-                # "wagtailmenus.context_processors.wagtailmenus"
->>>>>>> b17fa042fdb595f90e37f79bb887188aa444b013
             ],
         },
     },
@@ -131,12 +122,14 @@ WSGI_APPLICATION = "dio_website_cms.wsgi.application"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.parsers.JSONParser",
-        "rest_framework.parsers.MultiPartParser",
-        "rest_framework.parsers.FormParser",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
+        "rest_framework.parsers.FormParser",
+        "rest_framework.parsers.MultiPartParser",
     ],
 }
 # Database
@@ -174,11 +167,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "ru"
 
-TIME_ZONE = "Europe/Moscow"
-
-USE_I18N = True
-
+TIME_ZONE = "Asia/Yekaterinburg"
 USE_TZ = True
+USE_L10N = True
+USE_I18N = True
 
 
 # Static files (CSS, JavaScript, Images)

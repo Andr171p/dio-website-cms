@@ -6,8 +6,10 @@ requires-python = ">=3.11"
 dependencies = [
     "django-cors-headers>=4.8.0",
     "django-extensions>=4.1",
+    "django-htmx>=1.26.0",
     "django-stubs[compatible-mypy]>=5.2.3",
     "django-tailwind>=4.2.0",
+    "pytz>=2025.2",
     "wagtail>=7.1.1",
     "wagtailmenus>=4.0.4",
 ]

@@ -4,6 +4,8 @@ from django.db import models
 from notification.utils import create_admin_notification
 from wagtail.admin.panels import FieldPanel
 
+from .utils import get_tumen_time
+
 
 class FeedbackMessage(models.Model):
     name = models.CharField(max_length=255, verbose_name="Имя")
@@ -12,7 +14,7 @@ class FeedbackMessage(models.Model):
     company = models.CharField(verbose_name="Компания", blank=True, null=True)
     service_of_interest = models.CharField(verbose_name="Интересующа услуга")
     message = models.TextField(verbose_name="Сообщение")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    created_at = models.DateTimeField(default=get_tumen_time, verbose_name="Дата создания")
     is_processed = models.BooleanField(default=False, verbose_name="Обработано")
 
     panels: ClassVar[list[FieldPanel]] = [
@@ -22,7 +24,6 @@ class FeedbackMessage(models.Model):
         FieldPanel("company"),
         FieldPanel("service_of_interest"),
         FieldPanel("message"),
-        FieldPanel("created_at"),
         FieldPanel("is_processed"),
     ]
 
@@ -32,7 +33,7 @@ class FeedbackMessage(models.Model):
         ordering: ClassVar[list] = ["-created_at"]
 
     def __str__(self):
-        return f"{self.phone} - {self.created_at.strftime('%d.%m.%Y %H:%M')}"
+        return f"{self.email}"
 
     def save(self, *args, **kwargs):
         is_new = self.pk is None
@@ -40,7 +41,6 @@ class FeedbackMessage(models.Model):
 
         if is_new:
             create_admin_notification(
-                message=f"Новое сообщение обратной связи от {self.phone}",
-                level="info",
-                url=f"/admin/yourapp/feedbackmessage/{self.id}/",
+                message=f"Новое сообщение обратной связи от {self.email}",
+                url=f"http://127.0.0.1:7000/admin/snippets/feedback/feedbackmessage/edit/{self.id}/",  # type: ignore  # noqa: PGH003
             )

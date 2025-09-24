@@ -23,7 +23,7 @@ class FeedbackForm(forms.ModelForm):
             "phone": forms.TextInput(attrs={"class": "form-control", "placeholder": "Телефон"}),
             "company": forms.TextInput(attrs={"class": "form-control", "placeholder": "Компания"}),
             "service_of_interest": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Интересующа услуга"}
+                attrs={"class": "form-control", "placeholder": "Интересующая услуга"}
             ),
             "message": forms.Textarea(
                 attrs={"class": "form-control", "placeholder": "Сообщение", "rows": 4}

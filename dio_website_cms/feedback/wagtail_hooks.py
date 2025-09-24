@@ -1,41 +1,42 @@
-# wagtail_hooks.py
-from django.contrib import admin
+from typing import ClassVar
+
+from wagtail.admin.panels import FieldPanel
+from wagtail.snippets.models import register_snippet
+from wagtail.snippets.views.snippets import SnippetViewSet
 
 from .models import FeedbackMessage
 
 
-@admin.register(FeedbackMessage)
-class FeedbackMessageAdmin(admin.ModelAdmin):
+class FeedbackMessageViewSet(SnippetViewSet):
     model = FeedbackMessage
     menu_label = "Обратная связь"
-    menu_icon = "mail"
-    list_display = (
-        "name",
-        "email",
-        "phone",
-        "company",
-        "service_of_interest",
-        "message",
-        "created_at",
-        "is_processed",
-    )
+    menu_icon = "comment"
+    menu_order = 300
+    add_to_settings_menu = False
+    list_display = ("email", "created_at", "is_processed")
     list_filter = ("created_at", "is_processed")
-    search_fields = ("name", "email", "message")
-    list_editable = ("is_processed",)
+    search_fields = ("name", "email", "phone", "message")
+    add_to_admin_menu = True
+
+    panels: ClassVar[list[FieldPanel]] = [
+        FieldPanel("name", read_only=True),
+        FieldPanel("email", read_only=True),
+        FieldPanel("phone", read_only=True),
+        FieldPanel("company", read_only=True),
+        FieldPanel("service_of_interest", read_only=True),
+        FieldPanel("message", read_only=True),
+        FieldPanel("is_processed"),
+    ]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if qs is None:
+            qs = FeedbackMessage.objects.all()
+
+        return qs.order_by("-created_at")
 
     def has_add_permission(self, request):  # noqa: ARG002, PLR6301
         return False
 
-    # Разрешаем только изменение поля is_processed
-    def get_readonly_fields(self, request, obj=None):  # noqa: ARG002
-        if obj:  # editing an existing object
-            return [
-                "name",
-                "email",
-                "phone",
-                "company",
-                "service_of_interest",
-                "message",
-                "created_at",
-            ]
-        return self.readonly_fields
+
+register_snippet(FeedbackMessageViewSet)
