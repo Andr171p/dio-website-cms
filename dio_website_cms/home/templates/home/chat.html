@@ -1,0 +1,272 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<!-- Ваш существующий код до чата -->
+<section class="section is-inverse">
+    <div class="container">
+            <div class="chat-content w-full">
+                <div class="chat-header">
+                    <h2 class="heading_h4 text-center">AI Помощник</h2>
+                    <p class="paragraph_large text-color_secondary text-center margin-bottom_large">
+                        Задайте вопрос и получите мгновенную помощь!
+                    </p>
+                </div>
+                <div class="chat-container gap-xsmall w-list-unstyled" id="aiChat">
+                    <div class="chat-messages-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message bot-message">Привет! Я ваш AI-помощник. Задайте мне вопрос!</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-container w-form">
+                        <input type="text" id="chatInput" class="input_field w-input" placeholder="Введите сообщение...">
+                        <button class="button w-button" id="sendButton">Отправить</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+</section>
+
+<!-- Ваш остальной код -->
+<style>
+.chat-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 0;
+    background: #ece7db;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease;
+}
+
+.chat-header {
+    margin-bottom: 30px;
+}
+
+.chat-container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 900px; /* Увеличен размер */
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.chat-messages-container {
+    max-height: 400px; /* Увеличена высота */
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding-right: 10px; /* Для предотвращения перекрытия скролла */
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 100%;
+}
+
+.message {
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 10px;
+    max-width: 75%;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    word-break: break-word; /* Улучшенный перенос текста */
+    animation: slideIn 0.3s ease;
+}
+
+.bot-message {
+    background: #f8f9fa;
+    color: #333;
+    align-self: flex-start;
+}
+
+.user-message {
+    background: #1a2b3b;
+    color: #ffffff;
+    align-self: flex-end;
+}
+
+.chat-input-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.chat-input-container .input_field {
+    flex-grow: 1;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    box-sizing: border-box;
+    color: #000000; /* Явно задаём чёрный цвет для текста */
+}
+
+.chat-input-container .button {
+    padding: 12px 25px;
+    background: #1a2b3b;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    white-space: nowrap;
+}
+
+.chat-input-container .button:hover {
+    background: #0056b3;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Стили для скроллбара */
+.chat-messages-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.chat-messages-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.chat-messages-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+@media (max-width: 767px) {
+    .chat-container {
+        padding: 20px;
+        max-width: 90%;
+    }
+    .chat-messages-container {
+        max-height: 350px;
+    }
+    .chat-input-container .button {
+        padding: 10px 20px;
+    }
+}
+</style>
+
+<!-- Подключение JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendButton = document.getElementById('sendButton');
+    const chatMessagesContainer = document.querySelector('.chat-messages-container');
+
+    if (!chatMessages || !chatInput || !sendButton || !chatMessagesContainer) {
+        console.error('One or more chat elements not found:', {
+            chatMessages: !!chatMessages,
+            chatInput: !!chatInput,
+            sendButton: !!sendButton,
+            chatMessagesContainer: !!chatMessagesContainer
+        });
+        return;
+    }
+
+    // Функция для плавной прокрутки к последнему сообщению
+    function scrollToBottom() {
+        if (chatMessagesContainer) {
+            // Используем плавную прокрутку
+            chatMessagesContainer.scrollTo({
+                top: chatMessagesContainer.scrollHeight,
+                behavior: 'smooth'
+            });
+            
+            // Дублируем для надежности
+            setTimeout(() => {
+                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+            }, 100);
+            
+        } else {
+            console.error('chatMessagesContainer is not available');
+        }
+    }
+
+    // Функция отправки сообщения
+    function sendMessage() {
+        const messageText = chatInput.value.trim();
+        if (!messageText) {
+            return;
+        }
+
+        // Очищаем поле ввода сразу
+        chatInput.value = '';
+
+        // Добавляем сообщение пользователя
+        const userMessage = document.createElement('div');
+        userMessage.className = 'message user-message';
+        userMessage.textContent = messageText;
+        chatMessages.appendChild(userMessage);
+        
+        // Прокручиваем к сообщению пользователя
+        scrollToBottom();
+
+        // Симуляция ответа бота
+        setTimeout(() => {
+            const botMessage = document.createElement('div');
+            botMessage.className = 'message bot-message';
+            botMessage.textContent = 'Это тестовый ответ. Как могу помочь?';
+            chatMessages.appendChild(botMessage);
+            
+            // Прокручиваем к ответу бота
+            scrollToBottom();
+        }, 1000);
+    }
+
+    // Инициализация при загрузке - прокручиваем к начальному сообщению
+    setTimeout(scrollToBottom, 100);
+
+    // Наблюдатель за изменениями в сообщениях (для дополнительной надежности)
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length) {
+                // Небольшая задержка для гарантии, что DOM обновился
+                setTimeout(scrollToBottom, 50);
+            }
+        });
+    });
+
+    // Начинаем наблюдение за изменениями
+    observer.observe(chatMessages, { 
+        childList: true, 
+        subtree: true 
+    });
+
+    // Обработчики событий
+    sendButton.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    // Также прокручиваем при изменении размера окна (на случай респонсива)
+    window.addEventListener('resize', function() {
+        setTimeout(scrollToBottom, 100);
+    });
+
+});
+</script>

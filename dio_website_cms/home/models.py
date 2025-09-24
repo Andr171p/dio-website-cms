@@ -1,9 +1,10 @@
 from typing import ClassVar
 from django.db import models
 from wagtail.models import Page
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.api import APIField
 from wagtail.images.models import Image
+from wagtail.fields import RichTextField
 from wagtail.blocks import (
     CharBlock,
     RichTextBlock,
@@ -16,6 +17,8 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail import blocks
 from news.models import NewsBlock
 from .blocks import ContactsBlock, FeedbackFormBlock
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 
 # from wagtailai.panels import AIPanel, ai_indexable
 
@@ -291,7 +294,24 @@ class HomePage(Page):
         verbose_name="Секция партнёрств",
     )
 
+    eyebrow = models.CharField(
+        max_length=255, blank=True, help_text="Подзаголовок над основным заголовком"
+    )
+    heading = models.CharField(
+        max_length=255, blank=True, help_text="Основной заголовок"
+    )
+    subheading = models.TextField(blank=True, help_text="Подзаголовок или описание")
+
     content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("eyebrow"),
+                FieldPanel("heading"),
+                FieldPanel("subheading"),
+            ],
+            heading="Заголовок и описание",
+        ),
+        InlinePanel("faq_items", label="Часто задаваемые вопросы"),
         MultiFieldPanel(
             [
                 FieldPanel("header_section"),
@@ -351,6 +371,7 @@ class HomePage(Page):
         APIField("certificates"),
         APIField("awards"),
         APIField("partnership_section"),
+        APIField("content_panels"),
     ]
 
     def get_cases(self, count=6):
@@ -408,7 +429,22 @@ class HomePage(Page):
 
     def get_preview_template(self, request, mode_name):
         return "home/home_page.html"
-    
+
     class Meta:
         verbose_name = "Главная страница"
         verbose_name_plural = "Главные страницы"
+
+
+class FAQItem(ClusterableModel):
+    page = ParentalKey(HomePage, on_delete=models.CASCADE, related_name="faq_items")
+    question = models.CharField(max_length=255, help_text="Вопрос")
+    answer = RichTextField(blank=True, help_text="Ответ на вопрос")
+
+    panels = [
+        FieldPanel("question"),
+        FieldPanel("answer"),
+    ]
+
+    class Meta:
+        verbose_name = "Вопрос-ответ"
+        verbose_name_plural = "Часто задаваемые вопросы"

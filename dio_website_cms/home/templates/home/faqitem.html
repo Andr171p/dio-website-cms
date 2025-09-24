@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<section class="section is-secondary">
+    <div class="container">
+        <div class="header w-node-_9e6f83a0-9b71-aacf-3312-ff7e410fab03-372e0d7f">
+            <div class="eyebrow">{{ page.eyebrow }}</div>
+            <h2 class="heading_h1">{{ page.heading }}</h2>
+            <p class="subheading">{{ page.subheading }}</p>
+        </div>
+        <div class="w-layout-grid grid_3-col gap-medium w-node-_9e6f83a0-9b71-aacf-3312-ff7e410faeeb-372e0d7f">
+            {% for item in page.faq_items.all %}
+            <div class="padding-left_medium divider-vertical padding-top_xxsmall">
+                <h3 class="heading_h4">{{ item.question }}</h3>
+                <div class="rich-text w-richtext">
+                    {{ item.answer|richtext }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

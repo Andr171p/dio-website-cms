@@ -6,7 +6,7 @@
       <a href="/" class="nav_logo w-inline-block">
         {% get_settings use_default_site=True as settings %}
         {% if settings.base.HeaderSettings.logo %}
-          {% image settings.base.HeaderSettings.logo width-40 height-40 as logo %}
+          {% image settings.base.HeaderSettings.logo width-560 height-560 as logo %}
           <div class="nav_logo-icon">
             <img src="{{ logo.url }}" alt="{{ settings.base.HeaderSettings.site_title|default:'Логотип сайта' }}" class="w-full h-full object-cover">
           </div>
@@ -150,3 +150,22 @@
   </div>
 </div>
 
+<style>
+/* Существующие стили остаются, добавляем новые */
+.nav.is-secondary {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Высокий z-index, чтобы был поверх контента */
+    background-color: #2c3d50; /* Или ваш цвет фона */
+    box-shadow: 0 0 0 1px #000000;
+}
+
+/* Добавьте отступ для контента под хедером, чтобы он не перекрывался */
+body {
+    padding-top: 60px; /* Высота хедера, подстройте под ваш дизайн */
+}
+
+/* Оставьте остальные стили, например для .nav_container, .nav_menu и т.д. */
+</style>
