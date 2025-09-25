@@ -19,7 +19,7 @@ from news.models import NewsBlock
 from .blocks import ContactsBlock, FeedbackFormBlock
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-
+from services.models import ServiceBlock
 # from wagtailai.panels import AIPanel, ai_indexable
 
 
@@ -301,8 +301,24 @@ class HomePage(Page):
         max_length=255, blank=True, help_text="Основной заголовок"
     )
     subheading = models.TextField(blank=True, help_text="Подзаголовок или описание")
+    
+
+    content = StreamField([
+        ('hero', StructBlock([
+            ('title', CharBlock(required=True, label="Заголовок")),
+            ('image', ImageChooserBlock(required=True, label="Изображение")),
+        ])),
+        ('services_section', ServiceBlock()),
+    ], blank=True, use_json_field=True, verbose_name="Секции страницы")
+
+    
+
+    
 
     content_panels = Page.content_panels + [
+         MultiFieldPanel([
+            FieldPanel('content'),
+        ], heading="Секции страницы"),
         MultiFieldPanel(
             [
                 FieldPanel("eyebrow"),
@@ -372,7 +388,12 @@ class HomePage(Page):
         APIField("awards"),
         APIField("partnership_section"),
         APIField("content_panels"),
+         APIField('content'),
     ]
+    def get_services(self, count=6):
+        """Получить последние услуги из связанной SingleServicePage"""
+        from services.models import SingleServicePage
+        return SingleServicePage.objects.live().order_by("-date")[:count]
 
     def get_cases(self, count=6):
         """Получить последние кейсы"""
