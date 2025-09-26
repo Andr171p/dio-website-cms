@@ -2,9 +2,8 @@ from typing import ClassVar
 
 from django.db import models
 from notification.utils import create_admin_notification
+from utils import get_tumen_time
 from wagtail.admin.panels import FieldPanel
-
-from .utils import get_tumen_time
 
 
 class FeedbackMessage(models.Model):
@@ -15,7 +14,7 @@ class FeedbackMessage(models.Model):
     service_of_interest = models.CharField(verbose_name="Интересующа услуга")
     message = models.TextField(verbose_name="Сообщение")
     created_at = models.DateTimeField(default=get_tumen_time, verbose_name="Дата создания")
-    is_processed = models.BooleanField(default=False, verbose_name="Обработано")
+    is_processed = models.BooleanField(default=False, verbose_name="Просмотрено")
 
     panels: ClassVar[list[FieldPanel]] = [
         FieldPanel("name"),
@@ -41,6 +40,7 @@ class FeedbackMessage(models.Model):
 
         if is_new:
             create_admin_notification(
-                message=f"Новое сообщение обратной связи от {self.email}",
+                title="Новое сообщение обратной связи",
+                message=f"Сообщение обратной связи от {self.email}",
                 url=f"http://127.0.0.1:7000/admin/snippets/feedback/feedbackmessage/edit/{self.id}/",  # type: ignore  # noqa: PGH003
             )

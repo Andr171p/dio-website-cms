@@ -1,6 +1,6 @@
 from .models import AdminNotification
 
 
-def create_admin_notification(message, url=None):
+def create_admin_notification(title, message, url=None):
     """Создает новое уведомление в базе данных."""
-    return AdminNotification.objects.create(message=message, url=url)
+    return AdminNotification.objects.create(title=title, message=message, url=url)

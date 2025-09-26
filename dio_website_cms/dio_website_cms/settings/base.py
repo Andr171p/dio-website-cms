@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "chat",
     "feedback",
     "notification",
+    "vacancy",
     # Установленные приложения
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
@@ -66,6 +67,8 @@ INSTALLED_APPS = [
     "tailwind",
 ]
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # # Настройки меню
 # WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (
 #     ("header", "Header menu"),
