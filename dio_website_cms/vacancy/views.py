@@ -8,18 +8,18 @@ from .forms import VacancyForm
 
 @api_view(["POST"])
 @parser_classes([MultiPartParser, FormParser])
-def vacancy_view(request) -> Response:
+def vacancy_view(request):
     form_data = {
         "title": request.data.get("title"),
         "name": request.data.get("name"),
         "phone": request.data.get("phone"),
     }
 
-    # Создаем форму с данными и файлом
     form = VacancyForm(form_data, request.FILES)
     if form.is_valid():
-        form.save()
-        return Response(status=status.HTTP_200_OK)
-    return Response(
-        status=status.HTTP_400_BAD_REQUEST,
-    )
+        vacancy = form.save()
+        return Response(
+            {"message": "Резюме успешно отправлено", "id": vacancy.id}, status=status.HTTP_200_OK
+        )
+
+    return Response({"errors": form.errors}, status=status.HTTP_400_BAD_REQUEST)

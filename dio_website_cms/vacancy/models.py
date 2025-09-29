@@ -2,7 +2,6 @@ from typing import ClassVar
 
 from django.db import models
 from notification.utils import create_admin_notification
-from utils import get_tumen_time, validate_file_extension
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.models import Page
 from wagtail.search import index
@@ -39,26 +38,16 @@ class Vacancy(models.Model):
     resume = models.FileField(
         upload_to="resumes/%Y/%m/%d/",
         verbose_name="Резюме",
-        validators=[validate_file_extension],
         null=True,
         blank=True,
     )
-    created_at = models.DateTimeField(default=get_tumen_time, verbose_name="Дата создания")
+    resume_link = models.URLField(
+        verbose_name="Ссылка для скачивания резюме",
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     is_processed = models.BooleanField(default=False, verbose_name="Просмотрено")
-
-    panels: ClassVar[list[FieldPanel]] = [
-        MultiFieldPanel([
-            FieldPanel("title"),
-            FieldPanel("name"),
-            FieldPanel("phone"),
-            FieldPanel("resume"),
-        ]),
-        FieldPanel("is_processed"),
-    ]
-
-    class Meta:
-        verbose_name = "Резюме"
-        ordering: ClassVar[list] = ["-created_at"]
 
     def __str__(self):
         return f"{self.phone}"
@@ -67,9 +56,17 @@ class Vacancy(models.Model):
         is_new = self.pk is None
         super().save(*args, **kwargs)
 
+        # После сохранения обновляем поле ссылки
+        if self.resume:
+            self.resume_link = f"http://127.0.0.1:7000/vacancy/resume/download/{self.id}/"  # type: ignore  # noqa: PGH003
+        else:
+            self.resume_link = "Нет резюме"
+
         if is_new:
             create_admin_notification(
                 title="Новый отзыв на вакансию",
                 message=f"Резюме от {self.phone} на вакансию {self.title}",
                 url=f"http://127.0.0.1:7000/admin/snippets/vacancy/vacancy/edit/{self.id}/",  # type: ignore  # noqa: PGH003
             )
+        # Сохраняем еще раз чтобы обновить ссылку
+        super().save(update_fields=["resume_link"])

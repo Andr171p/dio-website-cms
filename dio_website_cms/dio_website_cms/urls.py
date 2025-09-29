@@ -6,6 +6,7 @@ from django.urls import include, path
 from feedback import views as feedback_views
 from search import views as search_views
 from vacancy import views as vacancies_views
+from vacancy.wagtail_hooks import download_resume
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
@@ -22,6 +23,7 @@ urlpatterns = [
     path("documents/delete/", chat_views.delete_document_, name="delete document"),
     path("feedback/", feedback_views.feedback_view, name="feedback"),
     path("vacancy/", vacancies_views.vacancy_view, name="vacancy"),
+    path("vacancy/resume/download/<int:vacancy_id>/", download_resume, name="download_resume"),
     path("", include("wagtail.urls")),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -22,27 +22,29 @@ class VacancyForm(forms.ModelForm):
             "phone": forms.TextInput(attrs={"class": "form-control", "placeholder": "Телефон"}),
             "resume": forms.FileInput(
                 attrs={
-                    "class": "form-control",
+                    "class": "form-control-file",
                     "placeholder": "Резюме",
                     "accept": ".pdf,.doc,.docx,.txt",
+                    "id": "resume-input",
                 }
             ),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["resume"].widget.attrs.update({"data-display": "file-display"})
+
     def clean_phone(self):
         phone = self.cleaned_data.get("phone")
         if phone:
-            # Удаляем все нецифровые символы
             digits = re.sub(r"\D", "", phone)
-
-            # Проверяем российские номера
             if digits.startswith("7") or digits.startswith("8"):
                 digits = digits[1:]
-
             if len(digits) != 10:
                 raise forms.ValidationError("Номер должен содержать 10 цифр")
-
-            # Форматируем номер
             return f"+7 ({digits[:3]}) {digits[3:6]}-{digits[6:8]}-{digits[8:10]}"
-
         return phone
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance

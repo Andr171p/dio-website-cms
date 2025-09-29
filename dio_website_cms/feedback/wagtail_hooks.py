@@ -1,6 +1,6 @@
 from typing import ClassVar
 
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
 
@@ -19,12 +19,14 @@ class FeedbackMessageViewSet(SnippetViewSet):
     add_to_admin_menu = True
 
     panels: ClassVar[list[FieldPanel]] = [
-        FieldPanel("name", read_only=True),
-        FieldPanel("email", read_only=True),
-        FieldPanel("phone", read_only=True),
-        FieldPanel("company", read_only=True),
-        FieldPanel("service_of_interest", read_only=True),
-        FieldPanel("message", read_only=True),
+        MultiFieldPanel([
+            FieldPanel("name", read_only=True),
+            FieldPanel("email", read_only=True),
+            FieldPanel("phone", read_only=True),
+            FieldPanel("company", read_only=True),
+            FieldPanel("service_of_interest", read_only=True),
+            FieldPanel("message", read_only=True),
+        ]),
         FieldPanel("is_processed"),
     ]
 
