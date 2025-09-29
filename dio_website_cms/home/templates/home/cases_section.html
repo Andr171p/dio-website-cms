@@ -1,124 +1,82 @@
 
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-<section class="section is-secondary">
-    <div class="container">
-        <!-- Заголовок -->
-        <div class="header is-align-center">
-            <div class="eyebrow">Успешные проекты</div>
-            <h2 class="heading_h1 max-width_large">Наши кейсы</h2>
-        </div>
 
-        <!-- Сетка кейсов 2 колонки -->
-        <div class="w-layout-grid grid_3-col w-node-_34d27092-df6c-f775-92ac-90f7530b4530-a11df62a">
-            {% for case in page.get_cases %}
-            <div class="card opacity-0 translate-y-8" data-animate="fadeInUp" >
-                <div class="card_body_small flex flex-col h-full">
-                     <!-- Логотип клиента -->
-                <div class="flex items-center gap-4 margin-bottom_xsmall">
-                    {% if case.customer_logo %}
-                        {% image case.customer_logo width-80 height-80 as case_img %}
-                        <img src="{{ case_img.url }}" alt="{{ case.title }}" 
-                            class="w-16 h-16 rounded-lg object-contain bg-white shadow-sm">
-                    {% endif %}
-                    <div>
-                        <!-- Технологии -->
-                        {% for block in case.content %}
-                        {% if block.block_type == "technologies" and block.value %}
-                        <span class="inline-block text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
-                            {{ block.value.0 }}
-                        </span>
-                        {% endif %}
+            <!-- Секция услуг -->
+            <section class="section ">
+                <div class="container">
+                    <!-- Заголовок -->
+                    <div class="header is-align-right">
+                        <div class="eyebrow">Успешные проекты</div>
+                        <h2 class="heading_h1 max-width_large">Наши кейсы</h2>
+                    </div>
+
+                    <!-- Сетка услуг 3 колонки -->
+                    <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
+                        {% for case in page.get_cases %}
+                            <a href="{{ case.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
+                                <!-- Фоновое изображение с анимацией -->
+                                {% if case.customer_logo %}
+                                    {% image case.customer_logo fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
+                                {% endif %}
+                                <div class="relative z-10 flex flex-col justify-between h-full p-6  text-white">
+                                    <!-- Верхняя часть: Категория -->
+                                    <div class="flex items-center justify-between mb-4">
+                                        
+                                        <div class="flex items-center gap-3">
+                                            {% for block in case.content %}
+                                            {% if block.block_type == "technologies" and block.value %}
+                                            <span class="inline-block text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
+                                            {{ block.value.0 }}
+                                        </span>
+                                        {% endif %}
+                                        {% endfor %}
+                                        </div>
+                                        
+                                        <span class="px-2 py-1 rounded-full bg-blue-600/50 text-white text-xs font-medium">
+                                            {{ case.get_industry_display}}
+                                        </span>
+                                    </div>
+
+                                    <!-- Текст -->
+                                    <div class="space-y-4 flex-grow">
+                                        <h3 class="heading_h3 text-blue-900">{{ case.title }}</h3>
+                                        <p class="subheading text-blue-900">
+                                            {{ case.intro|striptags|truncatewords:20  }}
+                                        </p>
+                                    </div>
+
+                                    <!-- Текст вместо кнопки -->
+                                    <div class="mt-auto text-blue-900 text-xl">
+                                        Подробнее
+                                        <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                        {% empty %}
+                            <div class="col-span-3 text-center py-12">
+                                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-600 mb-2">Кейсов пока нет</h3>
+                                <p class="text-gray-500 max-w-md mx-auto">Скоро здесь появятся наши кейсы.</p>
+                            </div>
                         {% endfor %}
                     </div>
-                    <span class="px-4 py-2 rounded-full bg-blue-600/50 text-white text-sm font-semibold ">
-                    {{ case.get_industry_display }}
-                </span>
+
+                    <!-- Кнопка "Все услуги" -->
+                    <div class="text-center mt-12">
+                        <a href="/cases/" class="button is-secondary w-button px-6 py-3 rounded-xl border border-white/50 text-white font-medium hover:bg-white inline-flex items-center">
+                            Все кейсы
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
-                
-
-                <!-- Заголовок и описание -->
-                <h3 class="heading_h4 margin-bottom_xsmall">{{ case.title }}</h3>
-                <p class="subheading inline-flex mt-auto">
-                    {{ case.intro|striptags|truncatewords:20 }}
-                </p>
-
-                <!-- Кнопка -->
-                <a href="{{ case.url }}" 
-                class="inline-flex items-center button w-button mt-auto">
-                    Подробнее о проекте
-                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-            </div>
-            </div>
-            {% empty %}
-            <div class="col-span-2 text-center py-12 opacity-0" data-animate="fadeInUp" data-delay="0.1">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-semibold text-gray-600 mb-2">Кейсов пока нет</h3>
-                <p class="text-gray-500 max-w-md mx-auto">Скоро здесь появятся наши успешные проекты.</p>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Кнопка "Все кейсы" -->
-        {% with cases_index=page.get_cases_index %}
-        {% if cases_index %}
-        <div class="text-center mt-12" data-animate="fadeInUp" data-delay="0.2">
-            <a href="/cases" class="btn-primary inline-flex items-center">
-                Все кейсы
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </a>
-        </div>
-        {% endif %}
-        
-        {% endwith %}
-        {% if value.show_view_all_button %}
-            {% with cases_index=page.get_cases_index %}
-            {% if cases_index %}
-            <div class="text-center mt-12" data-animate="fadeInUp" data-delay="0.2">
-            <a href="/cases" class="btn-primary inline-flex items-center">
-                Все кейсы
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </a>
-        </div>
-            {% endif %}
-            <div class="text-center mt-12" data-animate="fadeInUp" data-delay="0.2">
-            <a href="/cases" class="btn-primary inline-flex items-center">
-                Все кейсы
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </a>
-        </div>
-            {% endwith %}
-            <div class="text-center mt-12" data-animate="fadeInUp" data-delay="0.2">
-            <a href="/cases" class="btn-primary inline-flex items-center">
-                Все кейсы
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </a>
-        </div>
-            {% endif %}
-            <div class="text-center mt-12" data-animate="fadeInUp" data-delay="0.2">
-            <a href="/cases" class="px-6 py-3 rounded-xl border border-white/50 text-white font-medium hover:bg-white hover:text-blue-900 inline-flex items-center">
-                Все кейсы
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </a>
-        </div>
-    </div>
-</section>
-
+            </section>
 

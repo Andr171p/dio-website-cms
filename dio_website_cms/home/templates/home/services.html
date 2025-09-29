@@ -6,7 +6,7 @@
           
         {% elif block.block_type == 'services_section' %}
             <!-- Секция услуг -->
-            <section class="section">
+            <section class="section is-secondary">
                 <div class="container">
                     <!-- Заголовок -->
                     <div class="header">
@@ -34,7 +34,7 @@
 
                                     <!-- Текст -->
                                     <div class="space-y-4 flex-grow">
-                                        <h3 class="heading_h4 text-white">{{ service.headline }}</h3>
+                                        <h3 class="heading_h3 text-white">{{ service.headline }}</h3>
                                         <p class="subheading text-gray-200">
                                             {{ service.intro|striptags|truncatewords:14 }}
                                         </p>
@@ -64,7 +64,7 @@
 
                     <!-- Кнопка "Все услуги" -->
                     <div class="text-center mt-12">
-                        <a href="/services/" class="px-6 py-3 rounded-xl border border-white/50 text-white font-medium hover:bg-white hover:text-blue-900 inline-flex items-center">
+                        <a href="/services/" class="button is-secondary w-button px-6 py-3 rounded-xl border border-white/50 text-white font-medium hover:bg-white inline-flex items-center">
                             Все услуги
                             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

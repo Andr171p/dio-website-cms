@@ -451,6 +451,8 @@ class HomePage(Page):
     def get_preview_template(self, request, mode_name):
         return "home/home_page.html"
 
+    
+
     class Meta:
         verbose_name = "Главная страница"
         verbose_name_plural = "Главные страницы"

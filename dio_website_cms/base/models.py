@@ -5,6 +5,8 @@ from wagtail import blocks
 from wagtail.fields import StreamField, RichTextField
 from wagtail.blocks import  PageChooserBlock, CharBlock, URLBlock, TextBlock, StructBlock, ListBlock, ChoiceBlock, BooleanBlock
 from wagtail.models import DraftStateMixin, RevisionMixin, PreviewableMixin,Page
+from django.contrib.auth.models import User
+from django import forms 
 
 # ========== HEADER SETTINGS ==========
 @register_setting
@@ -309,9 +311,45 @@ class FooterSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGener
 
 
 # ========== CONTACT SETTINGS ==========
+
+class ContactSubmission(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Имя")
+    email = models.EmailField(verbose_name="Email")
+    phone = models.CharField(max_length=20, blank=True, verbose_name="Телефон")
+    message = models.TextField(verbose_name="Сообщение")
+    submitted_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата отправки")
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("email"),
+        FieldPanel("phone"),
+        FieldPanel("message"),
+        FieldPanel("submitted_at"),
+    ]
+
+    class Meta:
+        verbose_name = "Заявка"
+        verbose_name_plural = "Заявки"
+
+    def __str__(self):
+        return f"Заявка от {self.name} ({self.email})"
+
+
 @register_setting
 class ContactSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGenericSetting):
     """Настройки контактов"""
+    form_recipient_email = models.EmailField(
+        blank=True,
+        verbose_name="Email для заявок",
+        help_text="Email, на который будут отправляться заявки из формы."
+    )
+
+    notification_users = models.ManyToManyField(
+        User,
+        blank=True,
+        verbose_name="Пользователи для уведомлений",
+        help_text="Выберите пользователей, которые будут получать уведомления в админке."
+    )
     section_title = models.CharField(
         max_length=100,
         default="Связаться с нами",
@@ -369,6 +407,8 @@ class ContactSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGene
 
     content_panels = [
         MultiFieldPanel([
+            FieldPanel("form_recipient_email"),
+            FieldPanel("notification_users", widget=forms.CheckboxSelectMultiple),
             FieldPanel("section_title"),
             FieldPanel("section_description"),
             FieldPanel("primary_phone"),
