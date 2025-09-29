@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "feedback",
     "notification",
     "vacancy",
+    "ai",
     # Установленные приложения
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
@@ -70,10 +71,10 @@ INSTALLED_APPS = [
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # # Настройки меню
-# WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (
-#     ("header", "Header menu"),
-#     ("footer", "Footer menu"),
-# )
+# WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (  # noqa: ERA001, RUF100
+#     ("header", "Header menu"),  # noqa: ERA001
+#     ("footer", "Footer menu"),  # noqa: ERA001
+# )  # noqa: ERA001, RUF100
 
 WAGTAILAPI_BASE_URL = "http://localhost:8000/api"
 
