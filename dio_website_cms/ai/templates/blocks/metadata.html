@@ -1,0 +1,7 @@
+<div class="metadata-list">
+    {% for item in value %}
+        {% include_block item %}
+    {% empty %}
+        <p>Нет метаданных.</p>
+    {% endfor %}
+</div>

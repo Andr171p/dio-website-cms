@@ -23,15 +23,7 @@ class DocumentViewSet(SnippetViewSet):
         MultiFieldPanel(
             [
                 FieldPanel("page_content", widget=forms.Textarea(attrs={"rows": 10})),
-                FieldPanel(
-                    "metadata",
-                    widget=forms.Textarea(
-                        attrs={
-                            "rows": 5,
-                            "placeholder": '{"source": "example.pdf", "author": "John"}',
-                        }
-                    ),
-                ),
+                FieldPanel("metadata"),  # Уберите кастомный виджет
             ],
             heading="Содержимое документа",
         )
