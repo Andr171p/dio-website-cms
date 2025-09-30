@@ -12,30 +12,37 @@
     <div class="chat-widget" id="chatWidget">
       <div class="chat-header" id="chatHeader">
         <h2 class="heading_h2">Алёша</h2>
-        <span class=" heading_h1 chat-hint animate-pulse hidden">Спросите Алёшу</span>
+        <span class="chat-hint animate-pulse hidden">Спросите Алёшу</span>
       </div>
       <div class="chat-messages-container" id="chatMessagesContainer">
-        <div class="heading_h1 chat-messages" id="chatMessages">
+        <div class="chat-messages" id="chatMessages">
           <!-- Начальное сообщение бота (опционально, можно убрать) -->
           <!-- <div class="message bot-message1">Здравствуйте! Чем могу помочь?</div> -->
         </div>
         <!-- Большое поле ввода в центре -->
-        <div class="initial-input-container heading_h1" id="initialInputContainer">
+        <div class="initial-input-container" id="initialInputContainer">
           <input type="text" id="initialChatInput" placeholder="Задайте свой вопрос..." aria-label="Введите первый вопрос">
-          <button class="heading_h1" id="initialSendButton" aria-label="Отправить сообщение">➤</button>
+          <button id="initialSendButton" aria-label="Отправить сообщение">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="#fff"/>
+            </svg>
+          </button>
         </div>
       </div>
       <!-- Стандартное поле ввода (скрыто по умолчанию) -->
-      <div class="heading_h1 chat-input-container hidden" id="chatInputContainer">
+      <div class="chat-input-container hidden" id="chatInputContainer">
         <input type="text" id="chatInput" placeholder="С чем вам помочь?" aria-label="Введите сообщение">
-        <button id="sendButton" aria-label="Отправить сообщение">➤</button>
+        <button id="sendButton" aria-label="Отправить сообщение">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="#fff"/>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-/* --- Hero --- */
 /* --- Hero --- */
 .hero-chat {
   background: linear-gradient(135deg, #151515 25%, #e6e6e6 100%);
@@ -56,6 +63,7 @@
   color: #ffffff;
   letter-spacing: -0.02em;
   margin-bottom: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 .hero-subtitle {
   font-size: 22px;
@@ -63,17 +71,17 @@
   color: #ffffff;
   max-width: 600px;
   margin: 0 auto;
+  opacity: 0.9;
 }
 
 /* --- Чат --- */
 .chat-widget {
-  background: transparent; /* Прозрачный фон */
+  background: #2e2e2e; /* Темно-серый фон */
   border-radius: 16px;
-  box-shadow: none; /* Убираем тень */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 3px solid #000000;
   animation: pulseBorder 2s infinite ease-in-out;
   max-width: 1200px;
   width: 100%;
@@ -81,33 +89,39 @@
 }
 
 .chat-header {
-  background: rgba(17, 17, 17, 0.8); /* Полупрозрачный черный для заголовка */
-  color: #fff;
+  background: #2e2e2e; /* Темно-серый, совпадает с фоном */
+  color: #ffffff;
   padding: 16px 20px;
   display: flex;
   align-items: center;
   gap: 12px;
+  border-bottom: 1px solid #404040; /* Светлее серый для разделения */
 }
 .chat-header h2 {
   font-size: 20px;
   font-weight: 600;
   margin: 0;
+  letter-spacing: 0.5px;
 }
 .chat-hint {
   font-size: 14px;
   color: #ffffff;
-  opacity: 0.8;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+.chat-hint:hover {
+  opacity: 1;
 }
 
 .chat-messages-container {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  background: transparent; /* Прозрачный фон для области сообщений */
+  background: #2e2e2e; /* Совпадает с фоном чата */
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
 }
 .chat-messages {
   display: flex;
@@ -120,19 +134,20 @@
   font-size: 14px;
   line-height: 1.4;
   max-width: 80%;
-  animation: messageFade 0.4s ease;
+  animation: fadeInUp 0.4s ease-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
-@keyframes messageFade {
+@keyframes fadeInUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .bot-message1 {
-  background: transparent;
+  background: #404040; /* Светло-серый для бота, близкий к фону */
   color: #ffffff;
   align-self: flex-start;
 }
 .user-message1 {
-  background: #151515;
+  background: #4a4a4a; /* Чуть светлее серый для пользователя */
   color: #ffffff;
   align-self: flex-end;
 }
@@ -146,75 +161,102 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;
-  max-width: 600px;
-  background: transparent ;
-  border-radius: 12px;
-  padding: 10px;
-  
+  width: 95%;
+  max-width: 1000px;
+  background: #2e2e2e; /* Совпадает с фоном чата */
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
 }
 .initial-input-container input {
   flex: 1;
-  padding: 16px;
+  padding: 30px;
   border: none;
   outline: none;
-  font-size: 16px;
-  color: #f9f9f9;
+  font-size: 28px;
+  color: #ffffff;
   background: transparent;
+  border-bottom: 2px solid #404040; /* Светлее серый для контура */
+  transition: border-color 0.3s ease;
 }
 .initial-input-container input::placeholder {
-  color: #ffffff;
+  color: #757575; /* Средне-серый для placeholder */
   font-style: italic;
+  opacity: 0.8;
 }
-.initial-input-container input:focus {
-  box-shadow: none;
+.initial-input-container input:focus,
+.initial-input-container input:hover {
+  border-color: #4a4a4a; /* Чуть светлее при фокусе */
 }
 .initial-input-container button {
-  background: #d62828;
-  color: #fff;
+  background: #404040; /* Светлее серый для кнопки */
+  color: #ffffff;
   border: none;
-  padding: 0 24px;
+  padding: 12px;
+  width: 48px;
+  height: 48px;
   cursor: pointer;
-  transition: all 0.2s;
-  border-radius: 8px;
-  font-size: 18px;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(64, 64, 64, 0.4);
 }
 .initial-input-container button:hover {
-  background: #a11212;
-  transform: scale(1.1);
+  background: #4a4a4a; /* Чуть светлее при наведении */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(64, 64, 64, 0.6);
 }
 
 /* --- Стандартное поле ввода --- */
 .chat-input-container {
   display: flex;
-  background: linear-gradient(135deg, #ff0000 25%, #e6e6e6 100%); /* Красивый градиент */
-  border-radius: 0 0 12px 12px; /* Закругляем углы снизу, чтобы соответствовать .chat-widget */
   max-height: 50px;
+  background: #2e2e2e; /* Совпадает с фоном чата */
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
 }
 .chat-input-container input {
   flex: 1;
-  padding: 14px;
-      border: 1px solid var(--surface-transparent-primary, #FFFFFF0D);
+  padding: 12px;
+  border: none;
   outline: none;
   font-size: 14px;
-  color: #111111;
+  color: #ffffff;
+  background: transparent;
+  border-bottom: 2px solid #404040; /* Светлее серый для контура */
+  transition: border-color 0.3s ease;
 }
-.chat-input-container input:focus {
-  box-shadow: 0 0 8px rgba(214, 40, 40, 0.3);
+.chat-input-container input::placeholder {
+  color: #757575; /* Средне-серый для placeholder */
+  opacity: 0.7;
+}
+.chat-input-container input:focus,
+.chat-input-container input:hover {
+  border-color: #4a4a4a; /* Чуть светлее при фокусе */
 }
 .chat-input-container button {
-  background: #d62828;
+  background: #404040; /* Светлее серый для кнопки */
   color: #ffffff;
-      border: 1px solid var(--surface-transparent-primary, #FFFFFF0D);
-  padding: 0 20px;
+  border: none;
+  padding: 8px;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
-  transition: all 0.2s;
-  border-radius: 8px;
-  animation: pulseButton 1.5s infinite ease-in-out;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  box-shadow: 0 2px 6px rgba(64, 64, 64, 0.4);
 }
 .chat-input-container button:hover {
-  background: #a11212;
-  transform: scale(1.1);
+  background: #4a4a4a; /* Чуть светлее при наведении */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(64, 64, 64, 0.6);
 }
 @keyframes pulseButton {
   0%, 100% { transform: scale(1); }
@@ -224,6 +266,24 @@
 /* Скрытие элементов */
 .hidden {
   display: none !important;
+}
+
+/* Стили для эффекта пишущей машинки */
+.initial-input-container input,
+.chat-input-container input {
+  position: relative;
+}
+.initial-input-container input::after,
+.chat-input-container input::after {
+  content: '|';
+  position: absolute;
+  right: 50px;
+  color: #757575; /* Средне-серый для курсора */
+  animation: blink 0.7s step-end infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 /* --- Адаптив --- */
@@ -250,48 +310,21 @@
   }
   .initial-input-container {
     width: 90%;
+    max-width: 700px;
   }
   .initial-input-container input {
-    font-size: 14px;
+    font-size: 18px;
+    padding: 16px;
   }
-}
-
-/* Стили для эффекта пишущей машинки */
-.initial-input-container input,
-.chat-input-container input {
-  position: relative;
-}
-
-/* Мигающий курсор */
-.initial-input-container input::after,
-.chat-input-container input::after {
-  content: '|';
-  position: absolute;
-  right: 10px;
-  color: #666;
-  animation: blink 0.7s step-end infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* Стили для первого сообщения в центре (если используется из предыдущего ответа) */
-.first-message-display {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 24px;
-  font-weight: 500;
-  color: #ffffff;
-  text-align: center;
-  max-width: 80%;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.1); /* Легкая прозрачность */
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  .initial-input-container button {
+    width: 40px;
+    height: 40px;
+  }
+  .chat-input-container button {
+    width: 28px;
+    height: 28px;
+    margin-left: 6px;
+  }
 }
 </style>
 
@@ -396,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isTyping = false;
 
   function typePlaceholder(text, inputElement, callback) {
-    if (isTyping) return; // Не запускаем новую анимацию, если текущая идет
+    if (isTyping) return;
     isTyping = true;
     let index = 0;
     inputElement.placeholder = '';
@@ -405,10 +438,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (index < text.length) {
         inputElement.placeholder += text[index];
         index++;
-        setTimeout(typeChar, 100); // Скорость печати (100 мс на символ)
+        setTimeout(typeChar, 100);
       } else {
         isTyping = false;
-        setTimeout(callback, 2000); // Пауза перед следующей фразой
+        setTimeout(callback, 2000);
       }
     }
     typeChar();
@@ -419,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeInput = !initialInputContainer.classList.contains('hidden') ? initialChatInput : chatInput;
     typePlaceholder(currentText, activeInput, () => {
       currentPlaceholderIndex = (currentPlaceholderIndex + 1) % placeholders.length;
-      updatePlaceholder(); // Запускаем следующий placeholder
+      updatePlaceholder();
     });
   }
 
@@ -438,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Добавляем сообщение пользователя
     const userMessage = document.createElement('div');
-    userMessage.className = 'message user-message1 heading_h1';
+    userMessage.className = 'message user-message1';
     userMessage.textContent = text;
     chatMessages.appendChild(userMessage);
     scrollToBottom();
@@ -458,7 +491,6 @@ document.addEventListener('DOMContentLoaded', () => {
             { opacity: 0, y: 20 },
             { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
           );
-          // Перезапускаем анимацию placeholder для стандартного поля
           chatInput.placeholder = placeholders[currentPlaceholderIndex];
         }
       });
@@ -467,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ответ бота
     setTimeout(() => {
       const botMessage = document.createElement('div');
-      botMessage.className = 'message bot-message1 heading_h1';
+      botMessage.className = 'message bot-message1';
       botMessage.textContent = 'Это тестовый ответ. Чем могу помочь?';
       chatMessages.appendChild(botMessage);
       scrollToBottom();
@@ -489,5 +521,5 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.key === 'Enter') sendMessage(chatInput);
     });
   }
-}); 
+});
 </script>
