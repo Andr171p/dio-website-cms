@@ -6,7 +6,7 @@
 {% block content %}
 <article class="w-full bg-gray-50 ">
     <!-- Hero Section с изображением -->
-    <section class="section is-secondary">
+    <section class="section is-secondary pt-5">
         <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                 <!-- Текстовая часть -->
@@ -14,11 +14,11 @@
                     <span class="inline-block px-4 py-2 rounded-full bg-blue-600/50 text-white text-sm font-semibold mb-4 animate-fadeIn">
                         {{ page.get_industry_display }}
                     </span>
-                    <h1 class="text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white drop-shadow-md animate-fadeIn" style="animation-delay: 0.1s;">
+                    <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white drop-shadow-md animate-fadeIn" style="animation-delay: 0.1s;">
                         {{ page.title }}
                     </h1>
                     {% if page.intro %}
-                        <p class="text-blue-100 text-lg lg:text-xl mb-8 max-w-prose leading-relaxed animate-fadeIn" style="animation-delay: 0.2s;">
+                        <p class="heading_h3 text-blue-100 text-lg lg:text-xl mb-8 max-w-prose leading-relaxed animate-fadeIn" style="animation-delay: 0.2s;">
                             {{ page.intro|striptags }}
                         </p>
                     {% endif %}
@@ -41,7 +41,7 @@
         {% for block in page.content %}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 animate-fadeInUp">
                 <!-- Заголовок -->
-                <h2 class="col-span-1 text-2xl lg:text-3xl font-bold text-blue-800 mb-4 lg:mb-0">
+                <h2 class="heading_h1 col-span-1 text-2xl lg:text-3xl font-bold text-blue-800 mb-4 lg:mb-0">
                     {% if block.block_type == "description" %}Описание проекта
                     {% elif block.block_type == "challenge" %}Задача
                     {% elif block.block_type == "solution" %}Решение
@@ -51,7 +51,7 @@
                     {% else %}{{ block.block_type|title }}{% endif %}
                 </h2>
                 <!-- Контент -->
-                <div class="col-span-1 lg:col-span-2 text-lg leading-relaxed text-gray-700 prose max-w-none">
+                <div class="heading_h1 col-span-1 lg:col-span-2 text-lg leading-relaxed text-gray-700 prose max-w-none">
                     {% if block.block_type == "technologies" %}
                         <ul class="space-y-3">
                             {% for tech in block.value %}
@@ -67,8 +67,8 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {% for metric in block.value %}
                                 <div class="bg-blue-50 p-4 rounded-lg shadow-md">
-                                    <div class="text-xl font-bold text-blue-800 mb-1">{{ metric.value }}</div>
-                                    <div class="text-sm text-gray-600">{{ metric.description }}</div>
+                                    <div class="heading_h1 text-xl font-bold text-blue-800 mb-1">{{ metric.value }}</div>
+                                    <div class="heading_h1 text-sm text-gray-600">{{ metric.description }}</div>
                                 </div>
                             {% endfor %}
                         </div>
@@ -85,7 +85,7 @@
     <!-- Другие кейсы -->
     {% if other_cases %}
     <section class="max-w-6xl mx-auto px-4 lg:px-8 py-16 lg:py-20">
-        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 text-center mb-12 animate-fadeInUp" data-delay="0.2">
+        <h2 class="heading_h2 text-3xl lg:text-4xl font-bold text-gray-900 text-center mb-12 animate-fadeInUp" data-delay="0.2">
             Другие проекты
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -95,11 +95,11 @@
                     {% image case.main_image fill-400x300 class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" %}
                 {% endif %}
                 <div class="p-6 flex flex-col h-full">
-                    <span class="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full mb-3">
+                    <span class=" heading_h1 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full mb-3">
                         {{ case.get_industry_display }}
                     </span>
-                    <h3 class="font-semibold text-xl text-gray-900 mb-2">{{ case.title }}</h3>
-                    <p class="text-gray-600 text-sm mb-4">{{ case.customer_name }}</p>
+                    <h3 class="heading_h1 font-semibold text-xl text-gray-900 mb-2">{{ case.title }}</h3>
+                    <p class="heading_h1 text-gray-600 text-sm mb-4">{{ case.customer_name }}</p>
                     <div class="mt-auto">
                         <a href="{{ case.url }}" class="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200">Подробнее →</a>
                     </div>

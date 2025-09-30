@@ -198,7 +198,6 @@
 <!-- Подключение JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-
     const assistantToggle = document.getElementById('assistantToggle');
     const assistantPanel = document.getElementById('aiAssistant');
     const assistantMessages = document.getElementById('assistantMessages');
@@ -223,8 +222,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 assistantMessages.scrollTop = assistantMessages.scrollHeight;
             }, 50);
-        } else {
-            console.error('assistantMessages is not available');
         }
     }
 
@@ -236,13 +233,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Отправка сообщения
-    function sendAssistantMessage() {
-        const messageText = assistantInput.value.trim();
-        if (!messageText) {
-            console.log('Message is empty');
-            return;
+    // Эмуляция эффекта печати текста
+    function typeEffect(element, text, delay = 50) {
+        let index = 0;
+        element.textContent = '';
+        function typeChar() {
+            if (index < text.length) {
+                element.textContent += text[index];
+                index++;
+                setTimeout(typeChar, delay);
+            }
         }
+        typeChar();
+    }
+
+    // Отправка сообщения к API
+    async function sendAssistantMessage() {
+        const messageText = assistantInput.value.trim();
+        if (!messageText) return;
 
         assistantInput.value = '';
 
@@ -252,13 +260,38 @@ document.addEventListener('DOMContentLoaded', function() {
         assistantMessages.appendChild(userMessage);
         scrollToBottom();
 
-        setTimeout(() => {
+        // Добавляем временное сообщение "Печатает..."
+        const typingMessage = document.createElement('div');
+        typingMessage.className = 'message bot-message typing-message';
+        typingMessage.textContent = 'Печатает...';
+        assistantMessages.appendChild(typingMessage);
+        scrollToBottom();
+
+        try {
+            const response = await fetch('http://localhost:8001/api/v1/rag', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ chat_id: '1', role: 'user', text: messageText })
+            });
+            if (!response.ok) throw new Error('Ошибка сети');
+            const data = await response.json();
+
+            // Удаляем "Печатает..." и добавляем реальный ответ
+            assistantMessages.removeChild(typingMessage);
             const botMessage = document.createElement('div');
             botMessage.className = 'message bot-message';
-            botMessage.textContent = 'Это тестовый ответ. Как могу помочь?';
             assistantMessages.appendChild(botMessage);
+            typeEffect(botMessage, data.text);
             scrollToBottom();
-        }, 1000);
+        } catch (error) {
+            console.error('Ошибка:', error);
+            assistantMessages.removeChild(typingMessage);
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'message bot-message';
+            errorMessage.textContent = 'Ошибка при получении ответа.';
+            assistantMessages.appendChild(errorMessage);
+            scrollToBottom();
+        }
     }
 
     // Инициализация при загрузке
@@ -268,9 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
     assistantToggle.addEventListener('click', toggleAssistant);
     assistantSend.addEventListener('click', sendAssistantMessage);
     assistantInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            sendAssistantMessage();
-        }
+        if (event.key === 'Enter') sendAssistantMessage();
     });
 
     // Наблюдатель за изменениями в сообщениях
@@ -292,6 +323,5 @@ document.addEventListener('DOMContentLoaded', function() {
             assistantPanel.classList.remove('active');
         }
     });
-
 });
 </script>

@@ -116,12 +116,32 @@
 .chat-messages-container {
   flex: 1;
   padding: 20px;
+  padding-right: 10px;
   overflow-y: auto;
-  background: #2e2e2e; /* Совпадает с фоном чата */
+  background: #2e2e2e;
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  gap: 10px;
+  
+  /* Кастомный скролл для WebKit (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    width: 8px; /* Ширина скроллбара */
+  }
+  &::-webkit-scrollbar-track {
+    background: #2e2e2e; /* Фон трека, совпадает с фоном контейнера */
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #404040; /* Цвет ползунка */
+    border-radius: 4px; /* Скругление углов */
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #4a4a4a; /* Более светлый цвет при наведении */
+  }
+
+  /* Кастомный скролл для Firefox */
+  scrollbar-color: #404040 #2e2e2e; /* Ползунок / фон трека */
+  scrollbar-width: thin; /* Тонкий скроллбар */
 }
 .chat-messages {
   display: flex;
@@ -147,7 +167,7 @@
   align-self: flex-start;
 }
 .user-message1 {
-  background: #4a4a4a; /* Чуть светлее серый для пользователя */
+  background: #1b1b1b; /* Чуть светлее серый для пользователя */
   color: #ffffff;
   align-self: flex-end;
 }
@@ -326,8 +346,8 @@
     margin-left: 6px;
   }
 }
-</style>
 
+</style>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // Инициализация GSAP и ScrollTrigger
@@ -336,77 +356,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Анимация чат-виджета (основной контейнер)
   gsap.fromTo(
     "#chatWidget",
-    {
-      opacity: 0,
-      y: 80,
-      scale: 0.9,
-      rotate: 2
-    },
-    {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      rotate: 0,
-      duration: 1.5,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: "#hero-chat",
-        start: "top 40%",
-        end: "top -10%",
-        scrub: 1,
-        toggleActions: "play none none reverse"
-      }
-    }
+    { opacity: 0, y: 80, scale: 0.9, rotate: 2 },
+    { opacity: 1, y: 0, scale: 1, rotate: 0, duration: 1.5, ease: "power3.out", scrollTrigger: { trigger: "#hero-chat", start: "top 40%", end: "top -10%", scrub: 1, toggleActions: "play none none reverse" } }
   );
 
   // Анимация заголовка
   gsap.fromTo(
     "#chatHeader",
     { opacity: 0, y: -20 },
-    {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      delay: 0.2,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: "#hero-chat",
-        start: "top 90%",
-        end: "top -20%",
-        scrub: 1
-      }
-    }
+    { opacity: 1, y: 0, duration: 1, delay: 0.2, ease: "power2.out", scrollTrigger: { trigger: "#hero-chat", start: "top 90%", end: "top -20%", scrub: 1 } }
   );
-
-  // Анимация начального поля ввода
-  gsap.fromTo(
-    "#initialInputContainer",
-    { opacity: 0, scale: 0.8 },
-    {
-      opacity: 1,
-      scale: 1,
-      duration: 1,
-      delay: 0.4,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: "#hero-chat",
-        start: "top 90%",
-        end: "top -20%",
-        scrub: 1
-      }
-    }
-  );
-
-  // Показ подсказки через 3 секунды
-  const chatHint = document.querySelector('.chat-hint');
-  setTimeout(() => {
-    chatHint.classList.remove('hidden');
-    gsap.fromTo(
-      chatHint,
-      { opacity: 1 },
-      { opacity: 0.8, duration: 1, repeat: -1, yoyo: true }
-    );
-  }, 2000);
 
   // Элементы чата
   const initialChatInput = document.getElementById('initialChatInput');
@@ -418,13 +377,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialInputContainer = document.getElementById('initialInputContainer');
   const chatInputContainer = document.getElementById('chatInputContainer');
 
+  // Генерация или получение уникального chatId
+  let chatId = localStorage.getItem('chatId');
+  if (!chatId) {
+    chatId = 'chat_' + Math.random().toString(36).substr(2, 9); // Уникальный ID
+    localStorage.setItem('chatId', chatId);
+  }
+
+  // Загрузка истории из localStorage
+  let chatHistory = JSON.parse(localStorage.getItem(`chatHistory_${chatId}`)) || [];
+  chatHistory.forEach(message => addMessage(message.role, message.text));
+
+  // Проверка наличия истории и скрытие начального окна
+  if (chatHistory.length > 0) {
+    initialInputContainer.classList.add('hidden');
+    chatInputContainer.classList.remove('hidden');
+    gsap.fromTo(chatInputContainer, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" });
+    chatInput.placeholder = placeholders[currentPlaceholderIndex];
+  }
+
+  // Показ подсказки через 3 секунды
+  const chatHint = document.querySelector('.chat-hint');
+  setTimeout(() => {
+    chatHint.classList.remove('hidden');
+    gsap.fromTo(chatHint, { opacity: 1 }, { opacity: 0.8, duration: 1, repeat: -1, yoyo: true });
+  }, 2000);
+
   // Логика смены placeholder с эффектом печати
-  const placeholders = [
-    "Задайте свой вопрос...",
-    "Опишите свою задачу...",
-    "Расскажите, чем помочь...",
-    "Введите ваш запрос..."
-  ];
+  const placeholders = ["Задайте свой вопрос...", "Опишите свою задачу...", "Расскажите, чем помочь...", "Введите ваш запрос..."];
   let currentPlaceholderIndex = 0;
   let isTyping = false;
 
@@ -433,7 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
     isTyping = true;
     let index = 0;
     inputElement.placeholder = '';
-
     function typeChar() {
       if (index < text.length) {
         inputElement.placeholder += text[index];
@@ -455,8 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
       updatePlaceholder();
     });
   }
-
-  // Начинаем анимацию placeholder
   updatePlaceholder();
 
   // Логика чата
@@ -464,62 +441,105 @@ document.addEventListener('DOMContentLoaded', () => {
     container.scrollTop = container.scrollHeight;
   }
 
+  function addMessage(role, text) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = role === 'ai' ? 'message bot-message1' : 'message user-message1';
+    messageDiv.textContent = text;
+    chatMessages.appendChild(messageDiv);
+    scrollToBottom();
+  }
+
+  function typeEffect(element, text, delay = 50) {
+    let index = 0;
+    element.textContent = '';
+    function typeChar() {
+      if (index < text.length) {
+        element.textContent += text[index];
+        index++;
+        setTimeout(typeChar, delay);
+      }
+    }
+    typeChar();
+  }
+
+  function startTypingAnimation(element) {
+    let dotCount = 0;
+    element.textContent = 'Печатает';
+    const typingInterval = setInterval(() => {
+      dotCount = (dotCount + 1) % 4;
+      element.textContent = 'Печатает' + '.'.repeat(dotCount);
+    }, 500);
+    return typingInterval;
+  }
+
+  async function sendMessageToAPI(chatId, message) {
+    const typingMessage = document.createElement('div');
+    typingMessage.className = 'message bot-message1 typing-message';
+    chatMessages.appendChild(typingMessage);
+    scrollToBottom();
+
+    const typingInterval = startTypingAnimation(typingMessage);
+
+    try {
+      const response = await fetch('http://localhost:8001/api/v1/rag', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ chat_id: chatId, role: 'user', text: message })
+      });
+      if (!response.ok) throw new Error('Ошибка сети');
+      const data = await response.json();
+      clearInterval(typingInterval);
+      chatMessages.removeChild(typingMessage);
+      const botMessage = document.createElement('div');
+      botMessage.className = 'message bot-message1';
+      chatMessages.appendChild(botMessage);
+      typeEffect(botMessage, data.text);
+
+      // Сохранение истории
+      chatHistory.push({ role: 'user', text: message });
+      chatHistory.push({ role: 'ai', text: data.text });
+      localStorage.setItem(`chatHistory_${chatId}`, JSON.stringify(chatHistory));
+    } catch (error) {
+      clearInterval(typingInterval);
+      chatMessages.removeChild(typingMessage);
+      addMessage('ai', 'Ошибка при получении ответа.');
+      chatHistory.push({ role: 'ai', text: 'Ошибка при получении ответа.' });
+      localStorage.setItem(`chatHistory_${chatId}`, JSON.stringify(chatHistory));
+    }
+  }
+
   function sendMessage(inputElement, isInitial = false) {
     const text = inputElement.value.trim();
     if (!text) return;
     inputElement.value = '';
 
-    // Добавляем сообщение пользователя
-    const userMessage = document.createElement('div');
-    userMessage.className = 'message user-message1';
-    userMessage.textContent = text;
-    chatMessages.appendChild(userMessage);
-    scrollToBottom();
+    addMessage('user', text);
 
-    // Если это первое сообщение, скрываем начальное поле и показываем стандартное
     if (isInitial) {
       gsap.to(initialInputContainer, {
-        opacity: 0,
-        scale: 0.8,
-        duration: 0.5,
-        ease: "power2.in",
+        opacity: 0, scale: 0.8, duration: 0.5, ease: "power2.in",
         onComplete: () => {
           initialInputContainer.classList.add('hidden');
           chatInputContainer.classList.remove('hidden');
-          gsap.fromTo(
-            chatInputContainer,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
-          );
+          gsap.fromTo(chatInputContainer, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" });
           chatInput.placeholder = placeholders[currentPlaceholderIndex];
         }
       });
     }
 
-    // Ответ бота
-    setTimeout(() => {
-      const botMessage = document.createElement('div');
-      botMessage.className = 'message bot-message1';
-      botMessage.textContent = 'Это тестовый ответ. Чем могу помочь?';
-      chatMessages.appendChild(botMessage);
-      scrollToBottom();
-    }, 800);
+    sendMessageToAPI(chatId, text);
   }
 
   // Обработчики для начального поля
   if (initialSendButton && initialChatInput) {
     initialSendButton.addEventListener('click', () => sendMessage(initialChatInput, true));
-    initialChatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage(initialChatInput, true);
-    });
+    initialChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(initialChatInput, true); });
   }
 
   // Обработчики для стандартного поля
   if (sendButton && chatInput) {
     sendButton.addEventListener('click', () => sendMessage(chatInput));
-    chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage(chatInput);
-    });
+    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(chatInput); });
   }
 });
 </script>
