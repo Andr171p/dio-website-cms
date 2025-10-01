@@ -49,14 +49,13 @@ class Vacancy(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     is_processed = models.BooleanField(default=False, verbose_name="Просмотрено")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.phone}"
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         is_new = self.pk is None
         super().save(*args, **kwargs)
 
-        # После сохранения обновляем поле ссылки
         if self.resume:
             self.resume_link = f"http://127.0.0.1:7000/vacancy/resume/download/{self.id}/"  # type: ignore  # noqa: PGH003
         else:
@@ -68,5 +67,5 @@ class Vacancy(models.Model):
                 message=f"Резюме от {self.phone} на вакансию {self.title}",
                 url=f"http://127.0.0.1:7000/admin/snippets/vacancy/vacancy/edit/{self.id}/",  # type: ignore  # noqa: PGH003
             )
-        # Сохраняем еще раз чтобы обновить ссылку
+
         super().save(update_fields=["resume_link"])

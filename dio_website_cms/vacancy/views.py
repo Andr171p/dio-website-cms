@@ -19,7 +19,8 @@ def vacancy_view(request):
     if form.is_valid():
         vacancy = form.save()
         return Response(
-            {"message": "Резюме успешно отправлено", "id": vacancy.id}, status=status.HTTP_200_OK
+            {"message": "Резюме успешно отправлено", "id": vacancy.id},  # type: ignore  # noqa: PGH003
+            status=status.HTTP_200_OK,  # type: ignore  # noqa: PGH003
         )
 
     return Response({"errors": form.errors}, status=status.HTTP_400_BAD_REQUEST)

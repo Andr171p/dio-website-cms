@@ -1,0 +1,198 @@
+import re
+import os
+from typing import ClassVar
+from django import forms
+from django.db import models
+from django.core import validators
+from django.http import FileResponse
+from django.urls import path
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.snippets.views.snippets import SnippetViewSet
+from wagtail.snippets.models import register_snippet
+from .utils import get_tumen_time, create_admin_notification, validate_file_extension
+
+class VacancyForm(forms.ModelForm):
+    class Meta:
+        model = Vacancy
+        fields: ClassVar[list[str]] = [
+            "title",
+            "name",
+            "phone",
+            "resume",
+        ]
+        widgets: ClassVar[dict] = {
+            "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Вакансия"}),
+            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Ваше имя"}),
+            "phone": forms.TextInput(attrs={"class": "form-control", "placeholder": "Телефон"}),
+            "resume": forms.FileInput(
+                attrs={
+                    "class": "form-control-file",
+                    "placeholder": "Резюме",
+                    "accept": ".pdf,.doc,.docx,.txt",
+                    "id": "resume-input",
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['resume'].widget.attrs.update({
+            'data-display': 'file-display'
+        })
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone")
+        if phone:
+            digits = re.sub(r"\D", "", phone)
+            if digits.startswith("7") or digits.startswith("8"):
+                digits = digits[1:]
+            if len(digits) != 10:
+                raise forms.ValidationError("Номер должен содержать 10 цифр")
+            return f"+7 ({digits[:3]}) {digits[3:6]}-{digits[6:8]}-{digits[8:10]}"
+        return phone
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        return instance
+
+class Vacancy(models.Model):
+    title = models.CharField(verbose_name="Вакансия")
+    name = models.CharField(verbose_name="Имя")
+    phone = models.CharField(max_length=20, verbose_name="Телефон")
+    resume = models.FileField(
+        upload_to="resumes/%Y/%m/%d/",
+        verbose_name="Резюме",
+        validators=[validate_file_extension],
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField(default=get_tumen_time, verbose_name="Дата создания")
+    is_processed = models.BooleanField(default=False, verbose_name="Просмотрено")
+
+    panels: ClassVar[list[FieldPanel]] = [
+        MultiFieldPanel(
+            [
+                FieldPanel("title", read_only=True),
+                FieldPanel("name", read_only=True),
+                FieldPanel("phone", read_only=True),
+                FieldPanel("created_at", read_only=True),
+            ],
+            heading="Информация о кандидате",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("resume"),
+            ],
+            heading="Резюме",
+        ),
+        FieldPanel("is_processed"),
+    ]
+
+    class Meta:
+        verbose_name = "Резюме"
+        ordering: ClassVar[list] = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.phone}"
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        if is_new:
+            create_admin_notification(
+                title="Новый отзыв на вакансию",
+                message=f"Резюме от {self.phone} на вакансию {self.title}",
+                url=f"http://127.0.0.1:7000/admin/snippets/vacancy/vacancy/edit/{self.id}/",
+            )
+
+    @property
+    def resume_url(self):
+        """URL для скачивания резюме через кастомный view"""
+        return f"/vacancy/resume/download/{self.id}/" if self.resume else None
+
+    @property
+    def resume_filename(self):
+        """Имя файла резюме"""
+        return os.path.basename(self.resume.name) if self.resume else None
+
+    @property
+    def resume_size(self):
+        """Размер файла резюме"""
+        if self.resume:
+            try:
+                return self.resume.size
+            except (ValueError, OSError):
+                return None
+        return None
+
+class VacancyViewSet(SnippetViewSet):
+    model = Vacancy
+    menu_label = "Отзывы на вакансии"
+    menu_icon = "table"
+    menu_order = 300
+    add_to_settings_menu = False
+    list_display = ("title", "name", "phone", "created_at", "is_processed", "resume_download_link")
+    list_filter = ("created_at", "is_processed")
+    search_fields = ("title", "name", "phone")
+    add_to_admin_menu = True
+
+    panels: ClassVar[list] = [
+        MultiFieldPanel(
+            [
+                FieldPanel("title", read_only=True),
+                FieldPanel("name", read_only=True),
+                FieldPanel("phone", read_only=True),
+                FieldPanel("created_at", read_only=True),
+            ],
+            heading="Информация о кандидате",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("resume"),
+            ],
+            heading="Резюме",
+        ),
+        FieldPanel("is_processed"),
+    ]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if qs is None:
+            qs = Vacancy.objects.all()
+        return qs.order_by("-created_at")
+
+    def has_add_permission(self, request):
+        return False
+
+    def resume_download_link(self, obj):
+        if obj.resume:
+            return f'<a href="{obj.resume_url}" target="_blank">?? Скачать</a>'
+        return "—"
+
+    resume_download_link.short_description = "Резюме"
+    resume_download_link.allow_tags = True
+
+# Кастомный view для скачивания резюме
+def download_resume(request, vacancy_id):
+    try:
+        vacancy = Vacancy.objects.get(id=vacancy_id)
+        if not vacancy.resume:
+            return HttpResponse("Файл не найден", status=404)
+        
+        # Открываем файл и отправляем как attachment
+        file_path = vacancy.resume.path
+        with open(file_path, 'rb') as file:
+            response = FileResponse(file, content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename="{vacancy.resume_filename}"'
+            return response
+    except Vacancy.DoesNotExist:
+        return HttpResponse("Вакансия не найдена", status=404)
+    except (ValueError, OSError):
+        return HttpResponse("Ошибка при загрузке файла", status=500)
+
+# Добавляем URL для скачивания
+urlpatterns = [
+    path('vacancy/resume/download/<int:vacancy_id>/', download_resume, name='download_resume'),
+]
+
+register_snippet(VacancyViewSet)

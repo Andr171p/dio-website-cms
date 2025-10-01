@@ -2,6 +2,7 @@ from typing import ClassVar
 
 import os
 
+from django.db.models import QuerySet
 from django.http import FileResponse, HttpResponse
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.snippets.models import register_snippet
@@ -35,18 +36,18 @@ class VacancyViewSet(SnippetViewSet):
         FieldPanel("is_processed"),
     ]
 
-    def get_queryset(self, request):
+    def get_queryset(self, request) -> QuerySet:
         qs = super().get_queryset(request)
         if qs is None:
             qs = Vacancy.objects.all()
 
         return qs.order_by("-created_at")
 
-    def has_add_permission(self, request):  # noqa: ARG002, PLR6301
+    def has_add_permission(self, request) -> bool:  # noqa: ARG002, PLR6301
         return False
 
 
-def download_resume(request, vacancy_id):  # noqa: ARG001
+def download_resume(request, vacancy_id) -> FileResponse | HttpResponse:  # noqa: ARG001
     try:
         vacancy = Vacancy.objects.get(id=vacancy_id)
         if not vacancy.resume:
@@ -56,13 +57,13 @@ def download_resume(request, vacancy_id):  # noqa: ARG001
         if not os.path.exists(file_path):
             return HttpResponse("Файл не найден на сервере", status=404)
 
-        file = open(file_path, "rb")
+        file = open(file_path, "rb")  # noqa: SIM115
         response = FileResponse(file, content_type="application/octet-stream")
         response["Content-Disposition"] = (
             f'attachment; filename="{os.path.basename(vacancy.resume.name) or "resume"}"'
         )
         response["Content-Length"] = os.path.getsize(file_path)
-        return response
+        return response  # noqa: TRY300
     except Vacancy.DoesNotExist:
         return HttpResponse("Вакансия не найдена", status=404)
     except (ValueError, OSError):

@@ -5,10 +5,10 @@ from wagtail.blocks import CharBlock, ListBlock, StructBlock
 
 
 class KeyValueItemBlock(StructBlock):
-    key = CharBlock(required=True, label="Название", max_length=255)
-    value = CharBlock(required=True, label="Содержание", max_length=500)
+    key = CharBlock(required=True, label="Название")
+    value = CharBlock(required=True, label="Содержание")
 
-    def clean(self, value):
+    def clean(self, value) -> super:
         """Проверка, что ключ содержит только английские символы."""
         cleaned_data = super().clean(value)
         key_value = cleaned_data["key"]
@@ -25,7 +25,7 @@ class KeyValueItemBlock(StructBlock):
 
 
 class MetadataBlock(ListBlock):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(KeyValueItemBlock(), *args, **kwargs)
 
     class Meta:

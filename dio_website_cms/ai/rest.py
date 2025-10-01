@@ -4,7 +4,7 @@ from .constants import STATUS_CREATED
 
 
 def add_document(data: dict) -> list:
-    response = requests.post(
+    response = requests.post(  # noqa: S113
         url="http://127.0.0.1:8000/api/v1/documents",
         json=data,
     )
@@ -14,7 +14,7 @@ def add_document(data: dict) -> list:
 
 
 def upload_document(file: bytes) -> list:
-    response = requests.post(
+    response = requests.post(  # noqa: S113
         url="http://127.0.0.1:8000/api/v1/documents/upload",
         files={"file": file},
     )
