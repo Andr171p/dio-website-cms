@@ -168,5 +168,5 @@ class CaseStudyIndexPage(Page):
     template = "cases/case_study_index_page.html"
 
     class Meta:
-        verbose_name = "Портфолио кейсов"
-        verbose_name_plural = "Портфолио кейсов"
+        verbose_name = "Лента кейсов"
+        verbose_name_plural = "Лента кейсов"
