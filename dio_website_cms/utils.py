@@ -1,4 +1,4 @@
-import os
+import os  # noqa: INP001
 
 import pytz
 from django.core.exceptions import ValidationError
