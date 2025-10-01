@@ -13,6 +13,7 @@ def vacancy_view(request):
         "title": request.data.get("title"),
         "name": request.data.get("name"),
         "phone": request.data.get("phone"),
+        "csrftoken": request.data.get("csrftoken"),
     }
 
     form = VacancyForm(form_data, request.FILES)

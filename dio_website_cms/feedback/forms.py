@@ -5,11 +5,14 @@ import re
 
 from django import forms
 from django.core.validators import validate_email
+from utils import check_spam
 
 from .models import FeedbackMessage
 
 
 class FeedbackForm(forms.ModelForm):
+    csrftoken = forms.CharField(required=False, widget=forms.HiddenInput())
+
     class Meta:
         model = FeedbackMessage
         fields: ClassVar[list[str]] = [
@@ -48,17 +51,20 @@ class FeedbackForm(forms.ModelForm):
     def clean_phone(self):
         phone = self.cleaned_data.get("phone")
         if phone:
-            # Удаляем все нецифровые символы
             digits = re.sub(r"\D", "", phone)
 
-            # Проверяем российские номера
             if digits.startswith("7") or digits.startswith("8"):  # noqa: PIE810
                 digits = digits[1:]
 
             if len(digits) != 10:  # noqa: PLR2004
                 raise forms.ValidationError("Номер должен содержать 10 цифр")
 
-            # Форматируем номер
             return f"+7 ({digits[:3]}) {digits[3:6]}-{digits[6:8]}-{digits[8:10]}"
 
         return phone
+
+    def clean_csrftoken(self) -> str | None:
+        csrftoken = self.cleaned_data.get("csrftoken")
+        if csrftoken:
+            check_spam(csrftoken)
+        return csrftoken

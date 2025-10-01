@@ -3,11 +3,14 @@ from typing import ClassVar
 import re
 
 from django import forms
+from utils import check_spam
 
 from .models import Vacancy
 
 
 class VacancyForm(forms.ModelForm):
+    csrftoken = forms.CharField(required=False, widget=forms.HiddenInput())
+
     class Meta:
         model = Vacancy
         fields: ClassVar[list[str]] = [
@@ -44,6 +47,12 @@ class VacancyForm(forms.ModelForm):
                 raise forms.ValidationError("Номер должен содержать 10 цифр")
             return f"+7 ({digits[:3]}) {digits[3:6]}-{digits[6:8]}-{digits[8:10]}"
         return phone
+
+    def clean_csrftoken(self) -> str | None:
+        csrftoken = self.cleaned_data.get("csrftoken")
+        if csrftoken:
+            check_spam(csrftoken)
+        return csrftoken
 
     def save(self, commit=True) -> super:
         return super().save(commit=commit)
