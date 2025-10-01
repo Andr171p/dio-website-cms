@@ -6,25 +6,28 @@
 
     <!-- Сетка услуг -->
     <section class="section pt-10">
-        <div class="container">
-            <!-- Заголовок -->
-                    <div class="header mb-0 pt-0">
-                        <h2 class="heading_h3 ">Наши услуги</h2>
-                    </div>
-            <!-- Фильтр категорий -->
-            <div class="header is-align-center mb-8 pt-0">
-                <h2 class="heading_h2">Фильтр по категориям</h2>
-                <div class="flex flex-wrap justify-center gap-2 mt-4">
-                    <a href="?{% if not current_category %}category={% endif %}" class="px-4 py-2 rounded-full {% if not current_category %}bg-blue-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %}">
-                        Все
-                    </a>
-                    {% for category_value, category_name in SERVICE_CATEGORY_CHOICES %}
-                        <a href="?category={{ category_value }}" class="px-4 py-2 rounded-full {% if current_category == category_value %}bg-blue-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %}">
-                            {{ category_name }}
-                        </a>
-                    {% endfor %}
-                </div>
-            </div>
+        <div class="max-w-7xl mx-auto ">
+            <!-- Заголовок + кнопка -->
+        <div class="header mb-0 pt-0">
+                        <h2 class="heading_h3 ">Наши Услуги</h2>
+        </div>
+            
+           <!-- Filters -->
+<div class="header is-align-center mb-8 pt-0">
+    <div class="flex flex-wrap justify-center gap-2 mt-4">
+        <a href="{% pageurl page %}" class="heading_h1 px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 flex items-center {% if not current_category %}bg-gray-600 text-white{% else %}bg-white text-gray-600 hover:text-gray-600 border border-gray-200 hover:border-gray-200{% endif %}">
+            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+            Все
+        </a>
+        {% for category_value, category_name in SERVICE_CATEGORY_CHOICES %}
+        <a href="?category={{ category_value }}" class="heading_h1 px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 {% if current_category == category_value %}bg-gray-600 text-white{% else %}bg-white text-gray-600 hover:text-gray-600 border border-gray-200 hover:border-gray-200{% endif %}">
+            {{ category_name }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
 
             <!-- Сетка услуг -->
             <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
@@ -130,3 +133,44 @@
     margin: 0 auto;
 }
 </style>
+
+<style>
+.prose h1, h1 {
+    font-weight: 700;
+}
+.prose {
+    color: #4B5563;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeInUp {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+.line-clamp-2, .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.line-clamp-2 { -webkit-line-clamp: 2; }
+.line-clamp-3 { -webkit-line-clamp: 3; }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                const delay = parseInt(element.getAttribute('data-delay') || '0') * 100;
+                setTimeout(() => {
+                    element.classList.add("animate-fadeInUp");
+                }, delay);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll("[data-animate]:not([data-animated])").forEach(item => observer.observe(item));
+});
+</script>

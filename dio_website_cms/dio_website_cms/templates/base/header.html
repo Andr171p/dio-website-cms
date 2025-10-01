@@ -1,23 +1,41 @@
 {% load wagtailcore_tags wagtailimages_tags wagtailsettings_tags static %}
 
 <div class="nav is-secondary">
-  <div data-duration="400" data-animation="default" data-easing2="ease" data-easing="ease" data-collapse="medium" role="banner" data-no-scroll="1" class="nav_container w-nav">
+  <div
+    data-duration="400"
+    data-animation="default"
+    data-easing2="ease"
+    data-easing="ease"
+    data-collapse="medium"
+    role="banner"
+    data-no-scroll="1"
+    class="nav_container w-nav"
+  >
     <div class="nav_left">
       <a href="/" class="nav_logo w-inline-block">
         {% get_settings use_default_site=True as settings %}
         {% if settings.base.HeaderSettings.logo %}
           {% image settings.base.HeaderSettings.logo width-560 height-560 as logo %}
           <div class="nav_logo-icon">
-            <img src="{{ logo.url }}" alt="{{ settings.base.HeaderSettings.site_title|default:'Логотип сайта' }}" class="w-full h-full object-cover">
+            <img
+              src="{{ logo.url }}"
+              alt="{{ settings.base.HeaderSettings.site_title|default:'Логотип сайта' }}"
+              class="w-full h-full object-cover"
+            >
           </div>
         {% else %}
           <div class="nav_logo-icon">
             <svg width="100%" height="100%" viewBox="0 0 33 33" preserveAspectRatio="xMidYMid meet">
-              <path d="M28,0H5C2.24,0,0,2.24,0,5v23c0,2.76,2.24,5,5,5h23c2.76,0,5-2.24,5-5V5c0-2.76-2.24-5-5-5ZM29,17c-6.63,0-12,5.37-12,12h-1c0-6.63-5.37-12-12-12v-1c6.63,0,12-5.37,12-12h1c0,6.63,5.37,12,12,12v1Z" fill="currentColor"></path>
+              <path
+                d="M28,0H5C2.24,0,0,2.24,0,5v23c0,2.76,2.24,5,5,5h23c2.76,0,5-2.24,5-5V5c0-2.76-2.24-5-5-5ZM29,17c-6.63,0-12,5.37-12,12h-1c0-6.63-5.37-12-12-12v-1c6.63,0,12-5.37,12-12h1c0,6.63,5.37,12,12,12v1Z"
+                fill="currentColor"
+              ></path>
             </svg>
           </div>
         {% endif %}
-        <div data-brand-name="true" class="paragraph_large margin-bottom_none">{{ settings.base.HeaderSettings.site_title }}</div>
+        <div data-brand-name="true" class="paragraph_large margin-bottom_none">
+          {{ settings.base.HeaderSettings.site_title }}
+        </div>
       </a>
     </div>
     <div class="nav_center">
@@ -26,22 +44,41 @@
           {% for item in settings.base.HeaderSettings.nav_items %}
             <li class="nav_menu-list-item">
               {% if item.value.menu_type == "none" %}
-                <a href="{% if item.value.page %}{{ item.value.page.url }}{% else %}{{ item.value.external_url|default:'#' }}{% endif %}" class="nav_link w-inline-block">
+                <a
+                  href="{% if item.value.page %}{{ item.value.page.url }}{% else %}{{ item.value.external_url|default:'#' }}{% endif %}"
+                  class="nav_link w-inline-block"
+                >
                   <div>{{ item.value.name }}</div>
                 </a>
               {% else %}
-                <div data-delay="0" data-hover="false" class="nav_dropdown-menu w-dropdown">
-                  <div class="nav_link w-dropdown-toggle" id="w-dropdown-toggle-{{ forloop.counter0 }}" aria-controls="w-dropdown-list-{{ forloop.counter0 }}" aria-haspopup="menu" aria-expanded="false" role="button" tabindex="0">
+                <div data-delay="0" data-hover="true" class="nav_dropdown-menu w-dropdown">
+                  <a
+                    href="{% if item.value.page %}{{ item.value.page.url }}{% else %}{{ item.value.external_url|default:'#' }}{% endif %}"
+                    class="nav_link w-dropdown-toggle"
+                    id="w-dropdown-toggle-{{ forloop.counter0 }}"
+                    aria-controls="w-dropdown-list-{{ forloop.counter0 }}"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                    role="button"
+                    tabindex="0"
+                  >
                     <div>{{ item.value.name }}</div>
                     <div class="nav-caret w-icon-dropdown-toggle"></div>
-                  </div>
+                  </a>
                   {% if item.value.menu_type == "simple" %}
-                    <div class="nav_dropdown-list w-dropdown-list" id="w-dropdown-list-{{ forloop.counter0 }}" aria-labelledby="w-dropdown-toggle-{{ forloop.counter0 }}">
+                    <div
+                      class="nav_dropdown-list w-dropdown-list"
+                      id="w-dropdown-list-{{ forloop.counter0 }}"
+                      aria-labelledby="w-dropdown-toggle-{{ forloop.counter0 }}"
+                    >
                       <div class="nav-menu_dropdown-list-wrapper">
                         <ul role="list" class="flex_vertical margin-bottom_none w-list-unstyled">
                           {% for subitem in item.value.simple_dropdown_items %}
                             <li class="margin-bottom_none">
-                              <a href="{% if subitem.value.page %}{{ subitem.value.page.url }}{% else %}{{ subitem.value.external_url|default:'#' }}{% endif %}" class="nav_dropdown-link w-inline-block">
+                              <a
+                                href="{% if subitem.page %}{{ subitem.page.url }}{% else %}{{ subitem.external_url|default:'#' }}{% endif %}"
+                                class="nav_dropdown-link w-inline-block"
+                              >
                                 <div class="button_label">{{ subitem.name }}</div>
                               </a>
                             </li>
@@ -52,7 +89,7 @@
                   {% elif item.value.menu_type == "grouped" %}
                     <nav class="mega-nav_dropdown-list w-dropdown-list" id="w-dropdown-list-{{ forloop.counter0 }}" aria-labelledby="w-dropdown-toggle-{{ forloop.counter0 }}">
                       <div class="mega-nav_dropdown-list-wrapper">
-                        <ul role="list" class="grid_3-col tablet-1-col gap-medium margin-bottom_none w-list-unstyled">
+                        <ul role="list" class="grid_3-col tablet-1-col gap-medium w-list-unstyled">
                           {% if item.value.dropdown_groups and item.value.dropdown_groups|length > 0 %}
                             <li id="w-node-{{ forloop.counter0 }}-nav-item" class="w-node-{{ forloop.counter0 }}-nav-item-group">
                               <div class="w-layout-grid grid_3-col tablet-1-col gap-small">
@@ -60,61 +97,33 @@
                                   <div>
                                     <div class="eyebrow">{{ group.group_title|default:"No group title" }}</div>
                                     <ul role="list" class="mega-nav_list w-list-unstyled">
-                                      {% if group.items and group.items|length > 0 %}
-                                        {% for subitem in group.items %}
-                                          <li class="margin-bottom_none">
-                                            <a href="{% if subitem.page %}{{ subitem.page.url }}{% else %}{{ subitem.external_url|default:'#' }}{% endif %}" class="mega-nav_link-item w-inline-block">
-                                              {% if subitem.icon_svg %}
-                                                <div class="icon is-medium">
-                                                  {{ subitem.icon_svg|safe }}
-                                                </div>
+                                      {% for subitem in group.value.items %}
+                                        <li class="margin-bottom_none">
+                                          <a href="{% if subitem.value.page %}{{ subitem.value.page.url }}{% else %}{{ subitem.value.external_url|default:'#' }}{% endif %}" class="mega-nav_link-item w-inline-block" tabindex="0">
+                                            <div class="icon is-medium on-inverse">
+                                              {% if subitem.value.icon_svg %}
+                                                {{ subitem.value.icon_svg|safe }}
                                               {% else %}
-                                                <div class="icon is-medium">
-                                                  <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
-                                                    <path d="m25.7 9.3l-7-7A.9.9 0 0 0 18 2H8a2.006 2.006 0 0 0-2 2v24a2.006 2.006 0 0 0 2 2h16a2.006 2.006 0 0 0 2-2V10a.9.9 0 0 0-.3-.7M18 4.4l5.6 5.6H18ZM24 28H8V4h8v6a2.006 2.006 0 0 0 2 2h6Z" stroke-linejoin="round"></path>
-                                                  </svg>
-                                                </div>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
+                                                  <path d="m25.7 9.3l-7-7A.9.9 0 0 0 18 2H8a2.006 2.006 0 0 0-2 2v24a2.006 2.006 0 0 0 2 2h16a2.006 2.006 0 0 0 2-2V10a.9.9 0 0 0-.3-.7M18 4.4l5.6 5.6H18ZM24 28H8V4h8v6a2.006 2.006 0 0 0 2 2h6Z" stroke-linejoin="round"></path>
+                                                </svg>
                                               {% endif %}
-                                              <div class="w-node-subitem-group">
-                                                <div>
-                                                  <strong>{{ subitem.name|default:"No name" }}</strong>
-                                                </div>
-                                                <div class="paragraph_small text-color_secondary">{{ subitem.description|default:"No description" }}</div>
-                                              </div>
-                                            </a>
-                                          </li>
-                                        {% endfor %}
-                                      {% else %}
-                                        <div style="color: red;">No items in group {{ group.group_title|default:"unknown group" }}</div>
-                                      {% endif %}
+                                            </div>
+                                            <div>
+                                              <strong>{{ subitem.value.name|default:"No name" }}</strong>
+                                              <span class="paragraph_small text-color_secondary">{{ subitem.value.description|default:"No description" }}</span>
+                                            </div>
+                                          </a>
+                                        </li>
+                                      {% empty %}
+                                        <li style="color: red;">No items in group {{ group.value.group_title|default:"unknown group" }}</li>
+                                      {% endfor %}
                                     </ul>
                                   </div>
+                                {% empty %}
+                                  <li style="color: red;">No dropdown_groups data for {{ item.value.name }}</li>
                                 {% endfor %}
                               </div>
-                            </li>
-                          {% else %}
-                            <div style="color: red;">No dropdown_groups data for {{ item.value.name }}</div>
-                          {% endif %}
-                          {% if item.value.card_link.enabled %}
-                            <li id="w-node-{{ forloop.counter0 }}-card" class="  {% if item.value.dropdown_groups|length == 0 %}grid-span-3{% elif item.value.dropdown_groups|length == 1 %}grid-span-2{% elif item.value.dropdown_groups|length == 2 %}grid-span-1{% else %}grid-span-1{% endif %} flex_horizontal w-node-{{ forloop.counter0 }}-card-group">
-                              <a href="{% if item.value.card_link.page %}{{ item.value.card_link.page.url }}{% else %}{{ item.value.card_link.external_url|default:'#' }}{% endif %}" class="card-link is-inverse flex-child_expand w-inline-block">
-                                <div class="card_body">
-                                  <div class="heading_h3">{{ item.value.card_link.title|default:"No title" }}</div>
-                                  <p class="paragraph_small text-color_inverse-secondary">{{ item.value.card_link.description|default:"No description" }}</p>
-                                  <div class="margin_top-auto">
-                                    <div class="button-group">
-                                      <div class="text-button is-secondary">
-                                        <div>{{ item.value.card_link.button_text|default:"Подробнее" }}</div>
-                                        <div class="button_icon">
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 16 16" fill="none">
-                                            <path d="M2 8H14.5M14.5 8L8.5 2M14.5 8L8.5 14" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
-                                          </svg>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </a>
                             </li>
                           {% endif %}
                         </ul>
@@ -123,7 +132,6 @@
                   {% endif %}
                 </div>
               {% endif %}
-            
             </li>
           {% endfor %}
         </ul>
@@ -131,15 +139,31 @@
     </div>
     <div class="nav_right">
       <div class="button-group margin-top_none">
-        <a href="{{ settings.base.HeaderSettings.consultation_button_url }}" class="button w-inline-block">
+        <a
+          href="{% if settings.base.HeaderSettings.consultation_page %}{{ settings.base.HeaderSettings.consultation_page.url }}{% else %}#{% endif %}"
+          class="button w-inline-block"
+        >
           <div class="button_label">{{ settings.base.HeaderSettings.consultation_button_text }}</div>
         </a>
       </div>
     </div>
     <div class="nav_mobile-menu-button w-nav-button">
       <div class="icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-          <g class="nc-icon-wrapper" stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.5" fill="none" stroke="currentColor" stroke-miterlimit="10">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <g
+            class="nc-icon-wrapper"
+            stroke-linecap="square"
+            stroke-linejoin="miter"
+            stroke-width="1.5"
+            fill="none"
+            stroke="currentColor"
+            stroke-miterlimit="10"
+          >
             <line x1="1" y1="12" x2="23" y2="12" stroke="currentColor"></line>
             <line x1="1" y1="5" x2="23" y2="5"></line>
             <line x1="1" y1="19" x2="23" y2="19"></line>
@@ -151,21 +175,21 @@
 </div>
 
 <style>
-/* Существующие стили остаются, добавляем новые */
-.nav.is-secondary {
+  /* Существующие стили остаются без изменений */
+  .nav.is-secondary {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000; /* Высокий z-index, чтобы был поверх контента */
-     /* Или ваш цвет фона */
+    /* Или ваш цвет фона */
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
-}
+  }
 
-/* Добавьте отступ для контента под хедером, чтобы он не перекрывался */
-body {
+  /* Добавьте отступ для контента под хедером, чтобы он не перекрывался */
+  body {
     padding-top: 60px; /* Высота хедера, подстройте под ваш дизайн */
-}
+  }
 
-/* Оставьте остальные стили, например для .nav_container, .nav_menu и т.д. */
-</style>
+  
+</style>  

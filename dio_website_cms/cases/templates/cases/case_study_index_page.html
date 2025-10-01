@@ -1,30 +1,16 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-
-
 {% block content %}
-<section id="cases-section" class="section ">
-    <div class="max-w-7xl mx-auto px-6 ">
+<section id="cases-section " class="section pt-10 ">
+    <div class="max-w-7xl mx-auto  ">
         <!-- Заголовок + кнопка -->
-        <div class="flex flex-col md:flex-row justify-between items-center mb-16">
-            <h2 class="heading_h2">
-                Наши кейсы
-            </h2>
-            {% if value.show_view_all_button %}
-            {% with cases_index=page.get_cases_index %}
-            {% if cases_index %}
-            <a href="{% pageurl cases_index %}"
-               class="px-6 py-3 rounded-xl border border-white/50 text-white font-medium hover:bg-white hover:text-gray-900 transition">
-                Все кейсы →
-            </a>
-            {% endif %}
-            {% endwith %}
-            {% endif %}
+        <div class="header mb-0 pt-0">
+                        <h2 class="heading_h3 ">Наши Кейсы</h2>
         </div>
 
         <!-- Filters -->
-        <div class="flex flex-wrap justify-center gap-2 mb-8 opacity-0 transition-opacity duration-700" data-animate="fadeInUp" data-delay="0.2">
+        <div class="flex flex-wrap justify-center gap-2 mb-8 " >
             <a href="{% pageurl page %}" class="heading_h1 px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 flex items-center {% if not current_industry %}bg-gray-600 text-white{% else %}bg-white text-gray-600 hover:text-gray-600 border border-gray-200 hover:border-gray-200{% endif %}">
                 <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -41,7 +27,7 @@
         <!-- Cases Grid -->
         <div class="space-y-10">
             {% for case in cases %}
-            <div class="relative bg-gray-700/40 hover:bg-gray-700/60 transition-all duration-300 rounded-3xl shadow-xl p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 hover:scale-[1.01] opacity-0 animate-fadeInUp" data-delay="{{ forloop.counter0|add:0.3 }}">
+            <a href="{% pageurl case %}" class="relative bg-gray-700/40 hover:bg-gray-700/60 transition-all rounded-3xl shadow-xl p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 hover:scale-[1.01] " >
                 <!-- Логотип -->
                 <div class="flex items-center gap-4 flex-shrink-0">
                     {% if case.specific.customer_logo %}
@@ -64,14 +50,10 @@
                     <p class="heading_h5">
                         {{ case.specific.intro|striptags }}
                     </p>
-                    <a href="{% pageurl case %}" 
-                       class="inline-block px-6 py-3 bg-white text-gray-900 rounded-xl font-semibold hover:bg-gray-200 transition">
-                        Подробнее →
-                    </a>
                 </div>
-            </div>
+            </a>
             {% empty %}
-            <div class="text-center py-12 opacity-0 animate-fadeInUp" data-delay="0.3">
+            <div class="text-center py-12 " >
                 <div class="inline-flex items-center justify-center w-14 h-14 bg-gray-100 text-gray-600 rounded-full mb-3">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -85,7 +67,7 @@
 
         <!-- Pagination -->
         {% if cases.has_other_pages %}
-        <div class="text-center mt-10 opacity-0 transition-opacity duration-700" data-animate="fadeInUp" data-delay="0.4">
+        <div class="text-center mt-10 " >
             <div class="inline-flex items-center gap-1 bg-white rounded-lg shadow-sm p-1 border border-gray-200">
                 {% if cases.has_previous %}
                 <a href="?page={{ cases.previous_page_number }}{% if current_industry %}&industry={{ current_industry }}{% endif %}" class="flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-md transition-colors duration-200">
@@ -117,26 +99,17 @@
             </div>
         </div>
         {% endif %}
-
-        
     </div>
 </section>
 
 <style>
-
 .prose h1, h1 {
     font-weight: 700;
 }
 .prose {
     color: #4B5563;
 }
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.animate-fadeInUp {
-    animation: fadeInUp 0.8s ease-out forwards;
-}
+
 .line-clamp-2, .line-clamp-3 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -146,21 +119,5 @@
 .line-clamp-3 { -webkit-line-clamp: 3; }
 </style>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const element = entry.target;
-                const delay = parseInt(element.getAttribute('data-delay') || '0') * 100;
-                setTimeout(() => {
-                    element.classList.add("animate-fadeInUp");
-                }, delay);
-            }
-        });
-    }, { threshold: 0.1 });
 
-    document.querySelectorAll("[data-animate]:not([data-animated])").forEach(item => observer.observe(item));
-});
-</script>
 {% endblock %}

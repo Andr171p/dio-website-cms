@@ -94,24 +94,28 @@
                         {% csrf_token %}
                         
                         <div class="input margin-bottom_small">
-                            <label for="name" class="input_label">Имя</label>
-                            <input class="input_field w-input" maxlength="256" name="name" data-name="Name" placeholder="Ваше имя" type="text" id="name" required>
-                        </div>
-                        
-                        <div class="input margin-bottom_small">
                             <label for="email" class="input_label">Электронная почта</label>
                             <input class="input_field w-input" maxlength="256" name="email" data-name="Email" placeholder="email@website.com" type="email" id="email" required>
                         </div>
                         
-                        <div class="input margin-bottom_small">
-                            <label for="phone" class="input_label">Контакты</label>
-                            <input class="input_field w-input" maxlength="20" name="phone" data-name="Phone" placeholder="+7 (XXX) XXX-XX-XX" type="tel" id="phone">
-                        </div>
-                        
-                        
                         <div class="input margin-bottom_medium">
                             <label for="message" class="input_label">Сообщение</label>
                             <textarea class="input_field w-input" name="message" data-name="Message" placeholder="Расскажите о вашем проекте..." id="message" rows="4"></textarea>
+                        </div>
+                        
+                        <!-- Капча: Простая математическая задача -->
+                        <div class="input margin-bottom_small">
+                            <label for="captcha" class="input_label">Проверка: Сколько будет <span id="captcha-question"></span>?</label>
+                            <input class="input_field w-input" name="captcha" data-name="Captcha" placeholder="Введите ответ" type="text" id="captcha" required>
+                            <input type="hidden" name="captcha_answer" id="captcha-answer">
+                        </div>
+                        
+                        <!-- Согласие с политикой конфиденциальности -->
+                        <div class="checkbox-field margin-bottom_medium">
+                            <label class="w-checkbox checkbox-field">
+                                <input type="checkbox" name="agreement" id="agreement" required>
+                                <span class="checkbox-label w-form-label">Я согласен с <a href="/privacy-policy/" target="_blank" class="text-link is-secondary">политикой конфиденциальности</a> компании ДИО-Консалт</span>
+                            </label>
                         </div>
                         
                         <div class="button-group">
@@ -133,3 +137,47 @@
         </div>
     </div>
 </section>
+
+<!-- JavaScript для генерации капчи -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Генерация простой математической капчи
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    const answer = num1 + num2;
+    
+    document.getElementById('captcha-question').textContent = `${num1} + ${num2}`;
+    document.getElementById('captcha-answer').value = answer;
+    
+    // Клиентская валидация (дополнительно к серверной)
+    const form = document.getElementById('wf-form-contact-form');
+    form.addEventListener('submit', function(e) {
+        const userAnswer = parseInt(document.getElementById('captcha').value);
+        const correctAnswer = parseInt(document.getElementById('captcha-answer').value);
+        const agreement = document.getElementById('agreement').checked;
+        
+        if (userAnswer !== correctAnswer) {
+            e.preventDefault();
+            alert('Неверный ответ на капчу. Попробуйте снова.');
+            // Перегенерация капчи
+            location.reload(); // Простой способ, или реализовать перегенерацию
+        }
+        if (!agreement) {
+            e.preventDefault();
+            alert('Пожалуйста, подтвердите согласие с политикой конфиденциальности.');
+        }
+    });
+});
+</script>
+
+<!-- Дополнительные стили для новых элементов (добавьте в ваш CSS) -->
+<style>
+.checkbox-field {
+    display: flex;
+    align-items: center;
+}
+.checkbox-label {
+    font-size: 14px;
+    color: #666;
+}
+</style>

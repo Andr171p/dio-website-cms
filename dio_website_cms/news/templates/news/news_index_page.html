@@ -2,121 +2,69 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 {% block content %}
-<section class="section is-secondary relative    overflow-hidden pt-20" id="news-section">
-
-
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <!-- Main Header -->
-        <div class="text-center mb-12 lg:mb-16 animate-fadeIn" data-delay="0.1">
-           
-            <h1 class="heading_h1">
-                Новости компании
-            </h1>
-            <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                Следите за нашими последними новостями, проектами и успехами в реальном времени
-            </p>
+<section id="news-section" class="section pt-10">
+    <div class="max-w-7xl mx-auto">
+        <!-- Заголовок -->
+        <div class="header mb-8 pt-0">
+            <h2 class="heading_h3">Новости</h2>
         </div>
 
-        <!-- Main Content and Sidebar -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-            <!-- Main News Feed -->
-            <div class="lg:col-span-2 space-y-8">
-                {% for news_item in news %}
-                <article class="heading_h1 bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 animate-slideUp" data-delay="{{ forloop.counter0|add:0.2 }}">
-                    <div class="relative h-64 overflow-hidden bg-gray-50">
-                        {% if news_item.image %}
-                        {% image news_item.image width-800 loading="lazy" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" alt=news_item.headline %}
-                        {% else %}
-                        <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center text-gray-500">
-                            <svg class="w-16 h-16 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Фильтры -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8">
+            <a href="{% pageurl page %}" class="heading_h1 px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 flex items-center {% if not current_category %}bg-gray-600 text-white{% else %}bg-white text-gray-600 hover:text-gray-600 border border-gray-200 hover:border-gray-200{% endif %}">
+                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                Все новости
+            </a>
+            {% for category, label in NEWS_CATEGORY_CHOICES %}
+            <a href="?category={{ category }}" class="heading_h1 px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 {% if current_category == category %}bg-gray-600 text-white{% else %}bg-white text-gray-600 hover:text-gray-600 border border-gray-200 hover:border-gray-200{% endif %}">
+                {{ label }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <!-- Сетка новостей -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for news_item in news %}
+            <a href="{% pageurl news_item %}" class="group block bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+                <div class="relative h-48 overflow-hidden bg-gray-50">
+                    {% if news_item.image %}
+                        {% image news_item.image width-500 height-500 loading="lazy" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt=news_item.headline %}
+                    {% else %}
+                        <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+                            <svg class="w-12 h-12 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                         </div>
-                        {% endif %}
-                        <div class="absolute top-4 left-4">
-                            <span class="px-2.5 py-1 bg-white/90 backdrop-blur-sm text-xs font-medium text-blue-700 rounded-full shadow">
-                                {{ news_item.get_category_display }}
-                            </span>
-                        </div>
-                        <div class="absolute bottom-3 left-3 text-white text-sm bg-black/20 backdrop-blur-sm px-2.5 py-1 rounded-full">
-                            {{ news_item.date|date:"d.m.Y" }}
-                        </div>
-                    </div>
-                    <div class="p-5 lg:p-6">
-                        <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors duration-300">
-                            <a href="{% pageurl news_item %}" class="hover:underline decoration-2 underline-offset-4">{{ news_item.headline }}</a>
-                        </h2>
-                        <div class="flex items-center text-gray-500 text-sm mb-3">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            {{ news_item.read_time|default:"5" }} мин
-                        </div>
-                        <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-2">
-                            {{ news_item.intro|safe }}
-                        </p>
-                        <a href="{% pageurl news_item %}" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium text-sm transition-all duration-300 hover:translate-x-1">
-                            Читать далее
-                            <svg class="w-4 h-4 ml-1 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </a>
-                    </div>
-                </article>
-                {% empty %}
-                <div class="text-center py-16 bg-white rounded-2xl shadow-md animate-fadeIn" data-delay="0.2">
-                    <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-100 text-blue-600 rounded-full mb-6 animate-pulse">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Новостей пока нет</h3>
-                    <p class="text-gray-600 max-w-md mx-auto">Следите за обновлениями, скоро появятся свежие новости</p>
+                    {% endif %}
                 </div>
-                {% endfor %}
+                <div class="p-4">
+                    <p class="text-xs text-gray-500 mb-1">{{ news_item.date|date:"d.m.Y" }}</p>
+                    <h3 class="heading_h3 text-lg font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors duration-300">
+                        {{ news_item.headline }}
+                    </h3>
+                    <p class="text-sm text-gray-600 line-clamp-2">
+                        {{ news_item.intro|striptags }}
+                    </p>
+                </div>
+            </a>
+            {% empty %}
+            <div class="text-center py-12 bg-white rounded-lg shadow-md col-span-full">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 text-gray-600 rounded-full mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Новостей пока нет</h3>
+                <p class="text-gray-600 max-w-md mx-auto">Следите за обновлениями, скоро появятся свежие новости</p>
             </div>
-
-            <!-- Sidebar -->
-            <aside class="lg:col-span-1 space-y-6 animate-fadeIn" data-delay="0.3">
-                <!-- Popular News -->
-                <div class="bg-white rounded-2xl p-5 shadow-md">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Популярное</h3>
-                    <ul class="space-y-3">
-                        {% for popular in news|slice:":3" %}
-                        <li>
-                            <a href="{% pageurl popular %}" class="flex items-center text-gray-700 hover:text-blue-600 transition-colors duration-300">
-                                <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                </svg>
-                                {{ popular.headline|truncatechars:40 }}
-                            </a>
-                        </li>
-                        {% empty %}
-                        <li class="text-gray-500 text-sm">Нет популярных новостей</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <!-- Filters -->
-                <div class="bg-white rounded-2xl p-5 shadow-md">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Фильтры</h3>
-                    <div class="space-y-2">
-                        <a href="{% pageurl page %}" class="heading_h1 block px-3 py-1.5 rounded-md text-sm {% if not current_category %}bg-blue-600 text-white{% else %}text-gray-700 hover:bg-gray-100{% endif %} transition-all duration-200">
-                            Все новости
-                        </a>
-                        {% for category, label in NEWS_CATEGORY_CHOICES %}
-                        <a href="?category={{ category }}" class="heading_h1 block px-3 py-1.5 rounded-md text-sm {% if current_category == category %}bg-blue-600 text-white{% else %}text-gray-700 hover:bg-gray-100{% endif %} transition-all duration-200">
-                            {{ label }}
-                        </a>
-                        {% endfor %}
-                    </div>
-                </div>
-            </aside>
+            {% endfor %}
         </div>
 
-        <!-- Pagination -->
+        <!-- Пагинация -->
         {% if news.has_other_pages %}
-        <div class="text-center mt-12 lg:mt-16 animate-fadeIn" data-delay="0.4">
+        <div class="text-center mt-12">
             <div class="inline-flex items-center gap-1 bg-white rounded-xl shadow-md p-2 border border-gray-100">
                 {% if news.has_previous %}
                 <a href="?page={{ news.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-all duration-200">
@@ -150,70 +98,16 @@
 </section>
 
 <style>
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(30px) scale(0.98); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @keyframes bloom {
-        0%, 100% { transform: scale(1); opacity: 0.6; }
-        50% { transform: scale(1.1); opacity: 0.8; }
-    }
-
-    [data-animate].active {
-        animation-timing-function: ease-out;
-    }
-
-    [data-animate="fadeIn"].active {
-        animation: fadeIn 0.7s forwards;
-    }
-
-    [data-animate="slideUp"].active {
-        animation: slideUp 0.6s forwards;
-    }
-
-    .animate-bloom {
-        animation: bloom 8s infinite;
-    }
-
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const element = entry.target;
-                const delay = parseFloat(element.getAttribute('data-delay') || 0) * 100;
-                setTimeout(() => {
-                    element.classList.add('active');
-                    element.dataset.animated = 'true';
-                }, delay);
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('[data-animate]:not([data-animated])').forEach(el => {
-        observer.observe(el);
-    });
-
-    // Lazy load images
     const images = document.querySelectorAll('img[loading="lazy"]');
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {

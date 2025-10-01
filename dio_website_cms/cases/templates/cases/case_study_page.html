@@ -14,11 +14,11 @@
                     <span class="inline-block px-4 py-2 rounded-full bg-blue-600/50 text-white text-sm font-semibold mb-4 animate-fadeIn">
                         {{ page.get_industry_display }}
                     </span>
-                    <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white drop-shadow-md animate-fadeIn" style="animation-delay: 0.1s;">
+                    <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight mb-6 drop-shadow-md animate-fadeIn" style="animation-delay: 0.1s;">
                         {{ page.title }}
                     </h1>
                     {% if page.intro %}
-                        <p class="heading_h3 text-blue-100 text-lg lg:text-xl mb-8 max-w-prose leading-relaxed animate-fadeIn" style="animation-delay: 0.2s;">
+                        <p class="heading_h3  text-lg lg:text-xl mb-8 max-w-prose leading-relaxed animate-fadeIn" style="animation-delay: 0.2s;">
                             {{ page.intro|striptags }}
                         </p>
                     {% endif %}
@@ -86,14 +86,15 @@
     {% if other_cases %}
     <section class="max-w-6xl mx-auto px-4 lg:px-8 py-16 lg:py-20">
         <h2 class="heading_h2 text-3xl lg:text-4xl font-bold text-gray-900 text-center mb-12 animate-fadeInUp" data-delay="0.2">
-            Другие проекты
+            Другие кейсы
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for case in other_cases %}
             <article class="bg-white rounded-xl shadow-md hover:shadow-lg overflow-hidden transition-all duration-300 animate-fadeInUp" >
-                {% if case.main_image %}
+                <a href="{{ case.url }}">{% if case.main_image %}
                     {% image case.main_image fill-400x300 class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" %}
                 {% endif %}
+                </a>
                 <div class="p-6 flex flex-col h-full">
                     <span class=" heading_h1 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full mb-3">
                         {{ case.get_industry_display }}

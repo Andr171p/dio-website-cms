@@ -8,7 +8,24 @@ from wagtail.models import DraftStateMixin, RevisionMixin, PreviewableMixin,Page
 from django.contrib.auth.models import User
 from django import forms 
 
-# ========== HEADER SETTINGS ==========
+# settings/models.py
+
+from django.db import models
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, PublishingPanel
+from wagtail.contrib.settings.models import BaseGenericSetting, register_setting
+from wagtail.blocks import (
+    CharBlock,
+    ChoiceBlock,
+    StructBlock,
+    ListBlock,
+    TextBlock,
+    BooleanBlock,
+    PageChooserBlock,
+    URLBlock,
+)
+from wagtail.models import DraftStateMixin, RevisionMixin, PreviewableMixin
+from wagtail.fields import StreamField
+
 @register_setting
 class HeaderSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGenericSetting):
     """Настройки хедера сайта"""
@@ -19,174 +36,271 @@ class HeaderSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGener
 
     # Основные поля
     logo = models.ForeignKey(
-        'wagtailimages.Image',
+        "wagtailimages.Image",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+',
-        help_text='Логотип сайта (рекомендуемый размер: 40x40px)'
+        related_name="+",
+        help_text="Логотип сайта (рекомендуемый размер: 40x40px)",
     )
     site_title = models.CharField(
         max_length=255,
         blank=True,
-        default='',
-        help_text='Название сайта, отображаемое рядом с логотипом'
+        default="",
+        help_text="Название сайта, отображаемое рядом с логотипом",
     )
     consultation_button_text = models.CharField(
         max_length=255,
-        default='Оставить заявку',
-        help_text='Текст кнопки консультации'
+        default="Оставить заявку",
+        help_text="Текст кнопки консультации",
     )
-    consultation_button_url = models.URLField(
+    consultation_page = models.ForeignKey(
+        Page,
+        null=True,
         blank=True,
-        help_text='URL для кнопки консультации'
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Выберите страницу для ссылки на консультацию",
     )
 
     # Поле для элементов навигации (StreamField)
-    nav_items = StreamField([
-        ('nav_item', StructBlock([
-            ('name', CharBlock(
-                max_length=255,
-                required=True,
-                label='Название пункта*',
-                help_text='Название пункта меню'
-            )),
-            ('page', PageChooserBlock(
-                required=False,
-                label='Страница',
-                help_text='Выберите страницу для ссылки'
-            )),
-            ('external_url', URLBlock(
-                required=False,
-                label='Внешняя ссылка',
-                help_text='Укажите внешний URL, если страница не выбрана'
-            )),
-            ('menu_type', ChoiceBlock(
-                choices=[
-                    ('none', 'Без подменю'),
-                    ('simple', 'Простое подменю'),
-                    ('grouped', 'Группированное подменю с карточкой')
+    nav_items = StreamField(
+    [
+        (
+            "nav_item",
+            StructBlock(
+                [
+                    (
+                        "name",
+                        CharBlock(
+                            max_length=255,
+                            required=True,
+                            label="Название пункта*",
+                            help_text="Название пункта меню",
+                        ),
+                    ),
+                    (
+                        "page",
+                        PageChooserBlock(
+                            required=False,
+                            label="Страница",
+                            help_text="Выберите страницу для ссылки",
+                        ),
+                    ),
+                    (
+                        "external_url",
+                        URLBlock(
+                            required=False,
+                            label="Внешняя ссылка",
+                            help_text="Укажите внешний URL, если страница не выбрана",
+                        ),
+                    ),
+                    (
+                        "menu_type",
+                        ChoiceBlock(
+                            choices=[
+                                ("none", "Без подменю"),
+                                ("simple", "Простое подменю"),
+                                ("grouped", "Группированное подменю с карточкой"),
+                            ],
+                            default="none",
+                            label="Тип меню*",
+                            help_text="Выберите тип подменю",
+                        ),
+                    ),
+                    (
+                        "simple_dropdown_items",
+                        ListBlock(
+                            StructBlock(
+                                [
+                                    (
+                                        "name",
+                                        CharBlock(
+                                            max_length=255,
+                                            required=True,
+                                            label="Название подпункта*",
+                                            help_text="Название подпункта",
+                                        ),
+                                    ),
+                                    (
+                                        "page",
+                                        PageChooserBlock(
+                                            required=False,
+                                            label="Страница",
+                                            help_text="Выберите страницу для ссылки",
+                                        ),
+                                    ),
+                                    (
+                                        "external_url",
+                                        URLBlock(
+                                            required=False,
+                                            label="Внешняя ссылка",
+                                            help_text="Укажите внешний URL, если страница не выбрана",
+                                        ),
+                                    ),
+                                ]
+                            ),
+                            required=False,
+                            label="Простые элементы подменю",
+                            help_text="Используется для типа 'Простое подменю'",
+                        ),
+                    ),
+                    (
+                        "dropdown_groups",
+                        ListBlock(
+                            StructBlock(
+                                [
+                                    (
+                                        "group_title",
+                                        CharBlock(
+                                            max_length=255,
+                                            required=True,
+                                            label="Название группы*",
+                                            help_text="Например: Автоматизация бизнеса",
+                                        ),
+                                    ),
+                                    (
+                                        "items",
+                                        ListBlock(
+                                            StructBlock(
+                                                [
+                                                    (
+                                                        "name",
+                                                        CharBlock(
+                                                            max_length=255,
+                                                            required=True,
+                                                            label="Название подпункта*",
+                                                            help_text="Название подпункта",
+                                                        ),
+                                                    ),
+                                                    (
+                                                        "page",
+                                                        PageChooserBlock(
+                                                            required=False,
+                                                            label="Страница",
+                                                            help_text="Выберите страницу для ссылки",
+                                                        ),
+                                                    ),
+                                                    (
+                                                        "external_url",
+                                                        URLBlock(
+                                                            required=False,
+                                                            label="Внешняя ссылка",
+                                                            help_text="Укажите внешний URL, если страница не выбрана",
+                                                        ),
+                                                    ),
+                                                    (
+                                                        "description",
+                                                        TextBlock(
+                                                            required=False,
+                                                            label="Описание",
+                                                            help_text="Краткое описание подпункта",
+                                                        ),
+                                                    ),
+                                                    (
+                                                        "icon_svg",
+                                                        TextBlock(
+                                                            required=False,
+                                                            label="SVG код иконки",
+                                                            help_text="Вставьте SVG код для иконки",
+                                                        ),
+                                                    ),
+                                                ]
+                                            ),
+                                            required=False,
+                                            label="Элементы подменю",
+                                        ),
+                                    ),
+                                ]
+                            ),
+                            required=False,
+                            label="Группы выпадающего меню",
+                            help_text="Используется для типа 'Группированное подменю'",
+                            max_num=3,  # Ограничение до 3 групп
+                        ),
+                    ),
+                    (
+                        "card_link",
+                        StructBlock(
+                            [
+                                (
+                                    "enabled",
+                                    BooleanBlock(
+                                        default=False,
+                                        required=False,
+                                        label="Включить карточку",
+                                        help_text="Включить карточку ссылки",
+                                    ),
+                                ),
+                                (
+                                    "title",
+                                    CharBlock(
+                                        max_length=255,
+                                        required=False,
+                                        label="Название карточки",
+                                        help_text="Название карточки",
+                                    ),
+                                ),
+                                (
+                                    "description",
+                                    TextBlock(
+                                        required=False,
+                                        label="Описание карточки",
+                                        help_text="Описание карточки",
+                                    ),
+                                ),
+                                (
+                                    "page",
+                                    PageChooserBlock(
+                                        required=False,
+                                        label="Страница",
+                                        help_text="Выберите страницу для ссылки",
+                                    ),
+                                ),
+                                (
+                                    "external_url",
+                                    URLBlock(
+                                        required=False,
+                                        label="Внешняя ссылка",
+                                        help_text="Укажите внешний URL, если страница не выбрана",
+                                    ),
+                                ),
+                                (
+                                    "button_text",
+                                    CharBlock(
+                                        max_length=255,
+                                        default="Подробнее",
+                                        required=False,
+                                        label="Текст кнопки*",
+                                        help_text="Текст кнопки на карточке",
+                                    ),
+                                ),
+                            ],
+                            required=False,
+                            label="Карточка ссылки",
+                        ),
+                    ),
                 ],
-                default='none',
-                label='Тип меню*',
-                help_text='Выберите тип подменю: без подменю, простое подменю или группированное подменю с карточкой'
-            )),
-            ('simple_dropdown_items', ListBlock(
-                StructBlock([
-                    ('name', CharBlock(
-                        max_length=255,
-                        required=True,
-                        label='Название подпункта*',
-                        help_text='Название подпункта'
-                    )),
-                    ('page', PageChooserBlock(
-                        required=False,
-                        label='Страница',
-                        help_text='Выберите страницу для ссылки'
-                    )),
-                    ('external_url', URLBlock(
-                        required=False,
-                        label='Внешняя ссылка',
-                        help_text='Укажите внешний URL, если страница не выбрана'
-                    ))
-                ]),
-                required=False,
-                label='Простые элементы подменю',
-                help_text='Используется, если выбран тип "Простое подменю"'
-            )),
-            ('dropdown_groups', ListBlock(
-                StructBlock([
-                    ('group_title', CharBlock(
-                        max_length=255,
-                        required=True,
-                        label='Название группы*',
-                        help_text='Например: Автоматизация бизнеса'
-                    )),
-                    ('items', ListBlock(
-                        StructBlock([
-                            ('name', CharBlock(
-                                max_length=255,
-                                required=True,
-                                label='Название подпункта*',
-                                help_text='Название подпункта'
-                            )),
-                            ('page', PageChooserBlock(
-                                required=False,
-                                label='Страница',
-                                help_text='Выберите страницу для ссылки'
-                            )),
-                            ('external_url', URLBlock(
-                                required=False,
-                                label='Внешняя ссылка',
-                                help_text='Укажите внешний URL, если страница не выбрана'
-                            )),
-                            ('description', TextBlock(
-                                required=False,
-                                label='Описание',
-                                help_text='Краткое описание подпункта'
-                            )),
-                            ('icon_svg', TextBlock(
-                                required=False,
-                                label='SVG код иконки',
-                                help_text='Вставьте SVG код для иконки'
-                            ))
-                        ]),
-                        required=False,
-                        label='Элементы подменю'
-                    ))
-                ]),
-                required=False,
-                label='Группы выпадающего меню',
-                help_text='Используется, если выбран тип "Группированное подменю"',
-                max_num=3  # Ограничение до 3 групп
-            )),
-            ('card_link', StructBlock([
-                ('enabled', blocks.BooleanBlock(
-                    default=False,
-                    required=False,
-                    label='Включить карточку',
-                    help_text='Включить карточку ссылки'
-                )),
-                ('title', CharBlock(
-                    max_length=255,
-                    required=False,
-                    label='Название карточки',
-                    help_text='Название карточки'
-                )),
-                ('description', TextBlock(
-                    required=False,
-                    label='Описание карточки',
-                    help_text='Описание карточки'
-                )),
-                ('page', PageChooserBlock(
-                    required=False,
-                    label='Страница',
-                    help_text='Выберите страницу для ссылки'
-                )),
-                ('external_url', URLBlock(
-                    required=False,
-                    label='Внешняя ссылка',
-                    help_text='Укажите внешний URL, если страница не выбрана'
-                )),
-                ('button_text', CharBlock(
-                    max_length=255,
-                    default='Подробнее',
-                    required=False,
-                    label='Текст кнопки*',
-                    help_text='Текст кнопки на карточке'
-                ))
-            ], required=False, label='Карточка ссылки'))
-        ], icon='list-ul', label='Пункт меню'))
-    ], use_json_field=True, blank=True, null=True)
+                icon="list-ul",
+                label="Пункт меню",
+            ),
+    )],
+        use_json_field=True,
+        blank=True,
+        null=True,
+    ) 
 
     panels = [
-        MultiFieldPanel([
-            FieldPanel("logo"),
-            FieldPanel("site_title"),
-            FieldPanel("consultation_button_text"),
-            FieldPanel("consultation_button_url"),
-            FieldPanel("nav_items"),
-        ], heading="Основные настройки header"),
+        MultiFieldPanel(
+            [
+                FieldPanel("logo"),
+                FieldPanel("site_title"),
+                FieldPanel("consultation_button_text"),
+                FieldPanel("consultation_page"),
+                FieldPanel("nav_items"),
+            ],
+            heading="Основные настройки хедера",
+        ),
         PublishingPanel(),
     ]
 

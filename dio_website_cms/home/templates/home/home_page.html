@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags static %}
-
-{% block title %}{{ page.title }} | Мой сайт{% endblock %}
+{% load wagtailcore_tags wagtailimages_tags wagtailsettings_tags  static %}
+ {% get_settings use_default_site=True as settings %}
+{% block title %}{{ page.title }} | {{ settings.base.SiteSettings.name }}{% endblock %}
 
 
 {% block content %}
@@ -61,10 +61,10 @@
 {% include "home/services.html" %}
 {% include "home/cases_section.html" %}
 {% include "home/news.html" %}
-{% include "home/faqitem.html" %}
+<!-- {% include "home/faqitem.html" %}    -->
 {% include "home/statistics_section.html" with statistic_pages=page.statistic_pages %}
 
-{% include "certificates/certificates_page.html" %}
+<!-- {% include "certificates/certificates_page.html" %} -->
 
 {% endblock %}
 
