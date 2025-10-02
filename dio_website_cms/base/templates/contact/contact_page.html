@@ -5,7 +5,7 @@
 {% get_settings use_default_site=True as settings %}
 
 {% block content %}
-<section class="section">
+<section class="section ">
     <div class="mx-auto ">
         <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-10 text-center animate-fadeInUp" data-delay="0">
             <span class="highlight-text">{{ page.title }}</span>
@@ -14,7 +14,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             <!-- Contact Information -->
             <div class="lg:col-span-1 space-y-8 animate-fadeInUp" data-delay="0.1">
-                <div class="card p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                <div class="heading_h3 card p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
                     <h2 class="text-xl lg:text-2xl font-bold text-blue-900 dark:text-blue-200 mb-4">Контактная информация</h2>
                     <div class="space-y-4">
                         {% if page.address %}
@@ -47,7 +47,7 @@
 
                 <!-- Legal Information -->
                 {% if page.legal_name or page.inn or page.ogrn %}
-                    <div class="card p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                    <div class="heading_h3 card p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
                         <h2 class="text-xl lg:text-2xl font-bold text-blue-900 dark:text-blue-200 mb-4">Юридические данные</h2>
                         <div class="space-y-2 text-gray-700 dark:text-gray-300 text-base lg:text-lg">
                             {% if page.legal_name %}
@@ -80,12 +80,11 @@
         <!-- Contact Form -->
         {% if page.contact_form_text %}
             <div class="mt-12 lg:mt-16 animate-fadeInUp" data-delay="0.3">
-                <div class="card p-6 lg:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                <div class="heading_h3 card p-6 lg:p-8 bg-white dark:bg-gray-800 shadow-md rounded-lg">
                     <h2 class="text-2xl lg:text-3xl font-bold text-blue-900 dark:text-blue-200 mb-6">Свяжитесь с нами</h2>
                     <div class="prose text-gray-700 dark:text-gray-300 mb-6">
                         {{ page.contact_form_text|safe }}
                     </div>
-                    {% include 'base/contact.html' %}
                 </div>
             </div>
         {% endif %}
