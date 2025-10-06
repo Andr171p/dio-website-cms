@@ -3,6 +3,7 @@ from django.db import models
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.api import APIField
+from wagtail.search import index
 from wagtail.images.models import Image
 from wagtail.fields import RichTextField
 from wagtail.blocks import (
@@ -20,7 +21,9 @@ from .blocks import ContactsBlock, FeedbackFormBlock
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from services.models import ServiceBlock
+
 # from wagtailai.panels import AIPanel, ai_indexable
+from feedback.forms import FeedbackForm
 
 
 MAX_HEADLINE_LENGTH = 500
@@ -301,24 +304,35 @@ class HomePage(Page):
         max_length=255, blank=True, help_text="Основной заголовок"
     )
     subheading = models.TextField(blank=True, help_text="Подзаголовок или описание")
-    
 
-    content = StreamField([
-        ('hero', StructBlock([
-            ('title', CharBlock(required=True, label="Заголовок")),
-            ('image', ImageChooserBlock(required=True, label="Изображение")),
-        ])),
-        ('services_section', ServiceBlock()),
-    ], blank=True, use_json_field=True, verbose_name="Секции страницы")
-
-    
-
-    
+    content = StreamField(
+        [
+            (
+                "hero",
+                StructBlock(
+                    [
+                        ("title", CharBlock(required=True, label="Заголовок")),
+                        (
+                            "image",
+                            ImageChooserBlock(required=True, label="Изображение"),
+                        ),
+                    ]
+                ),
+            ),
+            ("services_section", ServiceBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+        verbose_name="Секции страницы",
+    )
 
     content_panels = Page.content_panels + [
-         MultiFieldPanel([
-            FieldPanel('content'),
-        ], heading="Секции страницы"),
+        MultiFieldPanel(
+            [
+                FieldPanel("content"),
+            ],
+            heading="Секции страницы",
+        ),
         MultiFieldPanel(
             [
                 FieldPanel("eyebrow"),
@@ -388,11 +402,13 @@ class HomePage(Page):
         APIField("awards"),
         APIField("partnership_section"),
         APIField("content_panels"),
-         APIField('content'),
+        APIField("content"),
     ]
+
     def get_services(self, count=6):
         """Получить последние услуги из связанной SingleServicePage"""
         from services.models import SingleServicePage
+
         return SingleServicePage.objects.live().order_by("-date")[:count]
 
     def get_cases(self, count=6):
@@ -406,7 +422,7 @@ class HomePage(Page):
 
         context = super().get_context(request, *args, **kwargs)
         context["cases"] = self.get_cases()
-
+        context["form"] = FeedbackForm()
         try:
             from cases.models import INDUSTRY_CHOICES
 
@@ -451,8 +467,6 @@ class HomePage(Page):
     def get_preview_template(self, request, mode_name):
         return "home/home_page.html"
 
-    
-
     class Meta:
         verbose_name = "Главная страница"
         verbose_name_plural = "Главные страницы"
@@ -471,3 +485,73 @@ class FAQItem(ClusterableModel):
     class Meta:
         verbose_name = "Вопрос-ответ"
         verbose_name_plural = "Часто задаваемые вопросы"
+
+
+class FAQPage(Page):
+    """Отдельная страница со множеством вопросов"""
+    question = blocks.CharBlock(
+        max_length=255,
+        required=True,
+        label="Вопрос"
+    )
+    
+    answer = blocks.RichTextBlock(
+        required=True,
+        label="Ответ",
+        features=['bold', 'italic', 'link', 'ol', 'ul']
+    )
+    eyebrow = models.CharField(
+        max_length=255, 
+        blank=True,
+        verbose_name="Надзаголовок"
+    )
+    
+    heading = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Основной заголовок"
+    )
+    
+    subheading = models.TextField(
+        blank=True,
+        verbose_name="Подзаголовок"
+    )
+
+    # StreamField для вопросов
+    faq_items = StreamField(
+        [
+            ("faq", blocks.StructBlock([
+                ("question", blocks.CharBlock(
+                    max_length=255,
+                    required=True,
+                    label="Вопрос"
+                )),
+                ("answer", blocks.RichTextBlock(
+                    required=True,
+                    label="Ответ",
+                    features=['bold', 'italic', 'link', 'ol', 'ul']
+                ))
+            ], icon="help", label="Вопрос-ответ"))
+        ],
+        blank=True,
+        use_json_field=True,
+        verbose_name="Вопросы и ответы"
+    )
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("eyebrow"),
+                FieldPanel("heading"),
+                FieldPanel("subheading"),
+            ],
+            heading="Заголовок секции",
+        ),
+        FieldPanel("faq_items"),
+    ]
+
+    template = "home/faqitem.html"
+
+    class Meta:
+        verbose_name = "Страница FAQ"
+        verbose_name_plural = "Страницы FAQ"

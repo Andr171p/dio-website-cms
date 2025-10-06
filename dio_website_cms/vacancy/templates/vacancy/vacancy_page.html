@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Описание вакансии -->
+<section class="section">
+    <div class="container">
+        <h1>{{ page.title }}</h1>
+        
+        <div class="vacancy-content">
+            <h2>Обязанности:</h2>
+            <p>{{ page.responsibilities|linebreaks }}</p>
+            
+            <h2>Требования:</h2>
+            <p>{{ page.requirements|linebreaks }}</p>
+            
+            <h2>Условия:</h2>
+            <p>{{ page.conditions|linebreaks }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Форма отклика -->
+<section class="section">
+    <div class="container">
+        <h2>Откликнуться на вакансию</h2>
+        
+        {% include "vacancy/includes/vacancy_form.html" %}
+    </div>
+</section>
+
+<!-- Подключение SweetAlert2 -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+{% endblock %}

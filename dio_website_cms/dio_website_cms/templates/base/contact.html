@@ -89,50 +89,8 @@
                     <p class="paragraph_medium">Пишите нам в любое время: <a href="mailto:{{ contact_settings.base.ContactSettings.primary_email|default:'info@example.com' }}" class="text-link is-secondary text-span_padding">{{ contact_settings.base.ContactSettings.primary_email|default:'info@example.com' }}</a></p>
                 </div>
                 
-                <div class="margin-bottom_none w-form">
-                    <form method="post" name="wf-form-Contact-Form" data-name="Contact Form" id="wf-form-contact-form" aria-label="Contact Form">
-                        {% csrf_token %}
-                        
-                        <div class="input margin-bottom_small">
-                            <label for="email" class="input_label">Электронная почта</label>
-                            <input class="input_field w-input" maxlength="256" name="email" data-name="Email" placeholder="email@website.com" type="email" id="email" required>
-                        </div>
-                        
-                        <div class="input margin-bottom_medium">
-                            <label for="message" class="input_label">Сообщение</label>
-                            <textarea class="input_field w-input" name="message" data-name="Message" placeholder="Расскажите о вашем проекте..." id="message" rows="4"></textarea>
-                        </div>
-                        
-                        <!-- Капча: Простая математическая задача -->
-                        <div class="input margin-bottom_small">
-                            <label for="captcha" class="input_label">Проверка: Сколько будет <span id="captcha-question"></span>?</label>
-                            <input class="input_field w-input" name="captcha" data-name="Captcha" placeholder="Введите ответ" type="text" id="captcha" required>
-                            <input type="hidden" name="captcha_answer" id="captcha-answer">
-                        </div>
-                        
-                        <!-- Согласие с политикой конфиденциальности -->
-                        <div class="checkbox-field margin-bottom_medium">
-                            <label class="w-checkbox checkbox-field">
-                                <input type="checkbox" name="agreement" id="agreement" required>
-                                <span class="checkbox-label w-form-label">Я согласен с <a href="/privacy-policy/" target="_blank" class="text-link is-secondary">политикой конфиденциальности</a> компании ДИО-Консалт</span>
-                            </label>
-                        </div>
-                        
-                        <div class="button-group">
-                            <input type="submit" data-wait="Отправка..." class="button w-button" value="Отправить заявку">
-                        </div>
-                    </form>
-                    
-                    <div class="form_success-message w-form-done" tabindex="-1" role="region" aria-label="Contact Form success">
-                        <div>Ваша заявка успешно отправлена!</div>
-                    </div>
-                    
-                    <div class="form_error-message w-form-fail" tabindex="-1" role="region" aria-label="Contact Form failure">
-                        <div class="form_error-message_content">
-                            <div class="display_inline-block">Ошибка при отправке. Попробуйте ещё раз.</div>
-                        </div>
-                    </div>
-                </div>
+                {% include 'feedback/form.html' %}  
+                
             </div>
         </div>
     </div>

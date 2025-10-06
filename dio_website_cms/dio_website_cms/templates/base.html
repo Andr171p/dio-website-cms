@@ -4,6 +4,9 @@
 <html data-wf-page="68d0d0322c6c6c90372e0d7f" data-wf-site="68d0d0312c6c6c90372e0d42" data-wf-status="1" class="w-mod-js w-mod-ix wf-comfortaa-n4-active wf-manrope-n4-active wf-active">
     <head>
         <meta charset="utf-8"/>
+        <!-- Подключите в head -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
         {% get_settings use_default_site=True as settings %}
         <title>{% block title %}{{page.title}}{% endblock %}</title>
 <!-- Favicon из настроек сайта -->
@@ -92,7 +95,7 @@
 
                 // Устанавливаем начальную тему
                 if (currentTheme === 'dark') {
-                    themeStyle.href = "{% static 'css/style5.css' %}?v=1.0";
+                    themeStyle.href = "{% static 'css/style5.css' %}?v=1.1";
                     lightIcon.classList.add('hidden');
                     darkIcon.classList.remove('hidden');
                     themeToggle.classList.add('bg-gray-200', 'text-black');
@@ -112,7 +115,7 @@
                 // Переключение темы
                 themeToggle.addEventListener('click', function() {
                     if (currentTheme === 'light') {
-                        themeStyle.href = "{% static 'css/style5.css' %}?v=1.0";
+                        themeStyle.href = "{% static 'css/style5.css' %}?v=1.1";
                         currentTheme = 'dark';
                         lightIcon.classList.add('hidden');
                         darkIcon.classList.remove('hidden');

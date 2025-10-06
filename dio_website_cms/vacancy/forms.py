@@ -1,12 +1,8 @@
 from typing import ClassVar
-
 import re
-
 from django import forms
 from utils import check_spam
-
 from .models import Vacancy
-
 
 class VacancyForm(forms.ModelForm):
     csrftoken = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -43,7 +39,7 @@ class VacancyForm(forms.ModelForm):
             digits = re.sub(r"\D", "", phone)
             if digits.startswith(("7", "8")):
                 digits = digits[1:]
-            if len(digits) != 10:  # noqa: PLR2004
+            if len(digits) != 10:
                 raise forms.ValidationError("Номер должен содержать 10 цифр")
             return f"+7 ({digits[:3]}) {digits[3:6]}-{digits[6:8]}-{digits[8:10]}"
         return phone
@@ -54,5 +50,5 @@ class VacancyForm(forms.ModelForm):
             check_spam(csrftoken)
         return csrftoken
 
-    def save(self, commit=True) -> super:
+    def save(self, commit=True):
         return super().save(commit=commit)
