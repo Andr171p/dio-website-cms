@@ -1,14 +1,15 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
-from wagtail.models import Page
+from django.utils import timezone
+from wagtail import blocks
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Page
 from wagtail.search import index
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-# from wagtailai.panels import AIPanel, ai_indexable
 
 # Константы для отраслей
 INDUSTRY_CHOICES = [
@@ -40,11 +41,9 @@ class CaseStudyPage(Page):
         related_name="+",
         verbose_name="Логотип клиента",
     )
-
-    intro = RichTextField(
-        "Краткое описание", blank=True, help_text="1-3 предложения для анонса"
-    )
-
+    
+    intro = RichTextField("Краткое описание", blank=True, help_text="1-3 предложения для анонса")
+    
     # Основное изображение кейса
     main_image = models.ForeignKey(
         "wagtailimages.Image",
@@ -56,36 +55,23 @@ class CaseStudyPage(Page):
     )
 
     # Детальное содержание
-    content = StreamField(
-        [
-            ("description", blocks.RichTextBlock(label="Описание проекта")),
-            ("challenge", blocks.RichTextBlock(label="Задача")),
-            ("solution", blocks.RichTextBlock(label="Решение")),
-            ("results", blocks.RichTextBlock(label="Результаты")),
-            (
-                "technologies",
-                blocks.ListBlock(
-                    blocks.CharBlock(label="Технология"),
-                    label="Используемые технологии",
-                ),
-            ),
-            (
-                "metrics",
-                blocks.ListBlock(
-                    blocks.StructBlock(
-                        [
-                            ("value", blocks.CharBlock(label="Значение")),
-                            ("description", blocks.CharBlock(label="Описание метрики")),
-                        ]
-                    ),
-                    label="Ключевые метрики",
-                ),
-            ),
-        ],
-        blank=True,
-        use_json_field=True,
-        verbose_name="Содержание кейса",
-    )
+    content = StreamField([
+        ('description', blocks.RichTextBlock(label="Описание проекта")),
+        ('challenge', blocks.RichTextBlock(label="Задача")),
+        ('solution', blocks.RichTextBlock(label="Решение")),
+        ('results', blocks.RichTextBlock(label="Результаты")),
+        ('technologies', blocks.ListBlock(
+            blocks.CharBlock(label="Технология"),
+            label="Используемые технологии"
+        )),
+        ('metrics', blocks.ListBlock(
+            blocks.StructBlock([
+                ('value', blocks.CharBlock(label="Значение")),
+                ('description', blocks.CharBlock(label="Описание метрики"))
+            ]),
+            label="Ключевые метрики"
+        )),
+    ], blank=True, use_json_field=True, verbose_name="Содержание кейса")
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -113,11 +99,7 @@ class CaseStudyPage(Page):
     def get_context(self, request):
         context = super().get_context(request)
         # Другие кейсы (исключая текущую)
-        context["other_cases"] = (
-            CaseStudyPage.objects.live()
-            .exclude(id=self.id)
-            .order_by("-project_date")[:3]
-        )
+        context['other_cases'] = CaseStudyPage.objects.live().exclude(id=self.id).order_by('-project_date')[:3]
         return context
 
     template = "cases/case_study_page.html"
@@ -168,5 +150,5 @@ class CaseStudyIndexPage(Page):
     template = "cases/case_study_index_page.html"
 
     class Meta:
-        verbose_name = "Лента кейсов"
-        verbose_name_plural = "Лента кейсов"
+        verbose_name = "Портфолио кейсов"
+        verbose_name_plural = "Портфолио кейсов"

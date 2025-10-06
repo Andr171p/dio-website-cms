@@ -21,7 +21,8 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 
-
+CSRF_USE_SESSIONS = False  # должно быть False
+CSRF_COOKIE_HTTPONLY = False
 # Application definition
 
 INSTALLED_APPS = [
@@ -33,6 +34,10 @@ INSTALLED_APPS = [
     "services",
     "solutions",
     "chat",
+    "feedback",
+    "notification",
+    "vacancy",
+    "ai",
     # Установленные приложения
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
@@ -46,8 +51,10 @@ INSTALLED_APPS = [
     "wagtail.search",
     "wagtail.admin",
     "wagtail",
+    "wagtailmenus",
     "modelcluster",
     "taggit",
+    "django_extensions",
     "django_filters",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -59,17 +66,16 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     'django_htmx',
-    "tailwind",
-    
+    "tailwind"
     # "wagtailmenus",
     
 ]
 
 # # Настройки меню
-# WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (
-#     ("header", "Header menu"),
-#     ("footer", "Footer menu"),
-# )
+# WAGTAILMENUS_FLAT_MENUS_HANDLE_CHOICES = (  # noqa: ERA001, RUF100
+#     ("header", "Header menu"),  # noqa: ERA001
+#     ("footer", "Footer menu"),  # noqa: ERA001
+# )  # noqa: ERA001, RUF100
 
 WAGTAILAPI_BASE_URL = "http://localhost:8000/api"
 
@@ -85,7 +91,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
-    'django_htmx.middleware.HtmxMiddleware',
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -110,8 +116,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "wagtail.contrib.settings.context_processors.settings",
-                # "wagtailmenus.context_processors.wagtailmenus"
+                "wagtailmenus.context_processors.wagtailmenus",
             ],
         },
     },
@@ -119,7 +124,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "dio_website_cms.wsgi.application"
 
-
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
+        "rest_framework.parsers.FormParser",
+        "rest_framework.parsers.MultiPartParser",
+    ],
+}
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -155,11 +172,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "ru"
 
-TIME_ZONE = "Europe/Moscow"
-
-USE_I18N = True
-
+TIME_ZONE = "Asia/Yekaterinburg"
 USE_TZ = True
+USE_L10N = True
+USE_I18N = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -189,6 +205,13 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+    }
 }
 
 # Django sets a maximum of 1000 fields per form by default, but particularly complex page models
