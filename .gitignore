@@ -183,3 +183,4 @@ scripts
 .docker
 DIORag.iml
 assets
+dio_website_cms/db.sqlite3
