@@ -1,4 +1,4 @@
-import os  # noqa: INP001
+import os
 
 import pytz
 from django import forms

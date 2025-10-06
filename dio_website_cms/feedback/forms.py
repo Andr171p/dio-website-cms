@@ -3,9 +3,9 @@ from typing import ClassVar
 
 import re
 
+from core.utils import check_spam
 from django import forms
 from django.core.validators import validate_email
-from utils import check_spam
 
 from .models import FeedbackMessage
 

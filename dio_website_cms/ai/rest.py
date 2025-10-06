@@ -1,4 +1,5 @@
 import requests
+from core.exceptions import BadRequestHTTPError
 
 from .constants import STATUS_CREATED
 
@@ -9,7 +10,7 @@ def add_document(data: dict) -> list:
         json=data,
     )
     if response.status_code != STATUS_CREATED:
-        raise Exception(f"API returned status {response.status_code}: {response.text}")  # noqa: TRY002
+        raise BadRequestHTTPError
     return response.json()
 
 
@@ -19,5 +20,5 @@ def upload_document(file: bytes) -> list:
         files={"file": file},
     )
     if response.status_code != STATUS_CREATED:
-        raise Exception(f"API returned status {response.status_code}: {response.text}")  # noqa: TRY002
+        raise BadRequestHTTPError
     return response.json()

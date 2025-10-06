@@ -1,8 +1,8 @@
 from typing import ClassVar
 
+from core.utils import get_tumen_time
 from django.db import models
 from notification.utils import create_admin_notification
-from utils import get_tumen_time
 
 
 class FeedbackMessage(models.Model):

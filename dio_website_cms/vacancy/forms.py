@@ -2,8 +2,8 @@ from typing import ClassVar
 
 import re
 
+from core.utils import check_spam
 from django import forms
-from utils import check_spam
 
 from .models import Vacancy
 

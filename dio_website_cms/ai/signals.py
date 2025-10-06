@@ -1,5 +1,6 @@
 import os
 
+from core.exceptions import DeletionError
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
@@ -14,4 +15,4 @@ def delete_file(sender, instance, **kwargs):  # noqa: ARG001
             try:
                 os.remove(file_path)
             except Exception as e:  # noqa: BLE001
-                raise Exception(f"Ошибка при удалении файла {file_path}: {e}") from None  # noqa: TRY002
+                raise DeletionError(f"Ошибка при удалении файла {file_path}: {e}") from None
