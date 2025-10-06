@@ -9,6 +9,7 @@ from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
 
 from .models import Vacancy
+from .panels import ResumeLinkPanel
 
 
 class VacancyViewSet(SnippetViewSet):
@@ -29,7 +30,7 @@ class VacancyViewSet(SnippetViewSet):
                 FieldPanel("name", read_only=True),
                 FieldPanel("phone", read_only=True),
                 FieldPanel("created_at", read_only=True),
-                FieldPanel("resume_link", read_only=True),
+                ResumeLinkPanel(),
             ],
             heading="Информация о кандидате",
         ),

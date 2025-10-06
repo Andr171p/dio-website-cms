@@ -9,7 +9,7 @@ from .models import Vacancy
 
 @receiver(post_delete, sender=Vacancy)
 def delete_file(sender, instance, **kwargs):  # noqa: ARG001
-    if hasattr(instance, "resume"):
+    if hasattr(instance, "resume") and instance.resume:
         file_path = instance.resume.path
         if os.path.exists(file_path):
             try:

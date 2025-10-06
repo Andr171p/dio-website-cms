@@ -5,6 +5,7 @@ from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
 
 from .models import AdminNotification
+from .panels import URLPanel
 
 
 class AdminNotificationViewSet(SnippetViewSet):
@@ -22,7 +23,7 @@ class AdminNotificationViewSet(SnippetViewSet):
         MultiFieldPanel([
             FieldPanel("title", read_only=True),
             FieldPanel("message", read_only=True),
-            FieldPanel("url", read_only=True),
+            URLPanel(),
         ]),
         FieldPanel("is_read"),
     ]
