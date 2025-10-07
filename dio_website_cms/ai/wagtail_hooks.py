@@ -2,12 +2,12 @@ from typing import ClassVar
 
 from django import forms
 from django.db.models import QuerySet
-from django.utils.html import format_html
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet, SnippetViewSetGroup
 
 from .models import AddDocument, UploadDocument
+from .panels import FileLinkPanel
 
 
 class DocumentViewSet(SnippetViewSet):
@@ -53,6 +53,7 @@ class UploadDocumentViewSet(SnippetViewSet):
 
     panels: ClassVar[list] = [
         FieldPanel("file"),
+        FileLinkPanel(),
     ]
 
     def get_queryset(self, request) -> QuerySet:
@@ -61,18 +62,6 @@ class UploadDocumentViewSet(SnippetViewSet):
             qs = UploadDocument.objects.all()
 
         return qs.order_by("-created_at")
-
-    def file_link(self, obj) -> str:  # noqa: PLR6301
-        if obj.file:
-            return format_html(
-                '<a href="{}" target="_blank" download>📎 {}</a>',
-                obj.file.url,
-                obj.file.name.split("/")[-1],
-            )
-        return "— Нет файла —"
-
-    file_link.short_description = "Файл"
-    file_link.admin_order_field = "file"
 
     def has_add_permission(self, request) -> bool:  # noqa: ARG002, PLR6301
         return True

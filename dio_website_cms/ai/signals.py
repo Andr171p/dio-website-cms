@@ -9,7 +9,7 @@ from .models import UploadDocument
 
 @receiver(post_delete, sender=UploadDocument)
 def delete_file(sender, instance, **kwargs):  # noqa: ARG001
-    if hasattr(instance, "file"):
+    if hasattr(instance, "file") and instance.file:
         file_path = instance.file.path
         if os.path.exists(file_path):
             try:

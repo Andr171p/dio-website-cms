@@ -2,6 +2,7 @@ from typing import ClassVar
 
 import uuid
 
+from core.exceptions import BadRequestHTTPError
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
@@ -70,7 +71,7 @@ class UploadDocument(models.Model):
         """Проверка расширения файла перед сохранением."""
         if self.file:
             file_extension = self.file.name.split(".")[-1].lower()
-            allowed_extensions = ["pdf", "docx", "doc", "txt", "md"]
+            allowed_extensions = ["pdf", "docx", "doc", "md"]
             if file_extension not in allowed_extensions:
                 raise ValidationError(
                     f"Недопустимое расширение файла. Допустимы только: {', '.join(allowed_extensions)}"  # noqa: E501
@@ -82,11 +83,16 @@ class UploadDocument(models.Model):
             return
 
         self.clean()
-        result = upload_document(self.file)  # type: ignore  # noqa: PGH003
-        if result:
-            super().save(*args, **kwargs)
-        else:
-            self.file = None
+        try:
+            result = upload_document(self.file)  # type: ignore  # noqa: PGH003
+            if result:
+                super().save(*args, **kwargs)
+            else:
+                self.file = None
+        except BadRequestHTTPError:
+            raise ValidationError(
+                "Недопустимое расширение файла. Допустимы только: pdf, docx, doc, md"
+            ) from None
 
     def delete(self, *args, **kwargs) -> None:
         # Удаляем файл перед удалением объекта
