@@ -4,9 +4,9 @@
 
 
 {% block content %}
-<article class="w-full bg-gray-50 ">
+<article class="w-full ">
     <!-- Hero Section с фиксированным фоном только в секции -->
-<section class="section is-secondary pt-5 relative min-h-[500px] flex items-center overflow-hidden">
+<section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
     <!-- Фоновое изображение -->
     {% if page.main_image %}
         {% image page.main_image original as bg_image %}
@@ -26,7 +26,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <!-- Текстовая часть -->
             <div class="relative z-10 space-y-6">
-                <span class="inline-block px-4 py-2 rounded-full bg-blue-600/50 text-white text-sm font-semibold mb-4 animate-fadeIn">
+                <span class="inline-block px-4 py-2 rounded-full bg-red-600/50 text-white text-sm font-semibold mb-4 animate-fadeIn">
                     {{ page.get_industry_display }}
                 </span>
                 <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white drop-shadow-md animate-fadeIn" style="animation-delay: 0.1s;">
@@ -37,7 +37,7 @@
                         {{ page.intro|striptags }}
                     </p>
                 {% endif %}
-                <a href="/cases" class="inline-block bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-blue-50 hover:shadow-xl transition-all duration-300 animate-fadeIn" style="animation-delay: 0.3s;">
+                <a href="/cases" class="inline-block button is-secondary w-button px-6 py-3 rounded-lg shadow-lg hover:bg-red-50 hover:shadow-xl transition-all duration-300 animate-fadeIn" style="animation-delay: 0.3s;">
                     Все кейсы
                 </a>
             </div>
@@ -52,7 +52,7 @@
         {% for block in page.content %}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 animate-fadeInUp">
                 <!-- Заголовок -->
-                <h2 class="heading_h1 col-span-1 text-2xl lg:text-3xl font-bold text-blue-800 mb-4 lg:mb-0">
+                <h2 class="heading_h1 col-span-1 text-2xl lg:text-3xl font-bold text-gray-800 mb-4 lg:mb-0">
                     {% if block.block_type == "description" %}Описание проекта
                     {% elif block.block_type == "challenge" %}Задача
                     {% elif block.block_type == "solution" %}Решение
@@ -67,7 +67,7 @@
                         <ul class="space-y-3">
                             {% for tech in block.value %}
                                 <li class="flex items-center gap-2 text-gray-600">
-                                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                     </svg>
                                     <span>{{ tech }}</span>
@@ -77,8 +77,8 @@
                     {% elif block.block_type == "metrics" %}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {% for metric in block.value %}
-                                <div class="bg-blue-50 p-4 rounded-lg shadow-md">
-                                    <div class="heading_h1 text-xl font-bold text-blue-800 mb-1">{{ metric.value }}</div>
+                                <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+                                    <div class="heading_h1 text-xl font-bold text-gray-800 mb-1">{{ metric.value }}</div>
                                     <div class="heading_h1 text-sm text-gray-600">{{ metric.description }}</div>
                                 </div>
                             {% endfor %}
@@ -107,13 +107,13 @@
                 {% endif %}
                 </a>
                 <div class="p-6 flex flex-col h-full">
-                    <span class=" heading_h1 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full mb-3">
+                    <span class=" heading_h1 px-3 py-1 bg-red-50 text-red-700 text-xs font-medium rounded-full mb-3">
                         {{ case.get_industry_display }}
                     </span>
                     <h3 class="heading_h1 font-semibold text-xl text-gray-900 mb-2">{{ case.title }}</h3>
                     <p class="heading_h1 text-gray-600 text-sm mb-4">{{ case.customer_name }}</p>
                     <div class="mt-auto">
-                        <a href="{{ case.url }}" class="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200">Подробнее →</a>
+                        <a href="{{ case.url }}" class="text-red-600 hover:text-red-800 font-medium transition-colors duration-200">Подробнее →</a>
                     </div>
                 </div>
             </article>

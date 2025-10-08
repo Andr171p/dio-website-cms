@@ -2,183 +2,237 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 {% block content %}
-<article class="w-full bg-gradient-to-br from-gray-50 via-white to-blue-50/20 min-h-screen">
+<article class="w-full">
     <!-- Hero Section -->
-    <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8 max-w-6xl">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-                <!-- Текстовая часть -->
-                <div class="relative z-10 space-y-6">
-                    <span class="heading_h1 inline-block px-4 py-2 rounded-full bg-blue-600/50 text-white text-sm font-semibold mb-4 animate-fadeIn">
+    <section class="section is-secondary relative min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden">
+        {% if page.image %}
+            {% image page.image original as bg_image %}
+            <div class="absolute inset-0 z-0">
+                <img src="{{ bg_image.url }}" alt="{{ page.headline }}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40"></div>
+            </div>
+        {% endif %}
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                <div class="space-y-6">
+                    <span class="inline-block px-4 py-2 rounded-full bg-red-600/80 text-red-100 text-sm font-semibold gs-reveal">
                         {{ page.get_category_display }}
                     </span>
-                    <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight drop-shadow-md animate-fadeIn" style="animation-delay: 0.1s;">
+                    <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight text-white drop-shadow-md gs-reveal">
                         {{ page.headline }}
                     </h1>
-                    <p class="heading_h1 text-blue-100 text-lg lg:text-xl leading-relaxed max-w-prose animate-fadeIn" style="animation-delay: 0.2s;">
+                    <p class="heading_h3 text-lg lg:text-xl leading-relaxed text-white/90 max-w-prose gs-reveal">
                         {{ page.excerpt|striptags }}
                     </p>
-                    <div class="flex gap-4 animate-fadeIn" style="animation-delay: 0.3s;">
-                        <a href="/news" class="heading_h4 inline-block bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-blue-50 hover:shadow-xl transition-all duration-300">
+                    <div class="gs-reveal">
+                        <a href="/news" style="color:rgb(255, 255, 255); box-shadow: 0 0 0 2px #ffffff inset" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg hover:bg-red-50 hover:shadow-xl transition-all duration-300">
                             Все новости
                         </a>
                     </div>
                 </div>
-                <!-- Изображение -->
-                {% if page.image %}
-                    <div class="relative overflow-hidden rounded-xl shadow-2xl transform hover:scale-105 transition-transform duration-300 animate-fadeIn" style="animation-delay: 0.4s;">
-                        {% image page.image width-800 class="w-full h-64 lg:h-80 object-cover" %}
-                    </div>
-                {% endif %}
+                <div class="hidden lg:block"></div>
             </div>
         </div>
     </section>
 
-    <!-- Основное содержание -->
-    <section class="max-w-4xl mx-auto px-4 lg:px-8 space-y-12 lg:space-y-16 py-16">
-        <div class="heading_h4 prose prose-lg max-w-none text-gray-900 news-content animate-fadeInUp" data-delay="0.1" style="color: #1f2937;">
-            {{ page.content|richtext }}
+    <!-- Main Content Section -->
+    <section class="section">
+        <div class="heading_h3 container mx-auto px-4 lg:px-8 max-w-4xl">
+            <div class="prose prose-lg max-w-none news-content gs-reveal">
+                {{ page.content|richtext }}
+            </div>
         </div>
     </section>
 
-    <!-- Другие новости -->
+    <!-- Other News Section -->
     {% if other_news %}
-    <section class="max-w-6xl mx-auto px-4 lg:px-8 py-16 lg:py-20">
-        <h2 class="heading_h1 text-3xl lg:text-4xl font-bold text-gray-900 text-center mb-12 animate-fadeInUp" data-delay="0.2">
-            Другие новости
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {% for news in other_news %}
-            <article class="heading_h1 bg-white rounded-xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 animate-fadeInUp" data-delay="{{ forloop.counter0|add:0.3 }}">
-                <a href="{% pageurl news %}">{% if news.image %}
-                    {% image news.image fill-400x300 class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" %}
-                {% endif %}
-                </a> 
-                <div class="p-6 flex flex-col h-full">
-                    <span class="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full mb-3">
-                        {{ news.category }}
-                    </span>
-                    <h3 class="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
-                        <a href="{% pageurl news %}" class="hover:text-blue-600 transition-colors duration-200">{{ news.headline }}</a>
-                    </h3>
-                    <p class="text-sm text-gray-600 mb-4">{{ news.date|date:"d.m.Y" }} • {{ news.read_time }} мин</p>
-                    <p class="text-gray-600 text-sm line-clamp-3 flex-grow">{{ news.excerpt }}</p>
-                    <div class="mt-auto pt-4">
-                        <a href="{% pageurl news %}" class="inline-block text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-200">Читать далее</a>
+    <section class="section is-secondary">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="header is-align-center">
+                <h2 class="heading_h2 gs-reveal">Другие новости</h2>
+            </div>
+            <div class="w-layout-grid grid_3-col tablet-1-col gap-large mt-12">
+                {% for news in other_news %}
+                <article class="card on-secondary gs-reveal">
+                    <a href="{% pageurl news %}">
+                    {% if news.image %}
+                        <div class="image-ratio_16x9">
+                            {% image news.image fill-400x225 class="image_cover" %}
+                        </div>
+                        {% endif %}
+                        </a>
+                    <div class="card_body space-y-4 p-6">
+                        <span class="inline-block px-3 py-1 bg-red-50 text-red-700 text-xs font-medium rounded-full">
+                            {{ news.get_category_display }}
+                        </span>
+                        <h3 class="heading_h4 font-semibold text-gray-900">
+                            <a href="{% pageurl news %}" class="hover:text-red-600 transition-colors duration-200">{{ news.headline }}</a>
+                        </h3>
+                        <div class="flex items-center justify-between text-sm text-gray-600">
+                            <span>
+                                <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                {{ news.date|date:"d.m.Y" }}
+                            </span>
+                            <span>{{ news.read_time }} мин</span>
+                        </div>
+                        <p class="text-gray-600 text-sm line-clamp-2">{{ news.excerpt|striptags }}</p>
+                        
                     </div>
-                </div>
-            </article>
-            {% endfor %}
+                </article>
+                {% endfor %}
+            </div>
         </div>
     </section>
     {% endif %}
-
-    
 </article>
 
 <style>
-.prose {
-    color: #1f2937 !important;
+    /* Image Ratios */
+    .image-ratio_16x9 {
+        aspect-ratio: 16 / 9;
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--card-radius, 0.75rem 0.75rem 0 0);
+    }
+    .image-ratio_16x9 img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Grid Layouts */
+    .w-layout-grid.grid_3-col {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--gap-large, 2rem);
+    }
+    @media (max-width: 1023px) {
+        .w-layout-grid.grid_3-col {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Card Styles */
+    .card {
+        background: white;
+        border-radius: var(--card-radius, 0.75rem);
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    .card:hover {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+    }
+    .card.on-secondary {
+        background: var(--secondary-bg, #f8fafc);
+    }
+
+    /* Prose Styles */
     
-}
-.prose h2 {
-    color: #111827 !important;
-    font-weight: 700 !important;
-    font-size: 2rem !important;
-    margin-top: 2rem !important;
-    margin-bottom: 1rem !important;
-}
-.prose h3 {
-    color: #111827 !important;
-    font-weight: 600 !important;
-    font-size: 1.5rem !important;
-    margin-top: 1.5rem !important;
-    margin-bottom: 0.75rem !important;
-}
-.prose p {
-    color: #4b5563 !important;
-    line-height: 1.75 !important;
-    margin-bottom: 1.25rem !important;
-}
-.prose ul, .prose ol {
-    color: #4b5563 !important;
-    margin-bottom: 1.25rem !important;
-    padding-left: 2rem !important;
-}
-.prose ul li, .prose ol li {
-    margin-bottom: 0.5rem !important;
-    padding-left: 0.5rem !important;
-}
-.prose blockquote {
-    color: #374151 !important;
-    font-style: italic !important;
-    border-left: 4px solid #3b82f6 !important;
-    padding-left: 1rem !important;
-    margin: 1.5rem 0 !important;
-}
-.prose a {
-    color: #3b82f6 !important;
-    text-decoration: underline !important;
-    transition: color 0.3s !important;
-}
-.prose a:hover {
-    color: #2563eb !important;
-}
-.animate-fadeIn {
-    animation: fadeIn 0.5s ease-out forwards;
-}
-.animate-fadeInUp {
-    animation: fadeInUp 0.5s ease-out forwards;
-}
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.p-6 {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-article {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-}
-.line-clamp-3 {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
-}
+    .prose h2 {
+        color: #111827 !important;
+        font-weight: 700 !important;
+        font-size: 2rem !important;
+        margin-top: 2rem !important;
+        margin-bottom: 1rem !important;
+    }
+    .prose h3 {
+        color: #111827 !important;
+        font-weight: 600 !important;
+        font-size: 1.5rem !important;
+        margin-top: 1.5rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    .prose p {
+        
+        line-height: 1.75 !important;
+        margin-bottom: 1.25rem !important;
+    }
+    .prose ul, .prose ol {
+        
+        margin-bottom: 1.25rem !important;
+        padding-left: 2rem !important;
+    }
+    .prose ul li, .prose ol li {
+        margin-bottom: 0.5rem !important;
+        padding-left: 0.5rem !important;
+    }
+    .prose blockquote {
+        color: #374151 !important;
+        font-style: italic !important;
+        border-left: 4px solid #ef4444 !important;
+        padding-left: 1rem !important;
+        margin: 1.5rem 0 !important;
+        background: #fef2f2 !important;
+        padding: 1rem !important;
+        border-radius: 0.5rem !important;
+    }
+    .prose a {
+        color: #ef4444 !important;
+        text-decoration: underline !important;
+        transition: color 0.3s !important;
+    }
+    .prose a:hover {
+        color: #dc2626 !important;
+    }
+
+    /* Line Clamps */
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+    }
+
+    /* GSAP Reveal */
+    .gs-reveal {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    /* Spacing Vars (if not defined elsewhere) */
+    :root {
+        --gap-large: 2rem;
+        --card-radius: 0.75rem;
+        --secondary-bg: #f8fafc;
+    }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const element = entry.target;
-                const delay = parseFloat(element.getAttribute('data-delay') || '0') * 1000;
-                setTimeout(() => {
-                    element.classList.add('animate-fadeInUp');
-                    element.dataset.animated = 'true';
-                }, delay);
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '50px 0px' });
+    gsap.registerPlugin(ScrollTrigger);
 
-    document.querySelectorAll('[data-animate]:not([data-animated])').forEach(el => {
-        observer.observe(el);
+    // Reveal animations
+    gsap.utils.toArray('.gs-reveal').forEach((element, index) => {
+        gsap.fromTo(element, 
+            { opacity: 0, y: 30 }, 
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: element,
+                    start: "top 90%",
+                    toggleActions: "play none none none"
+                },
+                delay: index * 0.1
+            }
+        );
+    });
+
+    // Hover scale for other news cards
+    gsap.utils.toArray('.card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 1.05, duration: 0.3 });
+        });
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 1, duration: 0.3 });
+        });
     });
 });
 </script>

@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="news-section" class="section pt-10">
-    <div class="max-w-7xl mx-auto">
+    <div class="container">
         <!-- Заголовок -->
         <div class="header mb-8 pt-0">
             <h2 class="heading_h3">Новости</h2>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="p-4">
                     <p class="text-xs text-gray-500 mb-1">{{ news_item.date|date:"d.m.Y" }}</p>
-                    <h3 class="heading_h3 text-lg font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors duration-300">
+                    <h3 class="heading_h3 text-lg font-semibold text-gray-900 mb-2 hover:text-red-600 transition-colors duration-300">
                         {{ news_item.headline }}
                     </h3>
                     <p class="text-sm text-gray-600 line-clamp-2">
@@ -67,7 +67,7 @@
         <div class="text-center mt-12">
             <div class="inline-flex items-center gap-1 bg-white rounded-xl shadow-md p-2 border border-gray-100">
                 {% if news.has_previous %}
-                <a href="?page={{ news.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-all duration-200">
+                <a href="?page={{ news.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-all duration-200">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
@@ -76,15 +76,15 @@
                 {% endif %}
                 {% for num in news.paginator.page_range %}
                     {% if news.number == num %}
-                    <span class="px-3 py-1.5 text-sm font-medium bg-blue-600 text-white rounded-md">{{ num }}</span>
+                    <span class="px-3 py-1.5 text-sm font-medium bg-red-600 text-white rounded-md">{{ num }}</span>
                     {% elif num > news.number|add:-2 and num < news.number|add:2 %}
-                    <a href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-700 rounded-md transition-all duration-200">
+                    <a href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}" class="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-red-700 rounded-md transition-all duration-200">
                         {{ num }}
                     </a>
                     {% endif %}
                 {% endfor %}
                 {% if news.has_next %}
-                <a href="?page={{ news.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-all duration-200">
+                <a href="?page={{ news.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="flex items-center px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-all duration-200">
                     Вперед
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>

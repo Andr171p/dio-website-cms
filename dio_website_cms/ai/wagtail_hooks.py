@@ -85,7 +85,7 @@ class UploadDocumentViewSet(SnippetViewSet):
 
 
 class DocumentViewSetGroup(SnippetViewSetGroup):
-    menu_label = "Загрузка документов в AI"
+    menu_label = "AI docs "
     menu_icon = "code"
     menu_order = 300
     items = (DocumentViewSet, UploadDocumentViewSet)

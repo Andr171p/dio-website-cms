@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     "notification",
     "vacancy",
     "ai",
+    "career",
+    "about",
+    "contact",
+    "faq",
+
     # Установленные приложения
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",

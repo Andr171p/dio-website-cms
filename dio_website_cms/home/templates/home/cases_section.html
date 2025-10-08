@@ -26,14 +26,14 @@
                                         <div class="flex items-center gap-3">
                                             {% for block in case.content %}
                                             {% if block.block_type == "technologies" and block.value %}
-                                            <span class="inline-block text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded-full">
+                                            <span class="inline-block text-xs px-2 py-1 bg-red-100 text-red-600 rounded-full">
                                             {{ block.value.0 }}
                                         </span>
                                         {% endif %}
                                         {% endfor %}
                                         </div>
                                         
-                                        <span class="px-2 py-1 rounded-full bg-blue-600/50 text-white text-xs font-medium">
+                                        <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
                                             {{ case.get_industry_display}}
                                         </span>
                                     </div>
@@ -57,7 +57,7 @@
                             </a>
                         {% empty %}
                             <div class="col-span-3 text-center py-12">
-                                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
+                                <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 text-red-600 rounded-full mb-4">
                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>

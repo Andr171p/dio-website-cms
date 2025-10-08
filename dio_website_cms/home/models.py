@@ -1,28 +1,19 @@
-from typing import ClassVar
 from django.db import models
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.api import APIField
-from wagtail.search import index
-from wagtail.images.models import Image
 from wagtail.fields import RichTextField
 from wagtail.blocks import (
     CharBlock,
-    RichTextBlock,
     StructBlock,
-    IntegerBlock,
-    BooleanBlock,
 )
 from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail import blocks
-from news.models import NewsBlock
-from .blocks import ContactsBlock, FeedbackFormBlock
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from services.models import ServiceBlock
 
-# from wagtailai.panels import AIPanel, ai_indexable
 from feedback.forms import FeedbackForm
 
 
@@ -238,10 +229,7 @@ class PartnershipBlock(blocks.StructBlock):
         label = "Секция партнёрств"
 
 
-# @ai_indexable(
-#     AIPanel("header_section"),
-#     include_meta=True
-# )
+
 class HomePage(Page):
     """Лендинг сайта, главная страница с каруселью и header"""
 
@@ -341,49 +329,19 @@ class HomePage(Page):
             ],
             heading="Заголовок и описание",
         ),
-        InlinePanel("faq_items", label="Часто задаваемые вопросы"),
         MultiFieldPanel(
             [
                 FieldPanel("header_section"),
             ],
             heading="Главный блок",
         ),
-        # MultiFieldPanel(
-        #     [
-        #         FieldPanel("hero_slides"),
-        #     ],
-        #     heading="Главная карусель",
-        # ),
-        # MultiFieldPanel(
-        #     [
-        #         FieldPanel("case_study_section"),
-        #     ],
-        #     heading="Секция кейсов",
-        # ),
         MultiFieldPanel(
             [
                 FieldPanel("achievements"),
             ],
             heading="Достижения",
         ),
-        # MultiFieldPanel(
-        #     [
-        #         FieldPanel("partners"),
-        #     ],
-        #     heading="Партнёры",
-        # ),
-        # MultiFieldPanel(
-        #     [
-        #         FieldPanel("certificates"),
-        #     ],
-        #     heading="Сертификаты",
-        # ),
-        # MultiFieldPanel(
-        #     [
-        #         FieldPanel("awards"),
-        #     ],
-        #     heading="Награды и достижения",
-        # ),
+        
         MultiFieldPanel(
             [
                 FieldPanel("partnership_section"),
@@ -418,7 +376,6 @@ class HomePage(Page):
         return CaseStudyPage.objects.live().order_by("-project_date")[:count]
 
     def get_context(self, request, *args, **kwargs):
-        from cases.models import CaseStudyPage
 
         context = super().get_context(request, *args, **kwargs)
         context["cases"] = self.get_cases()
@@ -471,87 +428,3 @@ class HomePage(Page):
         verbose_name = "Главная страница"
         verbose_name_plural = "Главные страницы"
 
-
-class FAQItem(ClusterableModel):
-    page = ParentalKey(HomePage, on_delete=models.CASCADE, related_name="faq_items")
-    question = models.CharField(max_length=255, help_text="Вопрос")
-    answer = RichTextField(blank=True, help_text="Ответ на вопрос")
-
-    panels = [
-        FieldPanel("question"),
-        FieldPanel("answer"),
-    ]
-
-    class Meta:
-        verbose_name = "Вопрос-ответ"
-        verbose_name_plural = "Часто задаваемые вопросы"
-
-
-class FAQPage(Page):
-    """Отдельная страница со множеством вопросов"""
-    question = blocks.CharBlock(
-        max_length=255,
-        required=True,
-        label="Вопрос"
-    )
-    
-    answer = blocks.RichTextBlock(
-        required=True,
-        label="Ответ",
-        features=['bold', 'italic', 'link', 'ol', 'ul']
-    )
-    eyebrow = models.CharField(
-        max_length=255, 
-        blank=True,
-        verbose_name="Надзаголовок"
-    )
-    
-    heading = models.CharField(
-        max_length=255,
-        blank=True,
-        verbose_name="Основной заголовок"
-    )
-    
-    subheading = models.TextField(
-        blank=True,
-        verbose_name="Подзаголовок"
-    )
-
-    # StreamField для вопросов
-    faq_items = StreamField(
-        [
-            ("faq", blocks.StructBlock([
-                ("question", blocks.CharBlock(
-                    max_length=255,
-                    required=True,
-                    label="Вопрос"
-                )),
-                ("answer", blocks.RichTextBlock(
-                    required=True,
-                    label="Ответ",
-                    features=['bold', 'italic', 'link', 'ol', 'ul']
-                ))
-            ], icon="help", label="Вопрос-ответ"))
-        ],
-        blank=True,
-        use_json_field=True,
-        verbose_name="Вопросы и ответы"
-    )
-
-    content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel("eyebrow"),
-                FieldPanel("heading"),
-                FieldPanel("subheading"),
-            ],
-            heading="Заголовок секции",
-        ),
-        FieldPanel("faq_items"),
-    ]
-
-    template = "home/faqitem.html"
-
-    class Meta:
-        verbose_name = "Страница FAQ"
-        verbose_name_plural = "Страницы FAQ"
