@@ -209,11 +209,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Reveal animations
     gsap.utils.toArray('.gs-reveal').forEach((element, index) => {
         gsap.fromTo(element, 
-            { opacity: 0, y: 30 }, 
+            { opacity: 0, y: 10 }, 
             {
                 opacity: 1,
                 y: 0,
-                duration: 0.8,
+                duration: 0.5,
                 ease: "power2.out",
                 scrollTrigger: {
                     trigger: element,
@@ -228,10 +228,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Hover scale for other news cards
     gsap.utils.toArray('.card').forEach(card => {
         card.addEventListener('mouseenter', () => {
-            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 1.05, duration: 0.3 });
+            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 0.05, duration: 0.1 });
         });
         card.addEventListener('mouseleave', () => {
-            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 1, duration: 0.3 });
+            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 0.5, duration: 0.1 });
         });
     });
 });
