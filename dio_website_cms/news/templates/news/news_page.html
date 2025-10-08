@@ -228,10 +228,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Hover scale for other news cards
     gsap.utils.toArray('.card').forEach(card => {
         card.addEventListener('mouseenter', () => {
-            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 0.05, duration: 0.1 });
+            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 1.05, duration: 0.1 });
         });
         card.addEventListener('mouseleave', () => {
-            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 0.5, duration: 0.1 });
+            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 1, duration: 0.1 });
         });
     });
 });
