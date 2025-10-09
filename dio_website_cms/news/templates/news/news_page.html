@@ -15,70 +15,105 @@
         <div class="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                 <div class="space-y-6">
-                    <span class="inline-block px-4 py-2 rounded-full bg-red-600/80 text-red-100 text-sm font-semibold gs-reveal">
+                    <span class="inline-block px-4 py-2 rounded-full bg-red-600/80 text-red-100 text-sm font-semibold">
                         {{ page.get_category_display }}
                     </span>
-                    <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight text-white drop-shadow-md gs-reveal">
+                    <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight text-white drop-shadow-md">
                         {{ page.headline }}
                     </h1>
-                    <p class="heading_h3 text-lg lg:text-xl leading-relaxed text-white/90 max-w-prose gs-reveal">
-                        {{ page.excerpt|striptags }}
+                    <p class="heading_h3 text-lg lg:text-xl leading-relaxed text-white/90 max-w-prose">
+                        {{ page.intro|striptags }}
                     </p>
-                    <div class="gs-reveal">
-                        <a href="/news" style="color:rgb(255, 255, 255); box-shadow: 0 0 0 2px #ffffff inset" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg hover:bg-red-50 hover:shadow-xl transition-all duration-300">
+                    <div>
+                        <a href="/news" style="color:rgb(255, 255, 255); box-shadow: 0 0 0 2px #ffffff inset" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg hover:bg-red-50 hover:shadow-xl">
                             Все новости
                         </a>
                     </div>
                 </div>
-                <div class="hidden lg:block"></div>
             </div>
         </div>
     </section>
 
-    <!-- Main Content Section -->
+    <!-- Main Content -->
     <section class="section">
-        <div class="heading_h3 container mx-auto px-4 lg:px-8 max-w-4xl">
-            <div class="prose prose-lg max-w-none news-content gs-reveal">
+        <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
+            <div class="prose prose-lg max-w-none news-content">
                 {{ page.content|richtext }}
             </div>
         </div>
     </section>
 
-    <!-- Other News Section -->
+    <!-- Modern Gallery Carousel -->
+    {% if page.gallery %}
+    <section class="section is-secondary">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="header is-align-center mb-12">
+                <h2 class="heading_h2">Галерея</h2>
+            </div>
+            
+            <!-- Карусель -->
+            <div class="relative">
+                <div class="gallery-carousel overflow-hidden">
+                    <div class="flex gap-6 pb-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+                        {% for item in page.gallery %}
+                        {% image item.value.image fill-400x300 as gallery_image %}
+                        <div class="flex-shrink-0 w-80 snap-start">
+                            <div class="gallery-card cursor-pointer group" onclick="openFullscreenModal({{ forloop.counter0 }})">
+                                <div class="image-ratio_4x3 rounded-xl overflow-hidden mb-4">
+                                    <img src="{{ gallery_image.url }}" alt="" 
+                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
+                                </div>
+                                {% if item.value.caption %}
+                                <div class="text-center">
+                                    <p class="text-gray-600 text-sm line-clamp-2">{{ item.value.caption|striptags }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Индикатор прокрутки -->
+                <div class="flex justify-center mt-6 space-x-2">
+                    {% for item in page.gallery %}
+                    <div class="w-2 h-2 bg-gray-300 rounded-full transition-all duration-300 indicator-dot"></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Other News -->
     {% if other_news %}
     <section class="section is-secondary">
         <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
             <div class="header is-align-center">
-                <h2 class="heading_h2 gs-reveal">Другие новости</h2>
+                <h2 class="heading_h2">Другие новости</h2>
             </div>
             <div class="w-layout-grid grid_3-col tablet-1-col gap-large mt-12">
                 {% for news in other_news %}
-                <article class="card on-secondary gs-reveal">
+                <article class="card on-secondary">
                     <a href="{% pageurl news %}">
-                    {% if news.image %}
+                        {% if news.image %}
                         <div class="image-ratio_16x9">
                             {% image news.image fill-400x225 class="image_cover" %}
                         </div>
                         {% endif %}
-                        </a>
+                    </a>
                     <div class="card_body space-y-4 p-6">
                         <span class="inline-block px-3 py-1 bg-red-50 text-red-700 text-xs font-medium rounded-full">
                             {{ news.get_category_display }}
                         </span>
                         <h3 class="heading_h4 font-semibold text-gray-900">
-                            <a href="{% pageurl news %}" class="hover:text-red-600 transition-colors duration-200">{{ news.headline }}</a>
+                            <a href="{% pageurl news %}" class="hover:text-red-600">{{ news.headline }}</a>
                         </h3>
                         <div class="flex items-center justify-between text-sm text-gray-600">
-                            <span>
-                                <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
-                                {{ news.date|date:"d.m.Y" }}
-                            </span>
+                            <span>{{ news.date|date:"d.m.Y" }}</span>
                             <span>{{ news.read_time }} мин</span>
                         </div>
-                        <p class="text-gray-600 text-sm line-clamp-2">{{ news.excerpt|striptags }}</p>
-                        
                     </div>
                 </article>
                 {% endfor %}
@@ -88,152 +123,312 @@
     {% endif %}
 </article>
 
+<!-- Fullscreen Modal -->
+<div id="fullscreenModal" class="fixed inset-0 z-[9999] hidden bg-black">
+    <div class="relative w-full h-full flex items-center justify-center">
+        <!-- Кнопка закрытия -->
+        <button onclick="closeFullscreenModal()" 
+                class="absolute top-6 right-6 z-50 text-white text-3xl hover:text-red-400 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 hover:bg-black/70">
+            ✕
+        </button>
+        
+        <!-- Кнопка назад -->
+        <button onclick="prevFullscreenImage()" 
+                class="absolute left-6 z-50 text-white text-3xl hover:text-red-400 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 hover:bg-black/70 lg:left-8">
+            ‹
+        </button>
+        
+        <!-- Кнопка вперед -->
+        <button onclick="nextFullscreenImage()" 
+                class="absolute right-6 z-50 text-white text-3xl hover:text-red-400 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 hover:bg-black/70 lg:right-8">
+            ›
+        </button>
+        
+        <!-- Контент по центру -->
+        <div class="relative w-full h-full flex flex-col items-center justify-center p-4">
+            <div class="max-w-6xl max-h-[85vh] w-full h-full flex items-center justify-center">
+                <img id="fullscreenImage" src="" alt="" 
+                     class="max-w-full max-h-full object-contain rounded-lg">
+            </div>
+            
+            <!-- Капшен и счетчик -->
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center text-white">
+                <div id="fullscreenCaption" class="text-lg mb-2 max-w-2xl px-4"></div>
+                <div class="text-sm opacity-80">
+                    <span id="fullscreenCurrent">1</span> / <span id="fullscreenTotal">{{ page.gallery|length }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Миниатюры внизу -->
+        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+            <div class="flex gap-2 max-w-4xl overflow-x-auto px-4 py-2 scrollbar-hide">
+                {% for item in page.gallery %}
+                {% image item.value.image fill-80x60 as thumb %}
+                <img src="{{ thumb.url }}" 
+                     alt=""
+                     class="w-16 h-12 object-cover rounded cursor-pointer opacity-60 hover:opacity-100 transition-opacity duration-200 border-2 border-transparent thumbnail"
+                     onclick="goToFullscreenImage({{ forloop.counter0 }})">
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-    /* Image Ratios */
-    .image-ratio_16x9 {
-        aspect-ratio: 16 / 9;
-        position: relative;
-        overflow: hidden;
-        border-radius: var(--card-radius, 0.75rem 0.75rem 0 0);
-    }
-    .image-ratio_16x9 img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+/* Стили для карусели */
+.gallery-carousel::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 
-    /* Grid Layouts */
-    .w-layout-grid.grid_3-col {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--gap-large, 2rem);
-    }
-    @media (max-width: 1023px) {
-        .w-layout-grid.grid_3-col {
-            grid-template-columns: 1fr;
-        }
-    }
+.image-ratio_4x3 {
+    aspect-ratio: 4/3;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+}
 
-    /* Card Styles */
-    .card {
-        background: white;
-        border-radius: var(--card-radius, 0.75rem);
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-    .card:hover {
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        transform: translateY(-4px);
-    }
-    .card.on-secondary {
-        background: var(--secondary-bg, #f8fafc);
-    }
+.image-ratio_16x9 {
+    aspect-ratio: 16/9;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+}
 
-    /* Prose Styles */
+.image-ratio_4x3 img,
+.image-ratio_16x9 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Карточка галереи */
+.gallery-card {
+    transition: all 0.3s ease;
+}
+
+.gallery-card:hover {
+    transform: translateY(-8px);
+}
+
+/* Индикаторы карусели */
+.indicator-dot.active {
+    background: #ef4444;
+    width: 16px;
+    border-radius: 8px;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .gallery-carousel .flex > div {
+        width: 280px;
+    }
     
-    .prose h2 {
-        color: #111827 !important;
-        font-weight: 700 !important;
-        font-size: 2rem !important;
-        margin-top: 2rem !important;
-        margin-bottom: 1rem !important;
+    #fullscreenModal button {
+        width: 44px;
+        height: 44px;
+        font-size: 24px;
     }
-    .prose h3 {
-        color: #111827 !important;
-        font-weight: 600 !important;
-        font-size: 1.5rem !important;
-        margin-top: 1.5rem !important;
-        margin-bottom: 0.75rem !important;
+    
+    #fullscreenModal .absolute.left-6 {
+        left: 16px;
     }
-    .prose p {
-        
-        line-height: 1.75 !important;
-        margin-bottom: 1.25rem !important;
+    
+    #fullscreenModal .absolute.right-6 {
+        right: 16px;
     }
-    .prose ul, .prose ol {
-        
-        margin-bottom: 1.25rem !important;
-        padding-left: 2rem !important;
+    
+    #fullscreenModal .absolute.top-6 {
+        top: 16px;
     }
-    .prose ul li, .prose ol li {
-        margin-bottom: 0.5rem !important;
-        padding-left: 0.5rem !important;
-    }
-    .prose blockquote {
-        color: #374151 !important;
-        font-style: italic !important;
-        border-left: 4px solid #ef4444 !important;
-        padding-left: 1rem !important;
-        margin: 1.5rem 0 !important;
-        background: #fef2f2 !important;
-        padding: 1rem !important;
-        border-radius: 0.5rem !important;
-    }
-    .prose a {
-        color: #ef4444 !important;
-        text-decoration: underline !important;
-        transition: color 0.3s !important;
-    }
-    .prose a:hover {
-        color: #dc2626 !important;
-    }
+}
 
-    /* Line Clamps */
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        overflow: hidden;
-    }
+.w-layout-grid.grid_3-col { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 2rem; 
+}
 
-    /* GSAP Reveal */
-    .gs-reveal {
-        opacity: 0;
-        transform: translateY(30px);
-    }
+@media (max-width: 1024px) { 
+    .w-layout-grid.grid_3-col { 
+        grid-template-columns: repeat(2, 1fr); 
+    } 
+}
 
-    /* Spacing Vars (if not defined elsewhere) */
-    :root {
-        --gap-large: 2rem;
-        --card-radius: 0.75rem;
-        --secondary-bg: #f8fafc;
-    }
+@media (max-width: 640px) { 
+    .w-layout-grid.grid_3-col { 
+        grid-template-columns: 1fr; 
+    } 
+}
+
+.card { 
+    background: white; 
+    border-radius: 0.75rem; 
+    overflow: hidden; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+    transition: all 0.3s ease;
+}
+
+.card:hover { 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
+    transform: translateY(-4px);
+}
+
+.card.on-secondary { 
+    background: #f8fafc; 
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+/* Prose стили */
+.prose h2 { color: #111827 !important; font-weight: 700 !important; font-size: 2rem !important; margin: 2rem 0 1rem !important; }
+.prose h3 { color: #111827 !important; font-weight: 600 !important; font-size: 1.5rem !important; margin: 1.5rem 0 0.75rem !important; }
+.prose p { line-height: 1.75 !important; margin-bottom: 1.25rem !important; }
+.prose ul, .prose ol { margin-bottom: 1.25rem !important; padding-left: 2rem !important; }
+.prose ul li, .prose ol li { margin-bottom: 0.5rem !important; padding-left: 0.5rem !important; }
+.prose blockquote { color: #374151 !important; font-style: italic !important; border-left: 4px solid #ef4444 !important; padding-left: 1rem !important; margin: 1.5rem 0 !important; background: #fef2f2 !important; padding: 1rem !important; border-radius: 0.5rem !important; }
+.prose a { color: #ef4444 !important; text-decoration: underline !important; }
+.prose a:hover { color: #dc2626 !important; }
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
+let currentFullscreenIndex = 0;
+const galleryItems = [];
+let touchStartX = 0;
+
+// Инициализация галереи
 document.addEventListener('DOMContentLoaded', function() {
-    gsap.registerPlugin(ScrollTrigger);
+    {% if page.gallery %}
+        {% for item in page.gallery %}
+            {% image item.value.image original as gallery_image %}
+            galleryItems.push({
+                image: '{{ gallery_image.url }}',
+                caption: `{{ item.value.caption|richtext|escapejs }}`
+            });
+        {% endfor %}
+    {% endif %}
+    
+    initCarousel();
+});
 
-    // Reveal animations
-    gsap.utils.toArray('.gs-reveal').forEach((element, index) => {
-        gsap.fromTo(element, 
-            { opacity: 0, y: 10 }, 
-            {
-                opacity: 1,
-                y: 0,
-                duration: 0.5,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 90%",
-                    toggleActions: "play none none none"
-                },
-                delay: index * 0.1
-            }
-        );
-    });
+// Карусель с индикаторами
+function initCarousel() {
+    const carousel = document.querySelector('.gallery-carousel .flex');
+    const indicators = document.querySelectorAll('.indicator-dot');
+    
+    if (carousel && indicators.length > 0) {
+        carousel.addEventListener('scroll', () => {
+            const scrollPos = carousel.scrollLeft;
+            const itemWidth = carousel.querySelector('div').offsetWidth + 24; // width + gap
+            const activeIndex = Math.round(scrollPos / itemWidth);
+            
+            indicators.forEach((dot, index) => {
+                dot.classList.toggle('active', index === activeIndex);
+            });
+        });
+    }
+}
 
-    // Hover scale for other news cards
-    gsap.utils.toArray('.card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 1.05, duration: 0.1 });
-        });
-        card.addEventListener('mouseleave', () => {
-            gsap.to(card.querySelector('.image-ratio_16x9 img'), { scale: 1, duration: 0.1 });
-        });
+// Полноэкранный режим
+function openFullscreenModal(index) {
+    currentFullscreenIndex = index;
+    updateFullscreenModal();
+    const modal = document.getElementById('fullscreenModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('fade-in');
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    updateThumbnails();
+}
+
+function closeFullscreenModal() {
+    const modal = document.getElementById('fullscreenModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('fade-in');
+    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
+}
+
+function prevFullscreenImage() {
+    currentFullscreenIndex = (currentFullscreenIndex - 1 + galleryItems.length) % galleryItems.length;
+    updateFullscreenModal();
+}
+
+function nextFullscreenImage() {
+    currentFullscreenIndex = (currentFullscreenIndex + 1) % galleryItems.length;
+    updateFullscreenModal();
+}
+
+function goToFullscreenImage(index) {
+    currentFullscreenIndex = index;
+    updateFullscreenModal();
+}
+
+function updateFullscreenModal() {
+    document.getElementById('fullscreenImage').src = galleryItems[currentFullscreenIndex].image;
+    document.getElementById('fullscreenCaption').innerHTML = galleryItems[currentFullscreenIndex].caption || '';
+    document.getElementById('fullscreenCurrent').textContent = currentFullscreenIndex + 1;
+    document.getElementById('fullscreenTotal').textContent = galleryItems.length;
+    updateThumbnails();
+}
+
+function updateThumbnails() {
+    document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+        thumb.classList.toggle('border-red-500', index === currentFullscreenIndex);
+        thumb.classList.toggle('opacity-100', index === currentFullscreenIndex);
+        thumb.classList.toggle('opacity-60', index !== currentFullscreenIndex);
     });
+}
+
+// Свайпы для мобильных
+document.getElementById('fullscreenModal').addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+document.getElementById('fullscreenModal').addEventListener('touchend', function(e) {
+    const touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    const swipeThreshold = 50;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            nextFullscreenImage();
+        } else {
+            prevFullscreenImage();
+        }
+    }
+});
+
+// Управление клавиатурой
+document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('fullscreenModal').classList.contains('hidden')) {
+        if (e.key === 'Escape') closeFullscreenModal();
+        if (e.key === 'ArrowLeft') prevFullscreenImage();
+        if (e.key === 'ArrowRight') nextFullscreenImage();
+        if (e.key >= '1' && e.key <= '9') {
+            const num = parseInt(e.key) - 1;
+            if (num < galleryItems.length) goToFullscreenImage(num);
+        }
+    }
 });
 </script>
 {% endblock %}

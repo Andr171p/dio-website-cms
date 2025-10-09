@@ -50,19 +50,22 @@
         {% elif block.block_type == 'expertise_grid' %}
             <!-- Сетка отраслей/услуг -->
             <section class="section">
-                <div class="container">
-                    <div class="header is-align-center">
-                        <h2 class="heading_h2">{{ block.value.title }}</h2>
-                    </div>
-                    <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
-                        {% for item in block.value.items %}
-                            <div class="padding-left_medium divider-vertical padding-top_xxsmall">
-                                <h3 class="heading_h4">{{ item }}</h3>
-                            </div>
-                        {% endfor %}
-                    </div>
+    <div class="container">
+        <div class="header is-align-center">
+            <h2 class="heading_h2">{{ block.value.title }}</h2>
+        </div>
+        <div class="w-layout-grid grid_3-col gap-4 lg:gap-6 py-10">
+            {% for item in block.value.items %}
+                <div class="grid-item padding-left_medium divider-vertical padding-top_xxsmall is-align-center">
+                    <h3 class="py-4 heading_h4">{{ item.title }}</h3>
+                    {% if item.description %}
+                        <p class="margin-bottom_none">{{ item.description|striptags }}</p>
+                    {% endif %}
                 </div>
-            </section>
+            {% endfor %}
+        </div>
+    </div>
+</section>
         {% elif block.block_type == 'cta' %}
             <!-- CTA -->
             <section class="section is-accent-primary">
@@ -82,7 +85,7 @@
     {% endfor %}
 
     <!-- Другие услуги -->
-    {% if other_services %}
+    {% if page.other_services %}
         <section class="section">
             <div class="container">
                 <div class="header is-align-center">
@@ -141,21 +144,28 @@
         }
     }
 
-    .mt-12 {
-        margin-top: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---spacing--3x);
+    .w-layout-grid.grid_3-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+.grid-item {
+    padding: 1rem;
+    margin: 0.5rem;
+    background: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692---background-color--background-primary);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+@media (min-width: 1024px) {
+    .w-layout-grid.grid_3-col {
+        gap: 1.5rem;
     }
-
-    .padding-left_medium {
-        padding-left: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---spacing--3x);
+}
+@media (max-width: 767px) {
+    .w-layout-grid.grid_3-col {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
-
-    .divider-vertical {
-        border-left: 1px solid var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692---border-color--border-secondary);
-        padding-left: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---spacing--1-25x);
-    }
-
-    .padding-top_xxsmall {
-        padding-top: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---spacing--xxsmall);
-    }
+}
 </style>
 {% endblock %}

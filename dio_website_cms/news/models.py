@@ -1,11 +1,13 @@
 from django.db import models
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.search import index
 from django.utils import timezone
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from wagtail import blocks
+from wagtail.blocks import RichTextBlock
+from wagtail.images.blocks import ImageChooserBlock
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Константы для категорий
 NEWS_CATEGORY_CHOICES = [
@@ -15,7 +17,6 @@ NEWS_CATEGORY_CHOICES = [
     ("events", "События"),
     ("awards", "Награды"),
 ]
-
 
 class NewsPage(Page):
     """Страница отдельной новости"""
@@ -42,6 +43,12 @@ class NewsPage(Page):
         verbose_name="Изображение",
     )
     content = RichTextField("Содержание", blank=True)
+    gallery = StreamField([
+        ('image', blocks.StructBlock([
+            ('image', ImageChooserBlock(required=True)),
+            ('caption', RichTextBlock(required=False)),
+        ], label="Изображение галереи")),
+    ], blank=True, use_json_field=True, verbose_name="Галерея")
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -55,6 +62,7 @@ class NewsPage(Page):
             heading="Основная информация",
         ),
         FieldPanel("content"),
+        FieldPanel("gallery"),
     ]
 
     search_fields = Page.search_fields + [
@@ -65,7 +73,6 @@ class NewsPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        # Другие новости (исключая текущую)
         context["other_news"] = (
             NewsPage.objects.live().exclude(id=self.id).order_by("-date")[:3]
         )
@@ -74,7 +81,6 @@ class NewsPage(Page):
     class Meta:
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
-
 
 class NewsIndexPage(Page):
     """Главная страница новостей"""
@@ -95,7 +101,6 @@ class NewsIndexPage(Page):
             news = news.filter(category=category)
         context["current_category"] = category
 
-        # Пагинация
         paginator = Paginator(news, self.items_per_page)
         page = request.GET.get("page")
         try:
@@ -113,8 +118,6 @@ class NewsIndexPage(Page):
         verbose_name = "Лента новостей"
         verbose_name_plural = "Ленты новостей"
 
-
-# Блок для отображения новостей на главной
 class NewsBlock(blocks.StructBlock):
     """Блок для отображения новостей на главной странице"""
 

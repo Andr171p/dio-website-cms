@@ -3,270 +3,301 @@
 
 {% block content %}
   <article class="w-full">
-    
-
-    <!-- Hero Section -->
-    <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
-      {% if page.hero_image %}
-        {% image page.hero_image original as bg_image %}
-        <div class="absolute inset-0 z-0">
-          <img src="{{ bg_image.url }}" alt="{{ page.hero_title }}" class="w-full h-full object-cover top-0 left-0">
-          <div class="absolute inset-0 bg-black/30"></div>
-        </div>
-      {% endif %}
-      <div class="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          <div class="space-y-6">
-            <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white drop-shadow-md gs-reveal">
-              {{ page.hero_title }}
-            </h1>
-            {% if page.hero_description_1 %}
-              <p class="heading_h3 text-lg lg:text-xl mb-8 max-w-prose leading-relaxed text-white/90 gs-reveal">
-                {{ page.hero_description_1|striptags }}
-              </p>
-            {% endif %}
-            {% if page.hero_button_text and page.hero_button_link %}
-              <a href="{{ page.hero_button_link }}" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg hover:bg-blue-50 hover:shadow-xl transition-all duration-300 gs-reveal">
-                {{ page.hero_button_text }}
-              </a>
-            {% endif %}
-          </div>
-          <div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- What We Do Section -->
-    <section class="section is-secondary">
-      <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
-        <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
-          <div class="image-ratio_auto">
-            {% if page.hero_image %}
-              {% image page.hero_image fill-400x300 class="image_cover" alt=page.hero_title %}
-            {% endif %}
-          </div>
-          <div class="header max-width_large space-y-6">
-            <h2 class="heading_h2 gs-reveal">{{ page.approach_title }}</h2>
-            <div class="heading_h5 rich-text w-richtext">
-              {% if page.approach_description_1 %}
-                {{ page.approach_description_1|richtext }}
-              {% endif %}
-              {% if page.approach_description_2 %}
-                {{ page.approach_description_2|richtext }}
-              {% endif %}
+    {% for block in page.content %}
+      {% if block.block_type == 'hero' %}
+        <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
+          {% if block.value.image %}
+            {% image block.value.image original as bg_image %}
+            <div class="absolute inset-0 z-0">
+              <img src="{{ bg_image.url }}" alt="{{ block.value.title }}" class="w-full h-full object-cover top-0 left-0">
+              <div class="absolute inset-0 bg-black/30"></div>
+            </div>
+          {% endif %}
+          <div class="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              <div class="space-y-6">
+                <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white drop-shadow-md gs-reveal">
+                  {{ block.value.title }}
+                </h1>
+                {% if block.value.description_1 %}
+                  <p class="heading_h3 text-lg lg:text-xl mb-8 max-w-prose leading-relaxed text-white/90 gs-reveal">
+                    {{ block.value.description_1|striptags }}
+                  </p>
+                {% endif %}
+                {% if block.value.description_2 %}
+                  <p class="heading_h3 text-lg lg:text-xl mb-8 max-w-prose leading-relaxed text-white/90 gs-reveal">
+                    {{ block.value.description_2|striptags }}
+                  </p>
+                {% endif %}
+                {% if block.value.description_3 %}
+                  <p class="heading_h3 text-lg lg:text-xl mb-8 max-w-prose leading-relaxed text-white/90 gs-reveal">
+                    {{ block.value.description_3|striptags }}
+                  </p>
+                {% endif %}
+                {% if service_list_items %}
+                  <ul class="list-disc pl-5 text-white/90 gs-reveal">
+                    {% for item in service_list_items %}
+                      <li>{{ item }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+                {% if block.value.button_text and block.value.button_link %}
+                  <a href="{% pageurl block.value.button_link %}" onclick="document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' });" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg hover:bg-blue-50 hover:shadow-xl transition-all duration-300 gs-reveal">
+                    {{ block.value.button_text }}
+                  </a>
+                {% endif %}
+              </div>
+              <div></div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- Expertise Grid -->
-    <section class="section">
-      <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
-        <div class="header is-align-center">
-          <h2 class="heading_h2 gs-reveal">{{ page.industries_title }}</h2>
-        </div>
-        <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
-          {% if page.industry_01 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_01 }}</h3></div>{% endif %}
-          {% if page.industry_02 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_02 }}</h3></div>{% endif %}
-          {% if page.industry_03 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_03 }}</h3></div>{% endif %}
-          {% if page.industry_04 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_04 }}</h3></div>{% endif %}
-          {% if page.industry_05 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_05 }}</h3></div>{% endif %}
-          {% if page.industry_06 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_06 }}</h3></div>{% endif %}
-        </div>
-      </div>
-    </section>
+      {% elif block.block_type == 'industries' %}
+        <section class="section">
+          <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="header is-align-center">
+              <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+            </div>
+            <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
+              {% for industry in block.value.industries %}
+                <div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal">
+                  <h3 class="heading_h4">{{ industry.title }}</h3>
+                  {% if industry.description %}
+                    <p class="margin-bottom_none">{{ industry.description|striptags }}</p>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
 
-    <!-- Trust Metrics -->
-<section class="section is-secondary">
-  <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
-    <div class="header is-align-center">
-      <h2 class="heading_h2 gs-reveal">{{ page.trust_title }}</h2>
-    </div>
-    <div class="w-layout-grid grid_5-col tablet-1-col gap-small mt-12">
-      {% if page.trust_image %}
-        <div class="image-ratio_4x3">
-          {% image page.trust_image fill-736x562 class="image_cover" alt=page.trust_title %}
-        </div>
-      {% endif %}
-      <div class="w-layout-grid grid_2-col gap-small">
-        <div class="card on-secondary">
-          <div class="card_body is-y-center">
-            <div class="heading_h3 margin-bottom_none">{{ page.metric_year_value }}</div>
-            <div class="paragraph_large margin-bottom_none">{{ page.metric_year_label }}</div>
+      {% elif block.block_type == 'trust_metrics' %}
+        <section class="section is-secondary">
+          <div class="container">
+            <div class="header max-width_large">
+              <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+              {% if block.value.description %}
+                <p class="paragraph_large text-color_secondary">{{ block.value.description }}</p>
+              {% endif %}
+            </div>
+            <div class="w-layout-grid grid_3-col gap-xsmall">
+              {% for metric in block.value.metrics %}
+                <div class="card on-secondary">
+                  <div class="card_body">
+                    {% if metric.icon %}
+                      <div class="icon margin-bottom_xsmall">{{ metric.icon|safe }}</div>
+                    {% endif %}
+                    <h3 class="heading_h4">{{ metric.value }}</h3>
+                    <p class="margin-bottom_none">{{ metric.label }}</p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
           </div>
-        </div>
-        <div class="card on-secondary">
-          <div class="card_body is-y-center">
-            <div class="heading_h3 margin-bottom_none">{{ page.metric_projects_value }}</div>
-            <div class="paragraph_large margin-bottom_none">{{ page.metric_projects_label }}</div>
-          </div>
-        </div>
-        <div class="card on-secondary">
-          <div class="card_body is-y-center">
-            <div class="heading_h3 margin-bottom_none">{{ page.metric_presence_value }}</div>
-            <div class="paragraph_large margin-bottom_none">{{ page.metric_presence_label }}</div>
-          </div>
-        </div>
-        <!-- Добавьте дополнительные карточки, если нужно -->
-      </div>
-    </div>
-  </div>
-</section>
+        </section>
 
-    <!-- Career Section -->
-    <section class="section">
-      <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
-        <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
-          <div class="header max-width_large space-y-6">
-            <h2 class="heading_h2 gs-reveal">{{ page.career_title }}</h2>
-            {% if page.career_description %}
-              <div class="rich-text w-richtext">
-                {{ page.career_description|richtext }}
+      {% elif block.block_type == 'approach' %}
+        <section class="section is-secondary">
+          <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
+              <div class="image-ratio_auto">
+                {% if page.hero_image %}
+                  {% image page.hero_image fill-400x300 class="image_cover" alt=page.title %}
+                {% endif %}
               </div>
-            {% endif %}
-            {% if page.career_button_text and page.career_button_link %}
-              <a href="{{ page.career_button_link }}" class="button is-secondary w-button gs-reveal">
-                {{ page.career_button_text }}
-              </a>
-            {% endif %}
+              <div class="header max-width_large space-y-6">
+                <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+                <div class="heading_h5 rich-text w-richtext">
+                  {% for desc in block.value.descriptions %}
+                    {{ desc|richtext }}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="image-ratio_auto">
-            {% if page.hero_image %}
-              {% image page.hero_image fill-400x300 class="image_cover" alt=page.career_title %}
-            {% endif %}
+        </section>
+
+      {% elif block.block_type == 'career' %}
+        <section class="section">
+          <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
+              <div class="header max-width_large space-y-6">
+                <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+                {% if block.value.description %}
+                  <div class="heading_h4 rich-text w-richtext">
+                    {{ block.value.description|richtext }}
+                  </div>
+                {% endif %}
+                {% if items_list %}
+                  <ul class="list-disc pl-5 gs-reveal">
+                    {% for item in items_list %}
+                      <li>{{ item }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+                {% if block.value.button_text and block.value.button_link %}
+                  <a href="{% pageurl block.value.button_link %}" class="button is-secondary w-button gs-reveal">
+                    {{ block.value.button_text }}
+                  </a>
+                {% endif %}
+              </div>
+              <div class="image-ratio_auto">
+                {% if page.hero_image %}
+                  {% image page.hero_image fill-400x300 class="image_cover" alt=page.title %}
+                {% endif %}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-{% include "home/statistics_section.html"  %}
+      {% elif block.block_type == 'contact' %}
+        <section id="contact-section" class="section is-secondary">
+          <div class="container">
+            <div class="w-layout-grid grid_2-col tablet-1-col gap-large">
+              <div class="card_body_small">
+                <div class="eyebrow margin-bottom_xsmall">Контактная информация</div>
+                <h2 class="heading_h2 margin-bottom_medium">{{ block.value.title }}</h2>
+                {% if block.value.description %}
+                  <p class="paragraph_large margin-bottom_large">{{ block.value.description }}</p>
+                {% endif %}
+                <div class="contact-list">
+                  <div class="contact-item py-5" style="display: flex; align-items: center; gap: 10px;">
+                    <div class="icon is-small">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
+                        <path d="M26 29h-.17C6.18 27.87 3.39 11.29 3 6.23A3 3 0 0 1 5.76 3h5.51a2 2 0 0 1 1.86 1.26L14.65 8a1.92 1.92 0 0 1-.25 1.86l-2.13 3.15a1.55 1.55 0 0 0-.08 1.41l4.07 9a1.93 1.93 0 0 0 1.8 1.15 1.48 1.48 0 0 0 1.44-.91l2-5a1.56 1.56 0 0 1 1.43-1h4.63A1.92 1.92 0 0 1 29 21.58V26A3 3 0 0 1 26 29ZM6 5a1 1 0 0 0-1 1v.08C5.46 12 8.41 26 25.94 27A1 1 0 0 0 27 26v-4.42l-4.62.83-2 5a3.48 3.48 0 0 1-3.38 2.15 3.93 3.93 0 0 1-3.69-2.30l-4.07-9a3.55 3.55 0 0 1 .18-3.24l2.13-3.15A3.92 3.92 0 0 0 13.35 8l-1.52-3.63A1 1 0 0 0 11.27 4H5.76A1 1 0 0 0 5 5Z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <a href="tel:+7 932 309 93 83" class="heading_h2 text-link is-secondary">+7 932 309 93 83</a>
+                    </div>
+                  </div>
+                  <div class="contact-item py-5" style="display: flex; align-items: center; gap: 10px;">
+                    <div class="icon is-small">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
+                        <path d="M28 6H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Zm-2.2 2L16 14.78 6.2 8ZM4 24V8.91l11.43 7.91a1 1 0 0 0 1.14 0L28 8.91V24Z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <a href="mailto:diocon@gmail.com" class="heading_h2 text-link is-secondary">diocon@gmail.com</a>
+                    </div>
+                  </div>
+                  <div class="contact-item py-5" style="display: flex; align-items: center; gap: 10px;">
+                    <div class="icon is-small">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
+                        <path d="M16 18a5 5 0 1 1 5-5 5 5 0 0 1-5 5Zm0-8a3 3 0 1 0 3 3 3 3 0 0 0-3-3Z"></path>
+                        <path d="M16 30l-8.44-9.17a28.7 28.7 0 0 1-.56-8.58A12.07 12.07 0 0 1 16 2a12.07 12.07 0 0 1 9 10.25 28.7 28.7 0 0 1-.56 8.58ZM8.83 18.83L16 26.85l7.17-8.02a26.7 26.7 0 0 0 .52-7.58A10.06 10.06 0 0 0 16 4a10.06 10.06 0 0 0-7.69 7.25 26.7 26.7 0 0 0 .52 7.58Z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="heading_h2 text-color_secondary">tumen</div>
+                    </div>
+                  </div>
+                  <div class="contact-item py-5" style="display: flex; align-items: center; gap: 10px;">
+                    <div class="icon is-small">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
+                        <path d="M16 30a14 14 0 1 1 14-14 14 14 0 0 1-14 14Zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4Z"></path>
+                        <path d="M20.59 22L15 16.41V7h2v8.58l5 5.01L20.59 22z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="heading_h2 text-color_secondary">Пн-Пт: 9:00 - 18:00, Сб-Вс: по договоренности</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="header margin-bottom_medium">
+                  <p class="eyebrow">Есть вопросы?</p>
+                  <h2 class="heading_h2">Свяжитесь с нами<br>— получите консультацию</h2>
+                  {% if block.value.description %}
+                    <p class="paragraph_medium">{{ block.value.description }}</p>
+                  {% endif %}
+                  <p class="paragraph_medium">Пишите нам в любое время: <a href="mailto:diocon@gmail.com" class="text-link is-secondary text-span_padding">diocon@gmail.com</a></p>
+                </div>
+                <div class="margin-bottom_none w-form">
+                  <form id="feedbackForm-{{ block.id }}" aria-label="Form">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                    <div class="input margin-bottom_small">
+                      <label for="id_email-{{ block.id }}">Email:</label>
+                      <input type="email" name="email" id="id_email-{{ block.id }}" class="input_field w-input" placeholder="Email">
+                    </div>
+                    <div class="input margin-bottom_small">
+                      <label for="id_message-{{ block.id }}">Сообщение:</label>
+                      <textarea name="message" id="id_message-{{ block.id }}" class="input_field w-input" placeholder="Сообщение" rows="4"></textarea>
+                    </div>
+                    {% if block.value.privacy_note %}
+                      <div class="checkbox-field margin-bottom_medium">
+                        <label class="w-checkbox checkbox-field">
+                          <input type="checkbox" name="agreement" id="agreement-{{ block.id }}" required="">
+                          <span class="checkbox-label w-form-label">{{ block.value.privacy_note|safe }}</span>
+                        </label>
+                      </div>
+                    {% endif %}
+                    <input type="hidden" name="csrftoken" id="id_csrftoken-{{ block.id }}" value="">
+                    {% if block.value.button_text and block.value.button_link %}
+                      <a href="{% pageurl block.value.button_link %}" class="button w-button">{{ block.value.button_text }}</a>
+                    {% else %}
+                      <button type="submit" class="button w-button">Отправить</button>
+                    {% endif %}
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
+      {% elif block.block_type == 'main_achievement' %}
+        <section class="section is-secondary">
+          <div class="container">
+            <div class="header max-width_large">
+              <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+              {% if block.value.description %}
+                <p class="paragraph_large text-color_secondary">{{ block.value.description }}</p>
+              {% endif %}
+            </div>
+            <div class="w-layout-grid grid_3-col gap-xsmall">
+              {% for item in block.value.items %}
+                <div class="card on-secondary">
+                  <div class="card_body">
+                    {% if item.icon %}
+                      <div class="icon margin-bottom_xsmall">{{ item.icon|safe }}</div>
+                    {% endif %}
+                    <h3 class="heading_h4">{{ item.title }}</h3>
+                    <p class="margin-bottom_none">{{ item.description }}</p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
 
+      {% elif block.block_type == 'additional_achievement' %}
+        <section class="section is-secondary">
+          <div class="container">
+            <div class="header max-width_large">
+              <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+              {% if block.value.description %}
+                <p class="paragraph_large text-color_secondary">{{ block.value.description }}</p>
+              {% endif %}
+            </div>
+            <div class="w-layout-grid grid_3-col gap-xsmall">
+              {% for item in block.value.items %}
+                <div class="card on-secondary">
+                  <div class="card_body">
+                    {% if item.icon %}
+                      <div class="icon margin-bottom_xsmall">{{ item.icon|safe }}</div>
+                    {% endif %}
+                    <h3 class="heading_h4">{{ item.title }}</h3>
+                    <p class="margin-bottom_none">{{ item.description }}</p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+      {% endif %}
+    {% endfor %}
   </article>
-
-  <style>
-    .image-ratio_1x1 {
-      aspect-ratio: 1 / 1;
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--card-radius, 0.375rem);
-    }
-
-    .image-ratio_auto {
-      aspect-ratio: auto;
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--card-radius, 0.375rem);
-    }
-
-    .w-layout-grid.grid_3-col {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--gap-xs, 0.5rem);
-    }
-
-    @media (min-width: 1024px) {
-      .w-layout-grid.grid_3-col {
-        gap: var(--gap-sm, 0.75rem);
-      }
-    }
-
-    .mt-12 {
-      margin-top: var(--spacing-3x, 3rem);
-    }
-
-    .padding-left_medium {
-      padding-left: var(--spacing-3x, 1.5rem);
-    }
-
-    .divider-vertical {
-      border-left: 1px solid var(--border-secondary, #e5e7eb);
-      padding-left: var(--spacing-1-25x, 0.625rem);
-    }
-
-    .padding-top_xxsmall {
-      padding-top: var(--spacing-xxsmall, 0.25rem);
-    }
-
-    .prose {
-      color: #4b5563 !important;
-      max-width: none !important;
-    }
-    .prose h2 {
-      color: #1e293b !important;
-      font-weight: 700 !important;
-      font-size: 2rem !important;
-      margin-top: 2rem !important;
-      margin-bottom: 1rem !important;
-    }
-    .prose h3 {
-      color: #1e293b !important;
-      font-weight: 600 !important;
-      font-size: 1.5rem !important;
-      margin-top: 1.5rem !important;
-      margin-bottom: 0.75rem !important;
-    }
-    .prose p {
-      color: #64748b !important;
-      line-height: 1.75 !important;
-      margin-bottom: 1.25rem !important;
-    }
-    .prose ul, .prose ol {
-      color: #64748b !important;
-      padding-left: 2rem !important;
-      margin-bottom: 1.25rem !important;
-    }
-    .prose ul li, .prose ol li {
-      margin-bottom: 0.5rem !important;
-      padding-left: 0.5rem !important;
-    }
-    .prose blockquote {
-      color: #475569 !important;
-      font-style: italic !important;
-      border-left: 4px solid #3b82f6 !important;
-      padding-left: 1rem !important;
-      margin: 1.5rem 0 !important;
-    }
-    .prose a {
-      color: #3b82f6 !important;
-      text-decoration: underline !important;
-      transition: color 0.3s !important;
-    }
-    .prose a:hover {
-      color: #2563eb !important;
-    }
-
-    /* Скрываем элементы до анимации */
-    .gs-reveal {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    /* Стили для счетчиков статистики */
-    .counter-element {
-      transition: color 1s ease;
-    }
-
-    .counter-element.animated {
-      color: var(--accent-color);
-    }
-
-    .animate-on-scroll {
-      animation: countUp 1s ease-out forwards;
-    }
-
-    /* Анимация счетчиков */
-    @keyframes countUp {
-      from { 
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to { 
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -283,9 +314,9 @@
             ease: "power2.out",
             scrollTrigger: {
               trigger: element,
-              start: "top 95%", // Анимация начинается, когда верх элемента достигает 80% от верха экрана
+              start: "top 95%",
               end: "bottom 20%",
-              toggleActions: "play none none reverse" // Плавное появление и исчезновение при скроллинге
+              toggleActions: "play none none reverse"
             }
           }
         );
@@ -337,74 +368,78 @@
 
       // Проверяем при загрузке и при скролле
       window.addEventListener('scroll', handleScroll);
-      handleScroll(); // Проверить сразу при загрузке
+      handleScroll();
     });
   </script>
 
   <style>
-.counter-element {
-    transition: color 1s ease;
-}
-
-.counter-element.animated {
-    color: var(--accent-color);
-}
-
-
-.animate-on-scroll {
-    animation: countUp 1s ease-out forwards;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Функция для анимации счетчиков
-    function animateCounter(element, start, end, duration, suffix = '') {
-        let startTime = null;
-        
-        function updateCounter(timestamp) {
-            if (!startTime) startTime = timestamp;
-            const progress = Math.min((timestamp - startTime) / (duration * 500), 1);
-            const currentValue = Math.floor(progress * (end - start) + start);
-            element.textContent = currentValue + suffix;
-            
-            if (progress < 1) {
-                requestAnimationFrame(updateCounter);
-            } else {
-                element.classList.add('animated');
-            }
-        }
-        
-        requestAnimationFrame(updateCounter);
+    .counter-element {
+      transition: color 1s ease;
     }
-
-    // Функция для проверки видимости элемента
-    function isElementInViewport(el) {
-        const rect = el.getBoundingClientRect();
-        return (
-            rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
-            rect.bottom >= 0
-        );
+    .counter-element.animated {
+      color: var(--accent-color);
     }
+    .animate-on-scroll {
+      animation: countUp 1s ease-out forwards;
+    }
+  </style>
 
-    // Запуск анимации при скролле
-    function handleScroll() {
-        const counters = document.querySelectorAll('.counter-element');
-        counters.forEach(counter => {
-            if (isElementInViewport(counter) && !counter.classList.contains('animated')) {
-                const value = parseInt(counter.getAttribute('data-value'));
-                const suffix = counter.getAttribute('data-suffix') || '';
-                counter.classList.add('animate-on-scroll');
-                animateCounter(counter, 0, value, 2, suffix);
-            }
+  {% for block in page.content %}
+    {% if block.block_type == 'contact' %}
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          document.getElementById('feedbackForm-{{ block.id }}').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            document.getElementById('id_csrftoken-{{ block.id }}').value = csrfToken;
+            const formData = new FormData(this);
+            const jsonData = {};
+            formData.forEach((value, key) => {
+              jsonData[key] = value;
+            });
+            Swal.fire({
+              title: 'Отправка...',
+              text: 'Пожалуйста, подождите',
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              }
+            });
+            fetch('/feedback/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+              },
+              body: JSON.stringify(jsonData)
+            })
+            .then(response => {
+              if (response.ok) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Успешно!',
+                  text: 'Ваше сообщение отправлено',
+                  confirmButtonColor: '#3085d6',
+                  confirmButtonText: 'OK'
+                });
+                this.reset();
+              } else {
+                throw new Error('Ошибка сервера');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Ошибка',
+                text: 'Не удалось отправить сообщение. Попробуйте еще раз.',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'OK'
+              });
+            });
+          });
         });
-    }
-
-    // Проверяем при загрузке и при скролле
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Проверить сразу при загрузке
-});
-</script>
-
-
-{% endblock %}
+      </script>
+    {% endif %}
+  {% endfor %}
+{% endblock %}    
