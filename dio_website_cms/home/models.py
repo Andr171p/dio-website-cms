@@ -228,10 +228,31 @@ class PartnershipBlock(blocks.StructBlock):
         icon = "group"
         label = "Секция партнёрств"
 
+class GlobalPresenceBlock(blocks.StructBlock):
+    title = blocks.CharBlock(
+        required=True,
+        default="Глобальное присутствие",
+        label="Заголовок"
+    )
+    
+    image = ImageChooserBlock(
+        required=True,
+        label="Изображение для локации",
+        help_text="Рекомендуемый размер: квадратное или 1x1"
+    )
 
 
 class HomePage(Page):
     """Лендинг сайта, главная страница с каруселью и header"""
+    global_presence = StreamField(
+        [
+            ('presence', GlobalPresenceBlock())
+        ],
+        use_json_field=True,
+        blank=True,
+        max_num=1,  # Только один блок
+        verbose_name="Блок 'Глобальное присутствие'"
+    )
 
     header_section = StreamField(
         [("header", HeaderBlock(label="Header секция"))],
@@ -315,6 +336,8 @@ class HomePage(Page):
     )
 
     content_panels = Page.content_panels + [
+         FieldPanel('global_presence'),
+         
         MultiFieldPanel(
             [
                 FieldPanel("content"),

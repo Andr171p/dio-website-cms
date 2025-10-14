@@ -1,0 +1,27 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<header class="section py-3 ">
+    <div class="container">
+        <div class="header is-align-right">
+            {% for block in page.global_presence %}
+                {% if block.block_type == 'presence' %}
+                    <h2 class="heading_h2 py-10">{{ block.value.title }}</h2>
+                {% endif %}
+            {% endfor %}
+        
+            <div class="ix_hero-intro-up-scale is-step-2-hero-intro-up-scale">
+                <div class="rounded-xxl">
+                    {% for block in page.global_presence %}
+                        {% if block.block_type == 'presence' %}
+                            {% image block.value.image width-2048 height-1080 as presence_img %}
+                            <img src="{{ presence_img.url }}" 
+                                 alt="{{ block.value.title }}" 
+                                 loading="lazy" 
+                                 class="image_cover rounded-xl">
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

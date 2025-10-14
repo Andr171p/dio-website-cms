@@ -542,8 +542,8 @@ class ContactSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGene
     ]
 
     class Meta:
-        verbose_name = "Контактов"
-        verbose_name_plural = "Контактов"
+        verbose_name = "Контакты"
+        verbose_name_plural = "Контакты"
 
     def get_preview_template(self, request, mode_name):
         return "base.html"
@@ -588,7 +588,7 @@ class SiteSettings(BaseGenericSetting):
     ]
 
     class Meta:
-        verbose_name = "Сайта"
+        verbose_name = "Инофрмация о сайте"
 
     def get_preview_template(self, request, mode_name):
         return "base.html"
