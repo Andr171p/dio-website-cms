@@ -4,11 +4,11 @@
 <section class="section overflow_hidden is-secondary">
     <div class="container">
         <!-- Header -->
-        <div id="w-node-{{ block.id }}-header" class="header is-align-center w-node-news-header">
+        <div id="w-node-{{ block.id }}-header" class="header w-node-news-header">
             <h2 class="heading_h2">Последние новости</h2>
-            <p class="subheading max-w-2xl mx-auto">
+            <div class="eyebrow">
                 Следите за последними достижениями и новостями компании ДИО-Консалт.
-            </p>
+            </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {% for news in page.get_news %}
@@ -23,7 +23,7 @@
                         {{ news.get_category_display }}
                     </span>
                     <h3 class="heading_h1 font-semibold text-lg text-white-900 mb-2 line-clamp-2">
-                        <a href="{% pageurl news %}" class="hover:text-gray-600 transition-colors duration-200">{{ news.headline|truncatewords:5 }}</a>
+                        <a href="{% pageurl news %}" class="hover:text-red-600 transition-colors duration-200">{{ news.headline|truncatewords:5 }}</a>
                     </h3>
                     <!-- Date and Read Time -->
                     <div class="flex items-center justify-between text-l font-extrabold tracking-tight mt-auto">

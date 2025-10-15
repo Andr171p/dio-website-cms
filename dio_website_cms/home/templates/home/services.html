@@ -10,7 +10,10 @@
                 <div class="container">
                     <!-- Заголовок -->
                     <div class="header">
-                        <h2 class="heading_h1 max-width_large">Наши услуги</h2>
+                        <div class="eyebrow">
+                            Широкий выбор
+                        </div>
+                        <h2 class="heading_h2 max-width_large">Наши услуги</h2>
                     </div>
 
                     <!-- Сетка услуг -->
@@ -21,7 +24,7 @@
                                 {% if service.image %}
                                     {% image service.image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
                                 {% endif %}
-                                <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/10 text-white">
+                                <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/50 text-white">
                                     <!-- Верхняя часть: Категория -->
                                     <div class="flex items-center justify-between mb-4">
                                         <div class="flex items-center gap-3">

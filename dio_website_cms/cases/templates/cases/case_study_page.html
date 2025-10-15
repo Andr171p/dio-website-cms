@@ -17,7 +17,7 @@
                 class="w-full h-full object-cover  top-0 left-0"
                 
             >
-            <div class="absolute inset-0 bg-black/30"></div>
+            <div class="absolute inset-0 bg-black/50"></div>
         </div>
     {% endif %}
     
@@ -37,7 +37,7 @@
                         {{ page.intro|striptags }}
                     </p>
                 {% endif %}
-                <a href="/cases" class="inline-block button is-secondary w-button px-6 py-3 rounded-lg shadow-lg hover:bg-red-50 hover:shadow-xl transition-all duration-300 animate-fadeIn" style="animation-delay: 0.3s;">
+                <a href="/cases" style=" color:white;    box-shadow: 0 0 0 2px white inset;" class="inline-block button is-secondary w-button px-6 py-3 rounded-lg shadow-lg hover:bg-red-50 hover:shadow-xl transition-all duration-300 animate-fadeIn" style="animation-delay: 0.3s;">
                     Все кейсы
                 </a>
             </div>
@@ -102,8 +102,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for case in other_cases %}
             <article class="bg-white rounded-xl shadow-md hover:shadow-lg overflow-hidden transition-all duration-300 animate-fadeInUp" >
-                <a href="{{ case.url }}">{% if case.main_image %}
-                    {% image case.main_image fill-400x300 class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" %}
+                <a href="{{ case.url }}">{% if case.customer_logo %}
+                    {% image case.customer_logo fill-400x300 class="w-full h-48 object-cover transition-transform duration-300 hover:scale-105" %}
                 {% endif %}
                 </a>
                 <div class="p-6 flex flex-col h-full">

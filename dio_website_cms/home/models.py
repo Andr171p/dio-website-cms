@@ -234,7 +234,7 @@ class GlobalPresenceBlock(blocks.StructBlock):
         default="Глобальное присутствие",
         label="Заголовок"
     )
-    
+    description = blocks.RichTextBlock(required=False, label="Описание")
     image = ImageChooserBlock(
         required=True,
         label="Изображение для локации",
@@ -337,7 +337,7 @@ class HomePage(Page):
 
     content_panels = Page.content_panels + [
          FieldPanel('global_presence'),
-         
+
         MultiFieldPanel(
             [
                 FieldPanel("content"),

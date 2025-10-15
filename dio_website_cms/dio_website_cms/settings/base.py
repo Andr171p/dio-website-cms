@@ -82,6 +82,18 @@ INSTALLED_APPS = [
 #     ("footer", "Footer menu"),  # noqa: ERA001
 # )  # noqa: ERA001, RUF100
 
+
+WAGTAILEMBEDS_RESPONSIVE_HTML = True
+WAGTAILEMBEDS_FINDERS = [
+    {
+        'class': 'wagtail.embeds.finders.oembed',
+        'options': {
+            'timeout': 5,  # Add timeout
+        }
+    }
+]
+
+
 WAGTAILAPI_BASE_URL = "http://localhost:8000/api"
 
 WAGTAILIMAGES_IMAGE_MODEL = "wagtailimages.Image"
