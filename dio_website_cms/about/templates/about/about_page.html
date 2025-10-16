@@ -26,7 +26,7 @@
               </p>
             {% endif %}
             {% if page.hero_button_text and page.hero_button_link %}
-              <a href="{{ page.hero_button_link }}" style=" color:white;    box-shadow: 0 0 0 2px white inset;" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg ">
+              <a onclick="document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' });" href="{{ page.hero_button_link }}" style=" color:white;    box-shadow: 0 0 0 2px white inset;" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg ">
                 {{ page.hero_button_text }}
               </a>
             {% endif %}

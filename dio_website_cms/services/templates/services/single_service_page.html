@@ -206,11 +206,11 @@
                     <div class="mt-12">
                         {% for item in block.value.items %}
                             <div class="accordion-item gs-reveal">
-                                <button class="accordion-toggle w-full text-left py-4 px-6 bg-red-900 rounded-lg flex justify-between items-center hover:bg-red-850 transition-colors">
+                                <button class="accordion-toggle w-full text-left py-4 px-6 bg-gray-900 rounded-lg flex justify-between items-center hover:bg-gray-850 ">
                                     <h3 class="heading_h4">{{ item.question }}</h3>
                                     <span class="accordion-icon text-xl">+</span>
                                 </button>
-                                <div class="accordion-content hidden px-6 py-4 bg-red-900 rounded-b-lg">
+                                <div class="accordion-content hidden px-6 py-4 bg-gray-900 rounded-b-lg">
                                     <div class="heading_h5 prose">{{ item.answer|richtext }}</div>
                                 </div>
                             </div>
@@ -335,6 +335,7 @@
 </script>
 
   <style>
+    
     .relative iframe {
         position: absolute;
         top: 0;
@@ -409,5 +410,14 @@
         font-size: 1.5rem;
         font-weight: bold;
     }
+
+.accordion-toggle.bg-gray-900,
+.accordion-content.bg-gray-900 {
+    background-color: #2a2a2a !important; /* Это hex для gray-900 */
+}
+
+.accordion-toggle:hover.bg-gray-850 {
+    background-color: #282828 !important; /* Темнее чем gray-900 */
+}
   </style>
 {% endblock %}

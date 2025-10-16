@@ -13,7 +13,7 @@
                         <div class="logos-grid">
                             {% for logo in block.value.logos %}
                                 <div class="logo-container1">
-                                    {% image logo.logo width-320 height-160 as img %}
+                                    {% image logo.logo width-800 height-800 as img %}
                                     {% if logo.link %}
                                         <a href="{{ logo.link }}" class="logo-link">
                                             <img src="{{ img.url }}" alt="Partner logo" class="partner-logo" loading="lazy">
@@ -65,7 +65,7 @@
     .logo-container1 {
         width: 180px;
         height: 90px;
-        background: #ffffff02;
+        background: #ffffff;
         border-radius: 20px;
         overflow: hidden;
         display: flex;
@@ -80,14 +80,12 @@
     }
 
     .partner-logo {
-        object-fit: cover;
+        object-fit: contain;
         border-radius: 8px;
         transition: transform 0.2s ease;
     }
 
-    .partner-logo:hover {
-        transform: scale(1.05);
-    }
+   
 
     @media (max-width: 768px) {
         .partnership-grid {
