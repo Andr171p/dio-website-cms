@@ -2,7 +2,7 @@ from typing import ClassVar
 
 from core.utils import get_tumen_time
 from django.db import models
-from notification.utils import create_admin_notification
+from notification.utils import create_admin_notification, send_notification
 
 
 class FeedbackMessage(models.Model):
@@ -29,3 +29,4 @@ class FeedbackMessage(models.Model):
                 message=f"Сообщение обратной связи от {self.email}",
                 url=f"http://127.0.0.1:7000/admin/snippets/feedback/feedbackmessage/edit/{self.id}/",  # type: ignore  # noqa: PGH003
             )
+            send_notification(title="сообщение обратной связи")

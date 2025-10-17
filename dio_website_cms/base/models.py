@@ -1,23 +1,8 @@
-<<<<<<< HEAD
 from django import forms
 from django.contrib.auth.models import User
-=======
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel, PublishingPanel
-from wagtail.contrib.settings.models import BaseGenericSetting, register_setting
-from wagtail import blocks
-from wagtail.fields import StreamField
-from wagtail.blocks import  PageChooserBlock, CharBlock, URLBlock, TextBlock, StructBlock, ListBlock, ChoiceBlock, BooleanBlock
-from wagtail.models import DraftStateMixin, RevisionMixin, PreviewableMixin,Page
-from django.contrib.auth.models import User
-from django import forms 
-from wagtail.blocks import CharBlock, StructBlock, ListBlock
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.images.api.fields import ImageRenditionField as ImageAPIField
->>>>>>> main
 from django.db import models
 from wagtail import blocks
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, PublishingPanel
-from wagtail.api import APIField
 from wagtail.blocks import (
     BooleanBlock,
     CharBlock,
@@ -28,19 +13,12 @@ from wagtail.blocks import (
     TextBlock,
     URLBlock,
 )
-<<<<<<< HEAD
 from wagtail.contrib.settings.models import BaseGenericSetting, register_setting
-from wagtail.fields import RichTextField, StreamField
+from wagtail.contrib.settings.models import BaseSiteSetting as SiteSetting
+from wagtail.fields import StreamField
 from wagtail.models import DraftStateMixin, Page, PreviewableMixin, RevisionMixin
 
-# settings/models.py
 
-
-=======
-from wagtail.models import DraftStateMixin, RevisionMixin, PreviewableMixin
-from wagtail.fields import StreamField
-from wagtail.contrib.settings.models import BaseSiteSetting as SiteSetting
->>>>>>> main
 @register_setting
 class HeaderSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGenericSetting):
     """Настройки хедера сайта"""
@@ -701,138 +679,32 @@ class SiteSettings(BaseGenericSetting):
 
     def get_preview_context(self, request, mode_name):
         return {"settings": self}
-<<<<<<< HEAD
 
 
-class ContactPage(Page):
-    """Страница контактов"""
-
-    # Поля для контактов
-    address = models.TextField(blank=True, verbose_name="Адрес")
-    phone = models.CharField(max_length=20, blank=True, verbose_name="Телефон")
-    email = models.EmailField(blank=True, verbose_name="Электронная почта")
-    map_info = models.TextField(
-        blank=True, verbose_name="Инструкции для карты (например, Embed-код)"
-    )
-    contact_form_text = models.TextField(blank=True, verbose_name="Текст для формы")
-    legal_name = models.CharField(max_length=200, blank=True, verbose_name="Юридическое название")
-    inn = models.CharField(max_length=12, blank=True, verbose_name="ИНН")
-    ogrn = models.CharField(max_length=13, blank=True, verbose_name="ОГРН")
-
-    # Панели для админки
-    content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel("address"),
-                FieldPanel("phone"),
-                FieldPanel("email"),
-            ],
-            heading="Контактная информация",
-        ),
-        FieldPanel("map_info"),
-        FieldPanel("contact_form_text"),
-        MultiFieldPanel(
-            [
-                FieldPanel("legal_name"),
-                FieldPanel("inn"),
-                FieldPanel("ogrn"),
-            ],
-            heading="Юридические данные",
-        ),
-    ]
-
-    # Указываем шаблон
-    template = "contact/contact_page.html"
-
-
-class AboutPage(Page):
-    """Страница 'О компании' с полным набором редактируемых полей"""
-
-    # Hero/About секция
-    hero_title = models.CharField(
-        max_length=255,
-        blank=True,
-        default="О компании",
-        help_text="Заголовок секции 'О компании'",
-=======
-    
 @register_setting
-class ThemeSettings(SiteSetting):  
+class ThemeSettings(SiteSetting):
     THEME_CHOICES = (
-        ('none', 'Нет темы'),
-        ('new_year', 'Новый год (снежинки)'),
-        ('autumn', 'Осень (листья)'),
+        ("none", "Нет темы"),
+        ("new_year", "Новый год (снежинки)"),
+        ("autumn", "Осень (листья)"),
         # Добавьте больше, если нужно: ('spring', 'Весна (цветы)'), etc.
->>>>>>> main
     )
-    
+
     theme = models.CharField(
         max_length=20,
         choices=THEME_CHOICES,
-        default='none',
+        default="none",
         help_text="Выберите сезонную тему для сайта",
     )
 
     panels = [
         MultiFieldPanel(
             [
-                FieldPanel('theme'),
+                FieldPanel("theme"),
             ],
             heading="Сезонные темы",
         ),
     ]
 
-<<<<<<< HEAD
-    api_fields = [
-        APIField("hero_title"),
-        APIField("hero_description_1"),
-        APIField("hero_description_2"),
-        APIField("hero_description_3"),
-        APIField("hero_service_list"),
-        APIField("hero_image"),
-        APIField("hero_button_text"),
-        APIField("hero_button_link"),
-        APIField("industries_title"),
-        APIField("industry_01"),
-        APIField("industry_02"),
-        APIField("industry_03"),
-        APIField("industry_04"),
-        APIField("industry_05"),
-        APIField("industry_06"),
-        APIField("trust_title"),
-        APIField("metric_year_label"),
-        APIField("metric_year_value"),
-        APIField("metric_projects_label"),
-        APIField("metric_projects_value"),
-        APIField("metric_presence_label"),
-        APIField("metric_presence_value"),
-        APIField("approach_title"),
-        APIField("approach_description_1"),
-        APIField("approach_description_2"),
-        APIField("career_title"),
-        APIField("career_description"),
-        APIField("career_button_text"),
-        APIField("career_button_link"),
-        APIField("career_items"),
-        APIField("contact_title"),
-        APIField("contact_description"),
-        APIField("contact_privacy_note"),
-        APIField("contact_button_text"),
-        APIField("contact_button_link"),
-    ]
-
-    def get_context(self, request, *args, **kwargs):
-        context = super().get_context(request, *args, **kwargs)
-        context["hero_service_list_items"] = (
-            self.hero_service_list.split("\n") if self.hero_service_list else []
-        )
-        context["career_items_list"] = self.career_items.split("\n") if self.career_items else []
-        return context
-
-    class Meta:
-        verbose_name = "Страница 'О компании'"
-        verbose_name_plural = "Страницы 'О компании'"
-=======
     class Meta:
         verbose_name = "Темы"
->>>>>>> main

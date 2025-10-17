@@ -43,7 +43,7 @@ class VacancyForm(forms.ModelForm):
             digits = re.sub(r"\D", "", phone)
             if digits.startswith(("7", "8")):
                 digits = digits[1:]
-            if len(digits) != 10:
+            if len(digits) != 10:  # noqa: PLR2004
                 raise forms.ValidationError("Номер должен содержать 10 цифр")
             return f"+7 ({digits[:3]}) {digits[3:6]}-{digits[6:8]}-{digits[8:10]}"
         return phone

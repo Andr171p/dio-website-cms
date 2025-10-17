@@ -1,16 +1,21 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
-from wagtail.models import Page
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import RichTextField, StreamField
-from wagtail.search import index
 from django.utils import timezone
-from wagtail.blocks import (
-    CharBlock, RichTextBlock, StructBlock, ListBlock, PageChooserBlock, ChoiceBlock
-)
-from wagtail.images.blocks import ImageChooserBlock
-from wagtail.embeds.blocks import EmbedBlock
 from wagtail import blocks
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.blocks import (
+    CharBlock,
+    ChoiceBlock,
+    ListBlock,
+    PageChooserBlock,
+    RichTextBlock,
+    StructBlock,
+)
+from wagtail.embeds.blocks import EmbedBlock
+from wagtail.fields import RichTextField, StreamField
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.models import Page
+from wagtail.search import index
 
 # Константы для категорий услуг
 SERVICE_CATEGORY_CHOICES = [
@@ -20,6 +25,7 @@ SERVICE_CATEGORY_CHOICES = [
     ("support", "Поддержка"),
     ("training", "Обучение"),
 ]
+
 
 # Блок для Hero
 class HeroBlock(StructBlock):
@@ -33,16 +39,17 @@ class HeroBlock(StructBlock):
         icon = "image"
         label = "Hero"
 
+
 # Блок для текста
 class TextBlock(StructBlock):
     content = RichTextBlock(
-        features=['h2', 'h3', 'bold', 'italic', 'link', 'ol', 'ul', 'blockquote'],
-        label="Текст"
+        features=["h2", "h3", "bold", "italic", "link", "ol", "ul", "blockquote"], label="Текст"
     )
 
     class Meta:
         icon = "doc-full"
         label = "Текстовая секция"
+
 
 # Блок для "Что мы делаем"
 class WhatWeDoBlock(StructBlock):
@@ -53,6 +60,7 @@ class WhatWeDoBlock(StructBlock):
     class Meta:
         icon = "edit"
         label = "Что мы делаем"
+
 
 # Блок для карточки с изображением
 class ImageCardBlock(StructBlock):
@@ -66,6 +74,7 @@ class ImageCardBlock(StructBlock):
         icon = "image"
         label = "Карточка с изображением"
 
+
 # Элемент для сетки карточек
 class CardItemBlock(StructBlock):
     title = CharBlock(required=True, label="Название")
@@ -77,20 +86,26 @@ class CardItemBlock(StructBlock):
         icon = "pick"
         label = "Элемент карточки"
 
+
 # Универсальный блок для сетки карточек (для экспертизы, преимуществ и т.д.)
 class CardGridBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок сетки")
-    grid_type = ChoiceBlock(choices=[
-        ('numbered', 'Нумерованный'),
-        ('bulleted', 'Маркированный'),
-        ('icon_grid', 'Сетка с иконками'),
-        ('image_grid', 'Сетка с изображениями'),
-    ], default='icon_grid', label="Тип сетки")
+    grid_type = ChoiceBlock(
+        choices=[
+            ("numbered", "Нумерованный"),
+            ("bulleted", "Маркированный"),
+            ("icon_grid", "Сетка с иконками"),
+            ("image_grid", "Сетка с изображениями"),
+        ],
+        default="icon_grid",
+        label="Тип сетки",
+    )
     items = ListBlock(CardItemBlock(), label="Элементы сетки")
 
     class Meta:
         icon = "folder-open"
         label = "Универсальная сетка карточек"
+
 
 # Блок для метрик доверия
 class MetricItemBlock(StructBlock):
@@ -102,6 +117,7 @@ class MetricItemBlock(StructBlock):
         icon = "pick"
         label = "Метрика"
 
+
 class MetricsBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок метрик")
     items = ListBlock(MetricItemBlock(), label="Список метрик")
@@ -109,6 +125,7 @@ class MetricsBlock(StructBlock):
     class Meta:
         icon = "site"
         label = "Метрики доверия"
+
 
 # Блок для галереи изображений
 class GalleryBlock(StructBlock):
@@ -119,6 +136,7 @@ class GalleryBlock(StructBlock):
         icon = "image"
         label = "Галерея изображений"
 
+
 # Блок для видео
 class VideoBlock(StructBlock):
     title = CharBlock(required=False, label="Заголовок видео")
@@ -127,6 +145,7 @@ class VideoBlock(StructBlock):
     class Meta:
         icon = "media"
         label = "Видео"
+
 
 # Блок для аккордеона (FAQ или детальные секции)
 class AccordionItemBlock(StructBlock):
@@ -137,6 +156,7 @@ class AccordionItemBlock(StructBlock):
         icon = "help"
         label = "Элемент аккордеона"
 
+
 class AccordionBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок аккордеона")
     items = ListBlock(AccordionItemBlock(), label="Элементы аккордеона")
@@ -144,6 +164,7 @@ class AccordionBlock(StructBlock):
     class Meta:
         icon = "list-ul"
         label = "Аккордеон (FAQ/Детали)"
+
 
 # Блок для CTA
 class CTABlock(StructBlock):
@@ -156,6 +177,7 @@ class CTABlock(StructBlock):
         icon = "plus"
         label = "CTA"
 
+
 class SingleServicePage(Page):
     date = models.DateField("Дата публикации", default=timezone.now)
     category = models.CharField(
@@ -164,9 +186,7 @@ class SingleServicePage(Page):
         default="consulting",
         verbose_name="Категория",
     )
-    headline = models.CharField(
-        "Заголовок", max_length=255, default="Заголовок услуги"
-    )
+    headline = models.CharField("Заголовок", max_length=255, default="Заголовок услуги")
     intro = models.TextField(
         "Краткое описание", blank=True, help_text="1-3 предложения для анонса"
     )
@@ -178,18 +198,23 @@ class SingleServicePage(Page):
         related_name="+",
         verbose_name="Изображение",
     )
-    content = StreamField([
-        ('hero', HeroBlock()),
-        ('text', TextBlock()),
-        ('what_we_do', WhatWeDoBlock()),
-        ('image_card', ImageCardBlock()),
-        ('card_grid', CardGridBlock()),
-        ('metrics', MetricsBlock()),
-        ('gallery', GalleryBlock()),
-        ('video', VideoBlock()),
-        ('accordion', AccordionBlock()),
-        ('cta', CTABlock()),
-    ], blank=True, use_json_field=True, verbose_name="Блоки страницы")
+    content = StreamField(
+        [
+            ("hero", HeroBlock()),
+            ("text", TextBlock()),
+            ("what_we_do", WhatWeDoBlock()),
+            ("image_card", ImageCardBlock()),
+            ("card_grid", CardGridBlock()),
+            ("metrics", MetricsBlock()),
+            ("gallery", GalleryBlock()),
+            ("video", VideoBlock()),
+            ("accordion", AccordionBlock()),
+            ("cta", CTABlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+        verbose_name="Блоки страницы",
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -202,9 +227,12 @@ class SingleServicePage(Page):
             ],
             heading="Основная информация",
         ),
-        MultiFieldPanel([
-            FieldPanel('content'),
-        ], heading="Блоки страницы"),
+        MultiFieldPanel(
+            [
+                FieldPanel("content"),
+            ],
+            heading="Блоки страницы",
+        ),
     ]
 
     search_fields = Page.search_fields + [
@@ -223,6 +251,7 @@ class SingleServicePage(Page):
     class Meta:
         verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
+
 
 class ServiceIndexPage(Page):
     intro = RichTextField("Введение", features=["bold", "italic", "link"], blank=True)
@@ -258,10 +287,9 @@ class ServiceIndexPage(Page):
         verbose_name = "Лента услуг"
         verbose_name_plural = "Ленты услуг"
 
+
 class ServiceBlock(blocks.StructBlock):
-    title = blocks.CharBlock(
-        max_length=100, required=True, label="Заголовок секции услуг"
-    )
+    title = blocks.CharBlock(max_length=100, required=True, label="Заголовок секции услуг")
     show_count = blocks.IntegerBlock(
         default=3, min_value=1, max_value=12, label="Количество услуг для показа"
     )

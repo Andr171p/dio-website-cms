@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "about",
     "contact",
     "faq",
-
     # Установленные приложения
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
@@ -70,10 +69,9 @@ INSTALLED_APPS = [
     "wagtail.api.v2",
     "rest_framework",
     "corsheaders",
-    'django_htmx',
-    "tailwind"
+    "django_htmx",
+    "tailwind",
     # "wagtailmenus",
-    
 ]
 
 # # Настройки меню
@@ -86,10 +84,10 @@ INSTALLED_APPS = [
 WAGTAILEMBEDS_RESPONSIVE_HTML = True
 WAGTAILEMBEDS_FINDERS = [
     {
-        'class': 'wagtail.embeds.finders.oembed',
-        'options': {
-            'timeout': 5,  # Add timeout
-        }
+        "class": "wagtail.embeds.finders.oembed",
+        "options": {
+            "timeout": 5,  # Add timeout
+        },
     }
 ]
 
@@ -257,10 +255,6 @@ WAGTAILADMIN_BASE_URL = "http://example.com"
 # if untrusted users are allowed to upload files -
 # see https://docs.wagtail.org/en/stable/advanced_topics/deploying.html#user-uploaded-files
 WAGTAILDOCS_EXTENSIONS = ["csv", "docx", "key", "odt", "pdf", "pptx", "rtf", "txt", "xlsx", "zip"]
-
-
-
-
 
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
