@@ -10,10 +10,13 @@
                 <div class="container">
                     <!-- Заголовок -->
                     <div class="header">
-                        <h2 class="heading_h1 max-width_large">Наши услуги</h2>
+                        <div class="eyebrow">
+                            Широкий выбор
+                        </div>
+                        <h2 class="heading_h2 max-width_large">Наши услуги</h2>
                     </div>
 
-                    <!-- Сетка услуг 3 колонки -->
+                    <!-- Сетка услуг -->
                     <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
                         {% for service in page.get_services|slice:block.value.show_count|default:"6" %}
                             <a href="{{ service.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
@@ -21,13 +24,13 @@
                                 {% if service.image %}
                                     {% image service.image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
                                 {% endif %}
-                                <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/10 text-white">
+                                <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/50 text-white">
                                     <!-- Верхняя часть: Категория -->
                                     <div class="flex items-center justify-between mb-4">
                                         <div class="flex items-center gap-3">
                                             <!-- Технологии пока отсутствуют, можно добавить позже -->
                                         </div>
-                                        <span class="px-2 py-1 rounded-full bg-blue-600/50 text-white text-xs font-medium">
+                                        <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
                                             {{ service.get_category_display }}
                                         </span>
                                     </div>
@@ -78,26 +81,73 @@
 {% endblock %}
 
 <style>
-.section {
-    padding: 4rem 0;
+
+
+
+/* Адаптация для мобильных (до 768px) */
+@media (max-width: 768px) {
+    .section {
+        padding: 2rem 0; /* Уменьшаем отступы */
+    }
+
+    .grid_3-col {
+        grid-template-columns: 1fr; /* Одна колонка на мобильных */
+        gap: 1rem;
+    }
+
+    .card {
+        height: 300px; /* Уменьшаем высоту карточек */
+    }
+
+    .card .card_body_small {
+        padding: 1rem; /* Уменьшаем внутренние отступы */
+    }
+
+    .heading_h1 {
+        font-size: 1.5rem; /* Уменьшаем заголовок */
+    }
+
+    .heading_h3 {
+        font-size: 1.2rem; /* Уменьшаем подзаголовки */
+    }
+
+    .subheading {
+        font-size: 0.9rem; /* Уменьшаем текст */
+    }
+
+    .button {
+        padding: 0.75rem 1.5rem; /* Уменьшаем кнопку */
+        font-size: 0.9rem; /* Уменьшаем шрифт кнопки */
+    }
+
+    /* Убираем hover-эффекты, добавляем эффект при касании */
+    .group:focus-within .card_body_small,
+    .group:active .card_body_small {
+        background-color: rgba(255, 255, 255, 0.7); /* Затемнение при касании */
+    }
+
+    .group:hover .card_body_small {
+        background-color: transparent; /* Отключаем hover на мобильных */
+    }
+
+    .group:focus-within .card img,
+    .group:active .card img {
+        transform: scale(1.125); /* Уменьшенный зум при касании */
+    }
+
+    .group:hover .card img {
+        transform: scale(1); /* Отключаем hover-зум */
+    }
 }
 
-.grid_3-col {
-    grid-template-columns: repeat(3, 1fr);
-}
+/* Стили для больших экранов остаются */
+@media (min-width: 769px) {
+    .group:hover .card_body_small {
+        background-color: rgba(255, 255, 255, 0.7); /* Затемнение при наведении */
+    }
 
-.card {
-    position: relative;
-    /* Фиксированная высота для согласованности */
-    overflow: hidden;
-}
-
-.card .card_body_small {
-    height: 100%;
-    justify-content: space-between;
-}
-
-.group:hover .card_body_small {
-    background-color: rgba(255, 255, 255, 0.7); /* Усиление затемнения при наведении */
+    .group:hover .card img {
+        transform: scale(1.125); /* Зум изображения при наведении */
+    }
 }
 </style>

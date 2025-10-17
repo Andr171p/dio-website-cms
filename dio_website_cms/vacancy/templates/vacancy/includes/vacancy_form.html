@@ -1,0 +1,133 @@
+{% load static %}
+
+<div class="margin-bottom_none w-form">
+    <form id="vacancyForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <input type="hidden" name="title" id="id_title" value="{{ page.title }}">
+        
+        <div class="input margin-bottom_small">
+            <label for="id_name">Имя:</label>
+            <input type="text" name="name" id="id_name" class="input_field w-input" placeholder="Ваше имя" required>
+        </div>
+        
+        <div class="input margin-bottom_small">
+            <label for="id_phone">Телефон:</label>
+            <input type="tel" name="phone" id="id_phone" class="input_field w-input" placeholder="+7 (___) ___-__-__" required>
+        </div>
+        
+        <div class="input margin-bottom_small">
+            <label for="id_resume">Резюме:</label>
+            <input type="file" name="resume" id="id_resume" class="input_field w-input" 
+                   accept=".pdf,.doc,.docx,.txt" required>
+            <small>Поддерживаемые форматы: PDF, DOC, DOCX, TXT (макс. 5MB)</small>
+        </div>
+        
+        <div class="checkbox-field margin-bottom_medium">
+            <label class="w-checkbox checkbox-field">
+                <input type="checkbox" name="agreement" id="agreement" required>
+                <span class="checkbox-label w-form-label">Я согласен с политикой конфиденциальности</span>
+            </label>
+        </div>
+        
+        <input type="hidden" name="csrftoken" id="id_csrftoken" value="">
+        
+        <button type="submit" class="button w-button">Отправить резюме</button>
+    </form>
+</div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('vacancyForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!document.getElementById('agreement').checked) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Внимание',
+                    text: 'Пожалуйста, согласитесь с политикой конфиденциальности',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+            
+            const fileInput = document.getElementById('id_resume');
+            if (fileInput.files[0]) {
+                const fileSize = fileInput.files[0].size;
+                const maxSize = 5 * 1024 * 1024;
+                
+                if (fileSize > maxSize) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Файл слишком большой',
+                        text: 'Максимальный размер файла: 5MB',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            }
+            
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            document.getElementById('id_csrftoken').value = csrfToken;
+            
+            const formData = new FormData(this);
+            
+            Swal.fire({
+                title: 'Отправка резюме...',
+                text: 'Пожалуйста, подождите',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            fetch('/vacancy/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return response.json().then(err => { throw err; });
+                }
+            })
+            .then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Успешно!',
+                    text: data.message || 'Резюме успешно отправлено',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+                this.reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                let errorMessage = 'Не удалось отправить резюме. Попробуйте еще раз.';
+                
+                if (error.errors) {
+                    const errorText = Object.values(error.errors).flat().join(', ');
+                    errorMessage = `Ошибки в форме: ${errorText}`;
+                }
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ошибка',
+                    text: errorMessage,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
+            });
+        });
+    }
+});
+</script>

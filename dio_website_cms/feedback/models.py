@@ -6,11 +6,7 @@ from notification.utils import create_admin_notification
 
 
 class FeedbackMessage(models.Model):
-    name = models.CharField(max_length=255, verbose_name="Имя")
     email = models.EmailField(verbose_name="Email")
-    phone = models.CharField(max_length=20, verbose_name="Телефон")
-    company = models.CharField(verbose_name="Компания", blank=True, null=True)
-    service_of_interest = models.CharField(verbose_name="Интересующа услуга")
     message = models.TextField(verbose_name="Сообщение")
     created_at = models.DateTimeField(default=get_tumen_time, verbose_name="Дата создания")
     is_processed = models.BooleanField(default=False, verbose_name="Просмотрено")

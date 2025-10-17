@@ -16,21 +16,11 @@ class FeedbackForm(forms.ModelForm):
     class Meta:
         model = FeedbackMessage
         fields: ClassVar[list[str]] = [
-            "name",
             "email",
-            "phone",
-            "company",
-            "service_of_interest",
             "message",
         ]
         widgets: ClassVar[dict] = {
-            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Ваше имя"}),
             "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "Email"}),
-            "phone": forms.TextInput(attrs={"class": "form-control", "placeholder": "Телефон"}),
-            "company": forms.TextInput(attrs={"class": "form-control", "placeholder": "Компания"}),
-            "service_of_interest": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Интересующая услуга"}
-            ),
             "message": forms.Textarea(
                 attrs={"class": "form-control", "placeholder": "Сообщение", "rows": 4}
             ),
@@ -48,20 +38,7 @@ class FeedbackForm(forms.ModelForm):
                 raise forms.ValidationError("Введите корректный email адрес") from None
         return email
 
-    def clean_phone(self):
-        phone = self.cleaned_data.get("phone")
-        if phone:
-            digits = re.sub(r"\D", "", phone)
-
-            if digits.startswith("7") or digits.startswith("8"):  # noqa: PIE810
-                digits = digits[1:]
-
-            if len(digits) != 10:  # noqa: PLR2004
-                raise forms.ValidationError("Номер должен содержать 10 цифр")
-
-            return f"+7 ({digits[:3]}) {digits[3:6]}-{digits[6:8]}-{digits[8:10]}"
-
-        return phone
+   
 
     def clean_csrftoken(self) -> str | None:
         csrftoken = self.cleaned_data.get("csrftoken")

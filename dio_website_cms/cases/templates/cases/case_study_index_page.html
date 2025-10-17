@@ -3,7 +3,7 @@
 
 {% block content %}
 <section id="cases-section " class="section pt-10 ">
-    <div class="max-w-7xl mx-auto  ">
+    <div class="container ">
         <!-- Заголовок + кнопка -->
         <div class="header mb-0 pt-0">
                         <h2 class="heading_h3 ">Наши Кейсы</h2>
@@ -33,14 +33,14 @@
                     {% if case.specific.customer_logo %}
                         {% image case.specific.customer_logo width-120 height-120 as case_img %}
                         <img src="{{ case_img.url }}" alt="{{ case.title }}" 
-                             class="w-20 h-20 md:w-24 md:h-24 rounded-xl object-contain bg-white shadow">
+                             class="w-full h-full md:w-100 md:h-100 rounded-xl object-contain  shadow">
                     {% endif %}
                 </div>
 
                 <!-- Контент -->
                 <div class="flex-1">
                     {% if case.specific.get_industry_display %}
-                    <span class="inline-block text-xs px-3 py-1 bg-gray-500 text-white rounded-full mb-3">
+                    <span class="inline-block text-xs px-3 py-1 bg-red-900 text-white rounded-full mb-3">
                         {{ case.specific.get_industry_display }}
                     </span>
                     {% endif %}

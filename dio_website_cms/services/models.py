@@ -1,18 +1,16 @@
 from django.db import models
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.search import index
 from django.utils import timezone
-from wagtail.fields import StreamField
-from wagtail.api import APIField
 from wagtail.blocks import (
-    CharBlock, RichTextBlock, StructBlock, ListBlock, PageChooserBlock
+    CharBlock, RichTextBlock, StructBlock, ListBlock, PageChooserBlock, ChoiceBlock
 )
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.embeds.blocks import EmbedBlock
 from wagtail import blocks
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 
 # Константы для категорий услуг
 SERVICE_CATEGORY_CHOICES = [
@@ -28,45 +26,131 @@ class HeroBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок Hero")
     subtitle = CharBlock(required=True, label="Подзаголовок Hero")
     image = ImageChooserBlock(required=True, label="Изображение Hero")
+    button_text = CharBlock(required=False, label="Текст кнопки")
+    button_link = PageChooserBlock(required=False, label="Ссылка кнопки")
 
     class Meta:
         icon = "image"
         label = "Hero"
 
+# Блок для текста
+class TextBlock(StructBlock):
+    content = RichTextBlock(
+        features=['h2', 'h3', 'bold', 'italic', 'link', 'ol', 'ul', 'blockquote'],
+        label="Текст"
+    )
+
+    class Meta:
+        icon = "doc-full"
+        label = "Текстовая секция"
+
 # Блок для "Что мы делаем"
 class WhatWeDoBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок")
-    description = RichTextBlock(required=True, label="Большой текст справа")
-    svg_image = ImageChooserBlock(required=True, label="SVG/изображение слева")
+    description = RichTextBlock(required=True, label="Описание")
+    image = ImageChooserBlock(required=True, label="Изображение слева")
 
     class Meta:
         icon = "edit"
         label = "Что мы делаем"
 
-# Блок для больших квадратных изображений
-class SquareImageBlock(StructBlock):
-    image = ImageChooserBlock(required=True, label="Квадратное изображение")
-    alt_text = CharBlock(required=False, label="Альтернативный текст")
+# Блок для карточки с изображением
+class ImageCardBlock(StructBlock):
+    image = ImageChooserBlock(required=True, label="Изображение")
+    title = CharBlock(required=True, label="Заголовок")
+    description = RichTextBlock(required=False, label="Описание")
+    button_text = CharBlock(required=False, label="Текст кнопки")
+    button_link = PageChooserBlock(required=False, label="Ссылка кнопки")
 
     class Meta:
         icon = "image"
-        label = "Квадратный блок изображения"
+        label = "Карточка с изображением"
 
-# Блок для сетки отраслей/услуг
-class ExpertiseGridBlock(StructBlock):
+# Элемент для сетки карточек
+class CardItemBlock(StructBlock):
+    title = CharBlock(required=True, label="Название")
+    description = RichTextBlock(required=False, label="Описание")
+    icon = ImageChooserBlock(required=False, label="Иконка (SVG)")
+    image = ImageChooserBlock(required=False, label="Изображение")
+
+    class Meta:
+        icon = "pick"
+        label = "Элемент карточки"
+
+# Универсальный блок для сетки карточек (для экспертизы, преимуществ и т.д.)
+class CardGridBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок сетки")
-    items = ListBlock(CharBlock(label="Элемент сетки"), label="Список отраслей/услуг")
+    grid_type = ChoiceBlock(choices=[
+        ('numbered', 'Нумерованный'),
+        ('bulleted', 'Маркированный'),
+        ('icon_grid', 'Сетка с иконками'),
+        ('image_grid', 'Сетка с изображениями'),
+    ], default='icon_grid', label="Тип сетки")
+    items = ListBlock(CardItemBlock(), label="Элементы сетки")
 
     class Meta:
         icon = "folder-open"
-        label = "Сетка отраслей/услуг"
+        label = "Универсальная сетка карточек"
+
+# Блок для метрик доверия
+class MetricItemBlock(StructBlock):
+    value = CharBlock(required=True, label="Значение (например, '10+', '100')")
+    label = CharBlock(required=True, label="Описание (например, 'Лет на рынке')")
+    icon = ImageChooserBlock(required=False, label="Иконка (SVG)")
+
+    class Meta:
+        icon = "pick"
+        label = "Метрика"
+
+class MetricsBlock(StructBlock):
+    title = CharBlock(required=True, label="Заголовок метрик")
+    items = ListBlock(MetricItemBlock(), label="Список метрик")
+
+    class Meta:
+        icon = "site"
+        label = "Метрики доверия"
+
+# Блок для галереи изображений
+class GalleryBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок галереи")
+    images = ListBlock(ImageChooserBlock(), label="Изображения")
+
+    class Meta:
+        icon = "image"
+        label = "Галерея изображений"
+
+# Блок для видео
+class VideoBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок видео")
+    video = EmbedBlock(required=True, label="Встраиваемое видео (YouTube, Vimeo и т.д.)")
+
+    class Meta:
+        icon = "media"
+        label = "Видео"
+
+# Блок для аккордеона (FAQ или детальные секции)
+class AccordionItemBlock(StructBlock):
+    question = CharBlock(required=True, label="Вопрос/Заголовок")
+    answer = RichTextBlock(required=True, label="Ответ/Описание")
+
+    class Meta:
+        icon = "help"
+        label = "Элемент аккордеона"
+
+class AccordionBlock(StructBlock):
+    title = CharBlock(required=True, label="Заголовок аккордеона")
+    items = ListBlock(AccordionItemBlock(), label="Элементы аккордеона")
+
+    class Meta:
+        icon = "list-ul"
+        label = "Аккордеон (FAQ/Детали)"
 
 # Блок для CTA
 class CTABlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок CTA")
     description = RichTextBlock(required=True, label="Описание CTA")
-    link_text = CharBlock(required=True, label="Текст кнопки")
-    link_page = PageChooserBlock(required=False, label="Ссылка")
+    button_text = CharBlock(required=True, label="Текст кнопки")
+    button_link = PageChooserBlock(required=False, label="Ссылка")
 
     class Meta:
         icon = "plus"
@@ -96,9 +180,14 @@ class SingleServicePage(Page):
     )
     content = StreamField([
         ('hero', HeroBlock()),
+        ('text', TextBlock()),
         ('what_we_do', WhatWeDoBlock()),
-        ('square_image', SquareImageBlock()),
-        ('expertise_grid', ExpertiseGridBlock()),
+        ('image_card', ImageCardBlock()),
+        ('card_grid', CardGridBlock()),
+        ('metrics', MetricsBlock()),
+        ('gallery', GalleryBlock()),
+        ('video', VideoBlock()),
+        ('accordion', AccordionBlock()),
         ('cta', CTABlock()),
     ], blank=True, use_json_field=True, verbose_name="Блоки страницы")
 
@@ -126,7 +215,6 @@ class SingleServicePage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        # Другие услуги (исключая текущую)
         context["other_services"] = (
             SingleServicePage.objects.live().exclude(id=self.id).order_by("-date")[:3]
         )
@@ -137,8 +225,6 @@ class SingleServicePage(Page):
         verbose_name_plural = "Услуги"
 
 class ServiceIndexPage(Page):
-    """Главная страница услуг"""
-
     intro = RichTextField("Введение", features=["bold", "italic", "link"], blank=True)
     items_per_page = models.PositiveIntegerField("Услуг на странице", default=9)
 
@@ -155,7 +241,6 @@ class ServiceIndexPage(Page):
             services = services.filter(category=category)
         context["current_category"] = category
 
-        # Пагинация
         paginator = Paginator(services, self.items_per_page)
         page = request.GET.get("page")
         try:
@@ -173,10 +258,7 @@ class ServiceIndexPage(Page):
         verbose_name = "Лента услуг"
         verbose_name_plural = "Ленты услуг"
 
-# Блок для отображения услуг на главной
 class ServiceBlock(blocks.StructBlock):
-    """Блок для отображения услуг на главной странице"""
-
     title = blocks.CharBlock(
         max_length=100, required=True, label="Заголовок секции услуг"
     )

@@ -139,7 +139,9 @@
     </div>
     <div class="nav_right">
       <div class="button-group margin-top_none">
+        
         <a
+        onclick="document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' });"
           href="{% if settings.base.HeaderSettings.consultation_page %}{{ settings.base.HeaderSettings.consultation_page.url }}{% else %}#{% endif %}"
           class="button w-inline-block"
         >

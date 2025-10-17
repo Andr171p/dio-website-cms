@@ -1,64 +1,65 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 <!-- Секция новостей -->
-<section class="section overflow_hidden is-secondary ">
+<section class="section overflow_hidden is-secondary">
     <div class="container">
         <!-- Header -->
-        <div id="w-node-{{ block.id }}-header" class="header is-align-center w-node-news-header">
+        <div id="w-node-{{ block.id }}-header" class="header w-node-news-header">
             <h2 class="heading_h2">Последние новости</h2>
-            <p class="subheading max-w-2xl mx-auto">
+            <div class="eyebrow">
                 Следите за последними достижениями и новостями компании ДИО-Консалт.
-            </p>
+            </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            {% for news in page.get_news %}
-            <article class="bg-dark rounded-xl shadow-md hover:shadow-lg overflow-hidden transition-all duration-500 animate-fadeInUp h-full" data-delay="{{ forloop.counter0|add:0.3 }}">
-                <a href="{{ news.url }}">
-                {% if news.image %}
-                    {% image news.image fill-400x300 class="w-full h-48 object-cover transition-transform duration-500 hover:scale-105" %}
-                {% endif %}
-                </a>
-                <div class=" p-6 flex flex-col h-full">
-                    <span class="heading_h1 inline-block px-4 py-2 rounded-full bg-blue-600/50 text-white text-sm font-semibold mb-4 animate-fadeIn">
+    {% for news in page.get_news %}
+    <article class="bg-dark rounded-xl shadow-md hover:shadow-lg overflow-hidden transition-all duration-500 h-full news-item">
+        <a href="{{ news.url }}">
+            {% if news.image %}
+                <!-- КАТЕГОРИЯ НА ФОТО - ДОБАВЬ ЭТОТ БЛОК -->
+                <div class="absolute top-4 left-4 z-10">
+                    <span class="px-3 py-1.5 rounded-full bg-red-600/90 text-white  backdrop-blur-sm">
                         {{ news.get_category_display }}
                     </span>
-                    <h3 class="heading_h1 font-semibold text-lg text-white-900 mb-2 line-clamp-2">
-                        <a href="{% pageurl news %}" class="hover:text-blue-600 transition-colors duration-200">{{ news.headline|truncatewords:14 }}</a>
-                    </h3>
-                    <!-- Date and Read Time -->
-                    <div class="flex items-center justify-between text-l font-extrabold tracking-tight mt-auto">
-                        <span class="flex items-center ">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            {{ news.date|date:"d.m.Y" }}
-                        </span>
-                        <span class="flex items-center">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            {{ news.read_time }} мин
-                        </span>
-                    </div>
                 </div>
-            </article>
-            {% empty %}
-            <div class="col-span-full text-center py-12 opacity-0" data-animate="fadeInUp" data-delay="0.1">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                
+                <div class="relative">
+                    {% image news.image fill-400x300 class="w-full h-48 object-cover transition-transform duration-500 hover:scale-105" loading="lazy" %}
+                </div>
+            {% endif %}
+        </a>
+        
+        <div class="p-6 flex flex-col h-full">
+            <!-- Дата и время чтения ПЕРЕМЕСТИЛ СЮДА -->
+            <div class="flex items-center gap-4 text-gray-400 mb-3">
+                <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
-                </div>
-                <h3 class="text-xl font-semibold text-gray-600 mb-2">Новостей пока нет</h3>
-                <p class="text-gray-500 max-w-md mx-auto">Скоро здесь появятся свежие новости компании.</p>
+                    {{ news.date|date:"d.m.Y" }}
+                </span>
+                <span class="flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    {{ news.read_time }} мин
+                </span>
             </div>
-            {% endfor %}
+            
+            <!-- Заголовок -->
+            <h3 class="heading_h5  text-white-900 mb-2 ">
+                <a href="{% pageurl news %}" class="hover:text-red-600 transition-colors duration-200">{{ news.headline|truncatewords:5 }}</a>
+            </h3>
         </div>
+    </article>
+    {% empty %}
+    <!-- пустой state без изменений -->
+    {% endfor %}
+</div>
 
         <!-- Кнопка "Все новости" -->
         {% with news_index=page.get_news_index %}
         {% if news_index %}
-        <div class="text-center mt-12" data-animate="fadeInUp" >
+        <div class="text-center mt-12 news-item">
             <a href="{% pageurl news_index %}" class="button is-secondary w-button">
                 Все новости
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,61 +72,31 @@
     </div>
 </section>
 
-<style>
 
-    article {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(1px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(5px) scale(0.1s); }
-        to { opacity: 1; transform: translateY(0) scale(0.1s); }
-    }
-    [data-animate].active {
-        animation: fadeInUp 0.1s ease-out forwards;
-    }
-    [data-animate="slideIn"].active {
-        animation: slideIn 0.1s ease-out forwards;
-    }
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        overflow: hidden;
-    }
-    .line-clamp-3 {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        overflow: hidden;
-    }
-</style>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                const element = entry.target;
-                const delay = parseFloat(element.getAttribute('data-delay') || '0') * 500;
-                setTimeout(() => {
-                    element.classList.add('active');
-                    element.dataset.animated = 'true';
-                }, delay);
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '50px 0px' });
+    // Register ScrollTrigger plugin
+    gsap.registerPlugin(ScrollTrigger);
 
-    document.querySelectorAll('[data-animate]:not([data-animated])').forEach((el) => {
-        observer.observe(el);
+    // Select all news items
+    const newsItems = document.querySelectorAll('.news-item');
+
+    // Animate all news items simultaneously
+    gsap.to(newsItems, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: '.section.is-secondary', // Trigger when section enters viewport
+            start: 'top 80%', // Start animation when section is 80% in view
+            toggleActions: 'play none none none', // Play animation once
+        }
     });
 
-    // Lazy load images
+    // Lazy load images (retained from original code)
     const images = document.querySelectorAll('img[loading="lazy"]');
     const imageObserver = new IntersectionObserver((items, observer) => {
         items.forEach((item) => {

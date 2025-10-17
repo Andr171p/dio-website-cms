@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     "notification",
     "vacancy",
     "ai",
+    "career",
+    "about",
+    "contact",
+    "faq",
+
     # Установленные приложения
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
@@ -76,6 +81,18 @@ INSTALLED_APPS = [
 #     ("header", "Header menu"),  # noqa: ERA001
 #     ("footer", "Footer menu"),  # noqa: ERA001
 # )  # noqa: ERA001, RUF100
+
+
+WAGTAILEMBEDS_RESPONSIVE_HTML = True
+WAGTAILEMBEDS_FINDERS = [
+    {
+        'class': 'wagtail.embeds.finders.oembed',
+        'options': {
+            'timeout': 5,  # Add timeout
+        }
+    }
+]
+
 
 WAGTAILAPI_BASE_URL = "http://localhost:8000/api"
 

@@ -15,16 +15,12 @@ class FeedbackMessageViewSet(SnippetViewSet):
     add_to_settings_menu = False
     list_display = ("email", "created_at", "is_processed")
     list_filter = ("created_at", "is_processed")
-    search_fields = ("name", "email", "phone", "message")
+    search_fields = ("email", "message")
     add_to_admin_menu = True
 
     panels: ClassVar[list[FieldPanel]] = [
         MultiFieldPanel([
-            FieldPanel("name", read_only=True),
             FieldPanel("email", read_only=True),
-            FieldPanel("phone", read_only=True),
-            FieldPanel("company", read_only=True),
-            FieldPanel("service_of_interest", read_only=True),
             FieldPanel("message", read_only=True),
         ]),
         FieldPanel("is_processed"),

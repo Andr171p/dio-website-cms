@@ -14,7 +14,7 @@ from .panels import ResumeLinkPanel
 
 class VacancyViewSet(SnippetViewSet):
     model = Vacancy
-    menu_label = "Отзывы на вакансии"
+    menu_label = "Вакансии"
     menu_icon = "table"
     menu_order = 300
     add_to_settings_menu = False

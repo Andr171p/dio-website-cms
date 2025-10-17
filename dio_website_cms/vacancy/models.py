@@ -1,11 +1,9 @@
 from typing import ClassVar
-
 from django.db import models
 from notification.utils import create_admin_notification
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.models import Page
 from wagtail.search import index
-
 
 class VacancyPage(Page):
     responsibilities = models.TextField(verbose_name="Обязанности")
@@ -26,10 +24,15 @@ class VacancyPage(Page):
         index.SearchField("title"),
     ]
 
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        from .forms import VacancyForm
+        context['form'] = VacancyForm()
+        return context
+
     class Meta:
         verbose_name = "Вакансия"
         verbose_name_plural = "Вакансии"
-
 
 class Vacancy(models.Model):
     title = models.CharField(verbose_name="Вакансия")
@@ -50,22 +53,26 @@ class Vacancy(models.Model):
     is_processed = models.BooleanField(default=False, verbose_name="Просмотрено")
 
     def __str__(self) -> str:
-        return f"{self.phone}"
+        return f"{self.name} - {self.title}"
 
     def save(self, *args, **kwargs) -> None:
         is_new = self.pk is None
         super().save(*args, **kwargs)
 
         if self.resume:
-            self.resume_link = f"http://127.0.0.1:7000/vacancy/resume/download/{self.id}/"  # type: ignore  # noqa: PGH003
+            self.resume_link = f"http://127.0.0.1:7000/vacancy/resume/download/{self.id}/"
         else:
-            self.resume_link = "Нет резюме"
-
-        if is_new:
-            create_admin_notification(
-                title="Новый отзыв на вакансию",
-                message=f"Резюме от {self.phone} на вакансию {self.title}",
-                url=f"http://127.0.0.1:7000/admin/snippets/vacancy/vacancy/edit/{self.id}/",  # type: ignore  # noqa: PGH003
-            )
+            self.resume_link = None
 
         super().save(update_fields=["resume_link"])
+        
+        if is_new:
+            create_admin_notification(
+                title="Новый отклик на вакансию",
+                message=f"Резюме от {self.name} на вакансию {self.title}",
+                url=f"http://127.0.0.1:7000/admin/snippets/vacancy/vacancy/edit/{self.id}/",
+            )
+
+    class Meta:
+        verbose_name = "Отклик на вакансию"
+        verbose_name_plural = "Отклики на вакансии"

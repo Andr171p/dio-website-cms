@@ -1,79 +1,235 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags static %}
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags static %}
+
+
 
 {% block content %}
+  <article class="w-full">
     {% for block in page.content %}
         {% if block.block_type == 'hero' %}
             <!-- Hero Section -->
-            <section class="section is-inverse">
-                <div class="container">
-                    <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
-                        <div class="header max-width_large">
-                            <h1 class="heading_h1">{{ block.value.title }}</h1>
-                            <p class="paragraph_xlarge text-color_secondary">{{ block.value.subtitle }}</p>
-                        </div>
-                        <div class="image-ratio_auto">
-                            {% image block.value.image fill-800x600 class="image_cover" alt=block.value.title %}
-                                
+            <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
+                {% image block.value.image original as bg_image %}
+                <div class="absolute inset-0 z-0">
+                    <img src="{{ bg_image.url }}" alt="{{ block.value.title }}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/50"></div>
+                </div>
+                <div class="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
+                    <div class="grid grid-cols-1 gap-8 items-center">
+                       
+                        <div class="space-y-6">
+                            <span class="inline-block px-4 py-2 rounded-full bg-red-600/50 text-white text-sm font-semibold mb-4 animate-fadeIn">
+                    {{ page.get_category_display }}
+                </span>
+                            <h1 class="heading_h1 text-white drop-shadow-md gs-reveal">{{ block.value.title }}</h1>
+                            <p class="paragraph_xlarge text-white/90 gs-reveal">{{ block.value.subtitle }}</p>
+                            {% if block.value.button_text and block.value.button_link %}
+                                <a href="{{ block.value.button_link.url }}" style=" color:white;    box-shadow: 0 0 0 2px white inset;" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg gs-reveal" style="color:white; box-shadow: 0 0 0 2px white inset;">
+                                    {{ block.value.button_text }}
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </section>
-        {% elif block.block_type == 'what_we_do' %}
-            <!-- Что мы делаем (SVG слева, текст справа) -->
+
+        {% elif block.block_type == 'text' %}
+            <!-- Text Section -->
             <section class="section">
-                <div class="container">
-                    <div class="w-layout-grid grid_2-col tablet-1-col gap-medium">
+                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                    <div class="prose gs-reveal">
+                        {{ block.value.content|richtext }}
+                    </div>
+                </div>
+            </section>
+
+        {% elif block.block_type == 'what_we_do' %}
+            <!-- What We Do Section -->
+            <section class="section is-secondary">
+                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                    <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
                         <div class="image-ratio_auto">
-                            {% image block.value.svg_image fill-400x300 class="image_cover" alt=block.value.title %}
+                            {% image block.value.image fill-900x800 class="image_cover rounded-lg gs-reveal" alt=block.value.title %}
                         </div>
-                        <div class="header max-width_large">
-                            <h2 class="heading_h2">{{ block.value.title }}</h2>
-                            <div class="rich-text w-richtext">
+                        <div class="header max-width_large space-y-6">
+                            <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+                            <div class=" heading_h5 rich-text w-richtext prose gs-reveal">
                                 {{ block.value.description|richtext }}
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-        {% elif block.block_type == 'square_image' %}
-            <!-- Большой квадратный блок изображения -->
+
+        {% elif block.block_type == 'image_card' %}
+            <!-- Image Card Section -->
             <section class="section">
-                <div class="container">
+                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
                     <div class="w-layout-grid grid_1-col gap-2 lg:gap-3 mt-12">
-                        <div class="image-ratio_1x1">
-                            {% image block.value.image fill-600x600 class="image_cover" alt=block.value.alt_text %}
+                        <div class="card on-secondary gs-reveal">
+                            <div class="card_body">
+                                <div class="image-ratio_1x1">
+                                    {% image block.value.image fill-600x600 class="image_cover rounded-lg" alt=block.value.title %}
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="heading_h4">{{ block.value.title }}</h3>
+                                    {% if block.value.description %}
+                                        <div class="paragraph_small text-color_secondary prose">{{ block.value.description|richtext }}</div>
+                                    {% endif %}
+                                    {% if block.value.button_text and block.value.button_link %}
+                                        <a href="{{ block.value.button_link.url }}" class="button is-secondary w-button mt-4 inline-block px-6 py-3 rounded-lg shadow-lg">
+                                            {{ block.value.button_text }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
-        {% elif block.block_type == 'expertise_grid' %}
-            <!-- Сетка отраслей/услуг -->
+
+        {% elif block.block_type == 'card_grid' %}
+            <!-- Card Grid Section -->
             <section class="section">
-                <div class="container">
+                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
                     <div class="header is-align-center">
-                        <h2 class="heading_h2">{{ block.value.title }}</h2>
+                        <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
                     </div>
-                    <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
+                    <div class="w-layout-grid grid_3-col gap-xsmall mt-12">
                         {% for item in block.value.items %}
-                            <div class="padding-left_medium divider-vertical padding-top_xxsmall">
-                                <h3 class="heading_h4">{{ item }}</h3>
+                            <div class="card on-secondary gs-reveal">
+                                <div class="card_body p-6">
+                                    {% if block.value.grid_type == 'icon_grid' and item.icon %}
+                                        <div class="icon margin-bottom_xsmall">
+                                            {% image item.icon fill-40x40 %}
+                                        </div>
+                                    {% elif block.value.grid_type == 'image_grid' and item.image %}
+                                        <div class="image-ratio_1x1">
+                                            {% image item.image fill-400x300 class="image_cover rounded-lg" %}
+                                        </div>
+                                    {% elif block.value.grid_type == 'numbered' %}
+                                        <div class="text-xl font-bold text-blue-600 mb-4">
+                                            {{ forloop.counter }}.
+                                        </div>
+                                    {% elif block.value.grid_type == 'bulleted' %}
+                                        <div class="text-xl font-bold text-blue-600 mb-4">•</div>
+                                    {% endif %}
+                                    <h3 class="heading_h4">{{ item.title }}</h3>
+                                    {% if item.description %}
+                                        <div class="paragraph_small text-color_secondary prose">{{ item.description|richtext }}</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
             </section>
-        {% elif block.block_type == 'cta' %}
-            <!-- CTA -->
-            <section class="section is-accent-primary">
-                <div class="container">
+
+        {% elif block.block_type == 'metrics' %}
+            <!-- Trust Metrics Section -->
+            <section class="section is-secondary">
+                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
                     <div class="header is-align-center">
-                        <h2 class="heading_h2">{{ block.value.title }}</h2>
-                        <p class="paragraph_large text-color_secondary">{{ block.value.description|richtext }}</p>
+                        <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
                     </div>
-                    <div class="button-group is-align-center">
-                        <a href="{{ block.value.link_page.url }}" class="button is-secondary w-button">
-                            {{ block.value.link_text }}
+                    <div class="w-layout-grid grid_3-col gap-xsmall mt-12">
+                        {% for item in block.value.items %}
+                            <div class="card on-secondary gs-reveal">
+                                <div class="card_body p-6 text-center">
+                                    {% if item.icon %}
+                                        <div class="icon margin-bottom_xsmall mx-auto">
+                                            {% image item.icon fill-40x40 %}
+                                        </div>
+                                    {% endif %}
+                                    <h3 class="heading_h3">{{ item.value }}</h3>
+                                    <p class="paragraph_large margin-bottom_none">{{ item.label }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+
+        {% elif block.block_type == 'gallery' %}
+            <!-- Gallery Section -->
+            <section class="section">
+                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                    {% if block.value.title %}
+                        <div class="header is-align-center">
+                            <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+                        </div>
+                    {% endif %}
+                    <div class="w-layout-grid grid_3-col gap-xsmall mt-12">
+                        {% for image in block.value.images %}
+                            <div class="image-ratio_1x1 gs-reveal">
+                                {% image image fill-400x400 class="image_cover rounded-lg shadow-lg" %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+
+        {% elif block.block_type == 'video' %}
+            <!-- Video Section -->
+            <section class="section is-secondary">
+                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                    {% if block.value.title %}
+                        <div class="header is-align-center">
+                            <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+                        </div>
+                    {% endif %}
+                    <div class="mt-12 gs-reveal">
+                        {% if block.value.video %}
+                            {% with embed=block.value.video %}
+                                {% if embed %}
+                                    <div class="relative" style="padding-bottom: 56.25%;">
+                                        {{ embed.html|safe }}
+                                    </div>
+                                {% else %}
+                                    <p class="text-center text-red-600">Ошибка: Невозможно загрузить видео. Проверьте URL.</p>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            <p class="text-center text-red-600">Ошибка: Видео не указано.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+        {% elif block.block_type == 'accordion' %}
+            <!-- Accordion Section -->
+            <section class="section">
+                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                    <div class="header is-align-center">
+                        <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+                    </div>
+                    <div class="mt-12">
+                        {% for item in block.value.items %}
+                            <div class="accordion-item gs-reveal">
+                                <button class="accordion-toggle w-full text-left py-4 px-6 bg-gray-900 rounded-lg flex justify-between items-center hover:bg-gray-850 ">
+                                    <h3 class="heading_h4">{{ item.question }}</h3>
+                                    <span class="accordion-icon text-xl">+</span>
+                                </button>
+                                <div class="accordion-content hidden px-6 py-4 bg-gray-900 rounded-b-lg">
+                                    <div class="heading_h5 prose">{{ item.answer|richtext }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+
+        {% elif block.block_type == 'cta' %}
+            <!-- CTA Section -->
+            <section class="section is-accent-primary">
+                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                    <div class="header is-align-center">
+                        <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+                        <div class="paragraph_large text-color_secondary prose gs-reveal">{{ block.value.description|richtext }}</div>
+                    </div>
+                    <div class="button-group is-align-center mt-6">
+                        <a href="{{ block.value.button_link.url }}" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg gs-reveal">
+                            {{ block.value.button_text }}
                         </a>
                     </div>
                 </div>
@@ -81,81 +237,187 @@
         {% endif %}
     {% endfor %}
 
-    <!-- Другие услуги -->
     {% if other_services %}
-        <section class="section">
-            <div class="container">
-                <div class="header is-align-center">
-                    <h2 class="heading_h2">Другие услуги</h2>
-                </div>
-                <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
-                    {% for service in other_services %}
-                        <a href="{{ service.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 300px;">
-                            {% if service.image %}
-                                {% image service.image fill-400x300 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
-                            {% endif %}
-                            <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/10 text-white">
-                                <div class="flex items-center justify-between mb-4">
-                                    <span class="px-2 py-1 rounded-full bg-blue-600/50 text-white text-xs font-medium">
-                                        {{ service.get_category_display }}
-                                    </span>
-                                </div>
-                                <div class="space-y-2 flex-grow">
-                                    <h3 class="heading_h4 text-white">{{ service.headline }}</h3>
-                                    <p class="subheading text-gray-200">
-                                        {{ service.intro|striptags|truncatewords:10 }}
-                                    </p>
-                                </div>
-                            </div>
-                        </a>
-                    {% endfor %}
-                </div>
+    <!-- Секция других услуг -->
+    <section class="section is-secondary">
+        <div class="container">
+            <!-- Заголовок -->
+            <!-- Заголовок с кнопкой справа - компактный -->
+            <div class="flex items-center justify-between mb-12">
+                <h2 class="heading_h2 max-width_large mb-0">Другие услуги</h2>
+                <a href="/services" class="button is-secondary text-white hover:text-red-300 font-medium text-sm inline-flex items-center transition-colors duration-200 shrink-0 ml-6">
+                    Все услуги
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
             </div>
-        </section>
-    {% endif %}
 
-<style>
-    /* Адаптация под ваши переменные */
-    .image-ratio_1x1 {
-        aspect-ratio: 1 / 1;
-        position: relative;
-        overflow: hidden;
-        border-radius: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---card--card-radius);
+            <!-- Сетка услуг -->
+            <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
+                {% for service in other_services %}
+                    <a href="{{ service.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
+                        <!-- Фоновое изображение с анимацией -->
+                        {% if service.image %}
+                            {% image service.image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
+                        {% endif %}
+                        <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/50 text-white">
+                            <!-- Верхняя часть: Категория -->
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <!-- Технологии пока отсутствуют, можно добавить позже -->
+                                </div>
+                                <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
+                                    {{ service.get_category_display }}
+                                </span>
+                            </div>
+
+                            <!-- Текст -->
+                            <div class="space-y-4 flex-grow">
+                                <h3 class="heading_h3 text-white">{{ service.headline }}</h3>
+                                <p class="subheading text-gray-200">
+                                    {{ service.intro|striptags|truncatewords:14 }}
+                                </p>
+                            </div>
+
+                            <!-- Текст вместо кнопки -->
+                            <div class="mt-auto text-white text-sm font-medium">
+                                Подробнее
+                                <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+  </article>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // GSAP Scroll Animations
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.utils.toArray('.gs-reveal').forEach(element => {
+            gsap.fromTo(element, 
+                { opacity: 0, y: 20 }, 
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top 95%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none reverse"
+                    }
+                }
+            );
+        });
+
+        // Accordion Toggle
+        document.querySelectorAll('.accordion-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('.accordion-icon');
+                content.classList.toggle('hidden');
+                icon.textContent = content.classList.contains('hidden') ? '+' : '−';
+            });
+        });
+    });
+</script>
+
+  <style>
+    
+    .relative iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }
 
-    .image-ratio_auto {
-        aspect-ratio: auto;
-        position: relative;
-        overflow: hidden;
-        border-radius: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---card--card-radius);
+    /* Prose Styling */
+    .prose {
+        color: var(--text-secondary) !important;
+        max-width: none !important;
+    }
+    .prose h2 {
+        color: var(--text-primary) !important;
+        font-weight: 700 !important;
+        font-size: 2rem !important;
+        margin-top: 2rem !important;
+        margin-bottom: 1rem !important;
+    }
+    .prose h3 {
+        color: var(--text-primary) !important;
+        font-weight: 600 !important;
+        font-size: 1.5rem !important;
+        margin-top: 1.5rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    .prose p {
+        color: var(--text-secondary) !important;
+        line-height: 1.75 !important;
+        margin-bottom: 1.25rem !important;
+    }
+    .prose ul, .prose ol {
+        color: var(--text-secondary) !important;
+        padding-left: 2rem !important;
+        margin-bottom: 1.25rem !important;
+    }
+    .prose ul li, .prose ol li {
+        margin-bottom: 0.5rem !important;
+        padding-left: 0.5rem !important;
+    }
+    .prose blockquote {
+        color: #475569 !important;
+        font-style: italic !important;
+        border-left: 4px solid var(--accent-primary) !important;
+        padding-left: 1rem !important;
+        margin: 1.5rem 0 !important;
+    }
+    .prose a {
+        color: var(--accent-primary) !important;
+        text-decoration: underline !important;
+        transition: color 0.3s !important;
+    }
+    .prose a:hover {
+        color: #2563eb !important;
     }
 
-    .w-layout-grid.grid_3-col {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---gap--xs-gap);
+    /* Animation Styling */
+    .gs-reveal {
+        opacity: 0;
+        transform: translateY(20px);
     }
 
-    @media (min-width: 1024px) {
-        .w-layout-grid.grid_3-col {
-            gap: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---gap--sm-gap);
-        }
+    /* Accordion Styling */
+    .accordion-item {
+        margin-bottom: var(--gap-xs);
+    }
+    .accordion-content {
+        transition: all 0.3s ease;
+    }
+    .accordion-icon {
+        font-size: 1.5rem;
+        font-weight: bold;
     }
 
-    .mt-12 {
-        margin-top: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---spacing--3x);
-    }
+.accordion-toggle.bg-gray-900,
+.accordion-content.bg-gray-900 {
+    background-color: #2a2a2a !important; /* Это hex для gray-900 */
+}
 
-    .padding-left_medium {
-        padding-left: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---spacing--3x);
-    }
-
-    .divider-vertical {
-        border-left: 1px solid var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692---border-color--border-secondary);
-        padding-left: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---spacing--1-25x);
-    }
-
-    .padding-top_xxsmall {
-        padding-top: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515754692_sizes---spacing--xxsmall);
-    }
-</style>
+.accordion-toggle:hover.bg-gray-850 {
+    background-color: #282828 !important; /* Темнее чем gray-900 */
+}
+  </style>
 {% endblock %}
