@@ -211,7 +211,7 @@
 
                 // Устанавливаем начальную тему
                 if (currentTheme === 'dark') {
-                    themeStyle.href = "{% static 'css/theme-light.css' %}?v=1.0";
+                    themeStyle.href = "{% static 'css/theme-light.css' %}?v=1.1";
                     lightIcon.classList.add('hidden');
                     darkIcon.classList.remove('hidden');
                     themeToggle.classList.add('bg-gray-200', 'text-black');
@@ -231,7 +231,7 @@
                 // Переключение темы
                 themeToggle.addEventListener('click', function() {
                     if (currentTheme === 'light') {
-                        themeStyle.href = "{% static 'css/theme-light.css' %}?v=1.0";
+                        themeStyle.href = "{% static 'css/theme-light.css' %}?v=1.1";
                         currentTheme = 'dark';
                         lightIcon.classList.add('hidden');
                         darkIcon.classList.remove('hidden');

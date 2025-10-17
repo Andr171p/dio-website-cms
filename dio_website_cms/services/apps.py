@@ -6,5 +6,4 @@ class ServicesConfig(AppConfig):
     name = 'services'
 
     def ready(self):
-        # Убедитесь, что здесь нет запросов к базе данных
-        pass  # Или перенесите логику в представления
+        pass  

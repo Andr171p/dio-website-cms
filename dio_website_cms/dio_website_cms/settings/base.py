@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "about",
     "contact",
     "faq",
+    "services_1c",
+    "programs",
 
     # Установленные приложения
     "wagtail.contrib.settings",

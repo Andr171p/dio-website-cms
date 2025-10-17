@@ -8520,21 +8520,30 @@ textarea.w-input, textarea.w-select {
   #w-node-_6c9d15a7-a823-5b48-4964-e97e1f9dcb3a-372e0d88 {
     grid-column-end: 7;
   }
-}
-/* --- Hero --- */
+}/* --- Hero --- */
 .hero-chat {
   background: linear-gradient(135deg, #151515 25%, #e6e6e6 100%);
   padding: 60px 20px 100px;
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+  padding: 0 15px;
+  box-sizing: border-box;
 }
+
 .hero-text {
   margin-bottom: 48px;
+  text-align: center;
 }
+
 .hero-text h1 {
   font-size: 52px;
   font-weight: 700;
@@ -8543,6 +8552,7 @@ textarea.w-input, textarea.w-select {
   margin-bottom: 16px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
+
 .hero-subtitle {
   font-size: 22px;
   line-height: 1.6;
@@ -8554,7 +8564,7 @@ textarea.w-input, textarea.w-select {
 
 /* --- Чат --- */
 .chat-widget {
-  background: #2e2e2e; /* Темно-серый фон */
+  background: #2e2e2e;
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   display: flex;
@@ -8564,29 +8574,39 @@ textarea.w-input, textarea.w-select {
   max-width: 1200px;
   width: 100%;
   height: 520px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@keyframes pulseBorder {
+  0%, 100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); }
+  50% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); }
 }
 
 .chat-header {
-  background: #2e2e2e; /* Темно-серый, совпадает с фоном */
+  background: #2e2e2e;
   color: #ffffff;
   padding: 16px 20px;
   display: flex;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid #404040; /* Светлее серый для разделения */
+  border-bottom: 1px solid #404040;
 }
+
 .chat-header h2 {
   font-size: 20px;
   font-weight: 600;
   margin: 0;
   letter-spacing: 0.5px;
 }
+
 .chat-hint {
   font-size: 14px;
   color: #ffffff;
   opacity: 0.7;
   transition: opacity 0.3s ease;
 }
+
 .chat-hint:hover {
   opacity: 1;
 }
@@ -8602,56 +8622,61 @@ textarea.w-input, textarea.w-select {
   flex-direction: column;
   gap: 10px;
   
-  /* Кастомный скролл для WebKit (Chrome, Safari) */
+  /* Custom scrollbar for WebKit */
   &::-webkit-scrollbar {
-    width: 8px; /* Ширина скроллбара */
+    width: 8px;
   }
   &::-webkit-scrollbar-track {
-    background: #2e2e2e; /* Фон трека, совпадает с фоном контейнера */
+    background: #2e2e2e;
   }
   &::-webkit-scrollbar-thumb {
-    background: #404040; /* Цвет ползунка */
-    border-radius: 4px; /* Скругление углов */
+    background: #404040;
+    border-radius: 4px;
   }
   &::-webkit-scrollbar-thumb:hover {
-    background: #4a4a4a; /* Более светлый цвет при наведении */
+    background: #4a4a4a;
   }
 
-  /* Кастомный скролл для Firefox */
-  scrollbar-color: #404040 #2e2e2e; /* Ползунок / фон трека */
-  scrollbar-width: thin; /* Тонкий скроллбар */
+  /* Custom scrollbar for Firefox */
+  scrollbar-color: #404040 #2e2e2e;
+  scrollbar-width: thin;
 }
+
 .chat-messages {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
+
 .message {
-  padding: 12px 16px 12px 20px !important; /* Увеличен левый padding для компенсации отступов списков */
+  padding: 12px 16px 12px 20px !important;
   border-radius: 12px;
   font-size: 14px;
   line-height: 1.4;
   max-width: 80%;
   animation: fadeInUp 0.4s ease-out;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  overflow: hidden; /* Предотвращаем вылезание контента */
-  word-wrap: break-word; /* Перенос длинных слов */
-  overflow-wrap: break-word; /* Совместимость с браузерами */
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 .bot-message1 {
-  background: #404040; /* Светло-серый для бота, близкий к фону */
+  background: #404040;
   color: #ffffff;
   align-self: flex-start;
-  word-wrap: break-word; /* Перенос длинных слов */
-  overflow-wrap: break-word; /* Совместимость с браузерами */
-  hyphens: auto; /* Гипфенизация для длинных слов */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
+
 .user-message1 {
-  background: #1b1b1b; /* Чуть светлее серый для пользователя */
+  background: #1b1b1b;
   color: #ffffff;
   align-self: flex-end;
 }
@@ -8667,11 +8692,13 @@ textarea.w-input, textarea.w-select {
   transform: translate(-50%, -50%);
   width: 95%;
   max-width: 1000px;
-  background: #2e2e2e; /* Совпадает с фоном чата */
+  background: #2e2e2e;
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
 }
+
 .initial-input-container input {
   flex: 1;
   padding: 30px;
@@ -8680,20 +8707,23 @@ textarea.w-input, textarea.w-select {
   font-size: 28px;
   color: #ffffff;
   background: transparent;
-  border-bottom: 2px solid #404040; /* Светлее серый для контура */
+  border-bottom: 2px solid #404040;
   transition: border-color 0.3s ease;
 }
+
 .initial-input-container input::placeholder {
-  color: #757575; /* Средне-серый для placeholder */
+  color: #757575;
   font-style: italic;
   opacity: 0.8;
 }
+
 .initial-input-container input:focus,
 .initial-input-container input:hover {
-  border-color: #4a4a4a; /* Чуть светлее при фокусе */
+  border-color: #4a4a4a;
 }
+
 .initial-input-container button {
-  background: #920707; /* Светлее серый для кнопки */
+  background: #920707;
   color: #ffffff;
   border: none;
   padding: 12px;
@@ -8707,8 +8737,9 @@ textarea.w-input, textarea.w-select {
   justify-content: center;
   box-shadow: 0 4px 10px rgba(64, 64, 64, 0.4);
 }
+
 .initial-input-container button:hover {
-  background: #4a4a4a; /* Чуть светлее при наведении */
+  background: #4a4a4a;
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(64, 64, 64, 0.6);
 }
@@ -8717,11 +8748,12 @@ textarea.w-input, textarea.w-select {
 .chat-input-container {
   display: flex;
   max-height: 50px;
-  background: #2e2e2e; /* Совпадает с фоном чата */
+  background: #2e2e2e;
   border-radius: 0 0 12px 12px;
   overflow: hidden;
   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
 }
+
 .chat-input-container input {
   flex: 1;
   padding: 12px;
@@ -8730,19 +8762,22 @@ textarea.w-input, textarea.w-select {
   font-size: 14px;
   color: #ffffff;
   background: transparent;
-  border-bottom: 2px solid #404040; /* Светлее серый для контура */
+  border-bottom: 2px solid #404040;
   transition: border-color 0.3s ease;
 }
+
 .chat-input-container input::placeholder {
-  color: #757575; /* Средне-серый для placeholder */
+  color: #757575;
   opacity: 0.7;
 }
+
 .chat-input-container input:focus,
 .chat-input-container input:hover {
-  border-color: #4a4a4a; /* Чуть светлее при фокусе */
+  border-color: #4a4a4a;
 }
+
 .chat-input-container button {
-  background: #920707; /* Светлее серый для кнопки */
+  background: #920707;
   color: #ffffff;
   border: none;
   padding: 8px;
@@ -8757,14 +8792,11 @@ textarea.w-input, textarea.w-select {
   margin-left: 8px;
   box-shadow: 0 2px 6px rgba(64, 64, 64, 0.4);
 }
+
 .chat-input-container button:hover {
-  background: #4a4a4a; /* Чуть светлее при наведении */
+  background: #4a4a4a;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(64, 64, 64, 0.6);
-}
-@keyframes pulseButton {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
 }
 
 /* Скрытие элементов */
@@ -8773,18 +8805,15 @@ textarea.w-input, textarea.w-select {
 }
 
 /* Стили для эффекта пишущей машинки */
-.initial-input-container input,
-.chat-input-container input {
-  position: relative;
-}
 .initial-input-container input::after,
 .chat-input-container input::after {
   content: '|';
   position: absolute;
-  right: 50px;
-  color: #757575; /* Средне-серый для курсора */
+  right: 10px;
+  color: #757575;
   animation: blink 0.7s step-end infinite;
 }
+
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
@@ -8801,20 +8830,20 @@ textarea.w-input, textarea.w-select {
   }
   .chat-widget {
     height: 420px;
-    position: sticky;
-    bottom: 20px;
-    margin-top: 20px;
-    z-index: 10;
+    max-width: 90%;
+    margin: 20px auto;
+    position: relative;
   }
   .hero-chat {
-    padding: 40px 20px 80px;
+    padding: 40px 15px 60px;
   }
   .chat-header h2 {
     font-size: 18px;
   }
   .initial-input-container {
-    width: 90%;
+    width: 95%;
     max-width: 700px;
+    padding: 15px;
   }
   .initial-input-container input {
     font-size: 18px;
@@ -8830,25 +8859,46 @@ textarea.w-input, textarea.w-select {
     margin-left: 6px;
   }
   .bot-message1 ul {
-    margin-left: 20px !important; /* Чуть меньше, но всё равно с отступом */
+    margin-left: 20px !important;
   }
   .bot-message1 li {
-    font-size: 13px; /* Чуть меньше шрифт для экономии места */
+    font-size: 13px;
   }
   .message {
-    padding-left: 16px !important; /* Адаптированный padding */
-    max-width: 90%; /* Больше места для сообщений на мобильных */
+    padding-left: 16px !important;
+    max-width: 90%;
   }
   .chat-messages-container {
-    padding: 15px; /* Уменьшен общий padding контейнера */
+    padding: 15px;
   }
 }
 
-/* Усиленные стили для Markdown в бот-сообщениях */
+@media (max-width: 600px) {
+  .chat-widget {
+    max-width: 95%;
+    height: 380px;
+  }
+  .hero-text h1 {
+    font-size: 32px;
+  }
+  .hero-subtitle {
+    font-size: 16px;
+  }
+  .initial-input-container input {
+    font-size: 16px;
+    padding: 12px;
+  }
+  .initial-input-container button {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Markdown styles for bot messages */
 .bot-message1 h3 {
   font-size: 16px;
   font-weight: 600;
-  margin: 10px 0 !important; /* !important для переопределения */
+  margin: 10px 0 !important;
   color: #ffffff;
 }
 
@@ -8859,23 +8909,21 @@ textarea.w-input, textarea.w-select {
 }
 
 .bot-message1 ul {
-  margin: 10px 0 10px 25px !important; /* Увеличен отступ слева до 25px для лучшей видимости */
-  padding-left: 0 !important; /* Обнуляем стандартный padding */
-  list-style-position: outside; /* Маркеры (точки) вне контента, с отступом */
+  margin: 10px 0 10px 25px !important;
+  padding-left: 0 !important;
+  list-style-position: outside;
 }
 
 .bot-message1 li {
   margin-bottom: 5px !important;
-  list-style-type: disc !important; /* Точки как маркеры */
+  list-style-type: disc !important;
   color: #ffffff !important;
-  padding-left: 5px; /* Дополнительный отступ внутри li для текста после точки */
-  position: relative; /* Для позиционирования маркера */
+  padding-left: 5px;
 }
 
-/* Поддержка вложенных списков (если Markdown имеет ul внутри ul) */
 .bot-message1 ul ul {
-  margin-left: 15px !important; /* Меньший отступ для подсписков */
-  list-style-type: circle; /* Круги для вложенных */
+  margin-left: 15px !important;
+  list-style-type: circle;
 }
 
 .bot-message1 ul ul li {

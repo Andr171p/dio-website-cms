@@ -100,7 +100,6 @@ class HeaderSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGener
                             choices=[
                                 ("none", "Без подменю"),
                                 ("simple", "Простое подменю"),
-                                ("grouped", "Группированное подменю с карточкой"),
                             ],
                             default="none",
                             label="Тип меню*",
@@ -144,141 +143,8 @@ class HeaderSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGener
                             help_text="Используется для типа 'Простое подменю'",
                         ),
                     ),
-                    (
-                        "dropdown_groups",
-                        ListBlock(
-                            StructBlock(
-                                [
-                                    (
-                                        "group_title",
-                                        CharBlock(
-                                            max_length=255,
-                                            required=True,
-                                            label="Название группы*",
-                                            help_text="Например: Автоматизация бизнеса",
-                                        ),
-                                    ),
-                                    (
-                                        "items",
-                                        ListBlock(
-                                            StructBlock(
-                                                [
-                                                    (
-                                                        "name",
-                                                        CharBlock(
-                                                            max_length=255,
-                                                            required=True,
-                                                            label="Название подпункта*",
-                                                            help_text="Название подпункта",
-                                                        ),
-                                                    ),
-                                                    (
-                                                        "page",
-                                                        PageChooserBlock(
-                                                            required=False,
-                                                            label="Страница",
-                                                            help_text="Выберите страницу для ссылки",
-                                                        ),
-                                                    ),
-                                                    (
-                                                        "external_url",
-                                                        URLBlock(
-                                                            required=False,
-                                                            label="Внешняя ссылка",
-                                                            help_text="Укажите внешний URL, если страница не выбрана",
-                                                        ),
-                                                    ),
-                                                    (
-                                                        "description",
-                                                        TextBlock(
-                                                            required=False,
-                                                            label="Описание",
-                                                            help_text="Краткое описание подпункта",
-                                                        ),
-                                                    ),
-                                                    (
-                                                        "icon_svg",
-                                                        TextBlock(
-                                                            required=False,
-                                                            label="SVG код иконки",
-                                                            help_text="Вставьте SVG код для иконки",
-                                                        ),
-                                                    ),
-                                                ]
-                                            ),
-                                            required=False,
-                                            label="Элементы подменю",
-                                        ),
-                                    ),
-                                ]
-                            ),
-                            required=False,
-                            label="Группы выпадающего меню",
-                            help_text="Используется для типа 'Группированное подменю'",
-                            max_num=3,  # Ограничение до 3 групп
-                        ),
-                    ),
-                    (
-                        "card_link",
-                        StructBlock(
-                            [
-                                (
-                                    "enabled",
-                                    BooleanBlock(
-                                        default=False,
-                                        required=False,
-                                        label="Включить карточку",
-                                        help_text="Включить карточку ссылки",
-                                    ),
-                                ),
-                                (
-                                    "title",
-                                    CharBlock(
-                                        max_length=255,
-                                        required=False,
-                                        label="Название карточки",
-                                        help_text="Название карточки",
-                                    ),
-                                ),
-                                (
-                                    "description",
-                                    TextBlock(
-                                        required=False,
-                                        label="Описание карточки",
-                                        help_text="Описание карточки",
-                                    ),
-                                ),
-                                (
-                                    "page",
-                                    PageChooserBlock(
-                                        required=False,
-                                        label="Страница",
-                                        help_text="Выберите страницу для ссылки",
-                                    ),
-                                ),
-                                (
-                                    "external_url",
-                                    URLBlock(
-                                        required=False,
-                                        label="Внешняя ссылка",
-                                        help_text="Укажите внешний URL, если страница не выбрана",
-                                    ),
-                                ),
-                                (
-                                    "button_text",
-                                    CharBlock(
-                                        max_length=255,
-                                        default="Подробнее",
-                                        required=False,
-                                        label="Текст кнопки*",
-                                        help_text="Текст кнопки на карточке",
-                                    ),
-                                ),
-                            ],
-                            required=False,
-                            label="Карточка ссылки",
-                        ),
-                    ),
+                    
+                    
                 ],
                 icon="list-ul",
                 label="Пункт меню",
