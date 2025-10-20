@@ -19,7 +19,7 @@
             <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'></svg>">
         {% endif %}
         <!-- Динамически подключаемый CSS -->
-        <link id="theme-style" href="{% static 'css/theme-dark.css' %}?v=1.0" rel="stylesheet" type="text/css"/>
+        <link id="theme-style" href="{% static 'css/theme-dark.css' %}?" rel="stylesheet" type="text/css"/>
         
         <link rel="icon" href="data:image/x-icon;base64,">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -56,10 +56,10 @@
 
         {% include "base/contact.html" %}
         {% include "base/footer.html" %}
-        {% include "base/chat.html" %}
+        {% include "base/chat.html" %} 
 
         <!-- Кнопка переключения темы с иконками -->
-        <button id="theme-toggle" style="z-index: 1001;" class="fixed bottom-20 right-7 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 transition flex items-center justify-center w-10 h-10">
+        <button id="theme-toggle" style="z-index: 1001;" class="fixed top-20 right-2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 transition flex items-center justify-center w-10 h-10">
             <!-- Иконка солнца (светлая тема по умолчанию) -->
             <svg id="light-icon" class="w-6 h-6" viewBox="0 0 128 128" fill="currentColor">
                 <path d="M37.41 41.95c-9.71 12.48-9.54 34.65 2.87 45.64c14.09 12.47 33.92 12.34 46.39.87c14.95-13.76 14.09-36.66.87-49.63c-13.29-13.04-37.04-13.72-50.13 3.12z"/>
@@ -211,7 +211,7 @@
 
                 // Устанавливаем начальную тему
                 if (currentTheme === 'dark') {
-                    themeStyle.href = "{% static 'css/theme-light.css' %}?v=1.1";
+                    themeStyle.href = "{% static 'css/theme-light.css' %}?";
                     lightIcon.classList.add('hidden');
                     darkIcon.classList.remove('hidden');
                     themeToggle.classList.add('bg-gray-200', 'text-black');
@@ -219,7 +219,7 @@
                     document.body.classList.add('theme-dark');
                     document.body.classList.remove('theme-light');
                 } else {
-                    themeStyle.href = "{% static 'css/theme-dark.css' %}?v=1.0";
+                    themeStyle.href = "{% static 'css/theme-dark.css' %}?";
                     lightIcon.classList.remove('hidden');
                     darkIcon.classList.add('hidden');
                     themeToggle.classList.add('bg-gray-800', 'text-white');
@@ -231,7 +231,7 @@
                 // Переключение темы
                 themeToggle.addEventListener('click', function() {
                     if (currentTheme === 'light') {
-                        themeStyle.href = "{% static 'css/theme-light.css' %}?v=1.1";
+                        themeStyle.href = "{% static 'css/theme-light.css' %}?";
                         currentTheme = 'dark';
                         lightIcon.classList.add('hidden');
                         darkIcon.classList.remove('hidden');
@@ -239,7 +239,7 @@
                         themeToggle.classList.replace('text-white', 'text-black');
                         document.body.classList.replace('theme-light', 'theme-dark');
                     } else {
-                        themeStyle.href = "{% static 'css/theme-dark.css' %}?v=1.0";
+                        themeStyle.href = "{% static 'css/theme-dark.css' %}?";
                         currentTheme = 'light';
                         lightIcon.classList.remove('hidden');
                         darkIcon.classList.add('hidden');

@@ -20,7 +20,7 @@
           <!-- <div class="message bot-message1">Здравствуйте! Чем могу помочь?</div> -->
         </div>
         <!-- Большое поле ввода в центре -->
-        <div class="initial-input-container" id="initialInputContainer">
+        <div class=" initial-input-container" id="initialInputContainer">
           <input type="text" id="initialChatInput" placeholder="Задайте свой вопрос..." aria-label="Введите первый вопрос">
           <button id="initialSendButton" aria-label="Отправить сообщение">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,6 +42,95 @@
   </div>
 </section>
 
+<style>
+  
+
+  /* Мобильные стили */
+  @media screen and (max-width: 767px) {
+    .hero-chat {
+      padding: 20px 0;
+    }
+
+    .container {
+      padding: 0;
+    }
+
+    .hero-text {
+      padding: 0 16px;
+      margin-bottom: 24px;
+    }
+
+    .heading_h1 {
+      font-size: 32px;
+    }
+
+    .hero-subtitle.heading_h4 {
+      font-size: 18px;
+    }
+
+    .chat-widget {
+      max-width: 100%;
+      width: 100%;
+      height: calc(100vh - 200px); /* Полная высота минус заголовки и отступы */
+      margin: 0;
+      border-radius: 0;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-messages-container {
+      flex: 1; /* Растягиваем контейнер сообщений на оставшееся пространство */
+      max-height: none; /* Убираем ограничение высоты */
+    }
+
+    .chat-header {
+      padding: 12px 16px;
+      font-size: 20px;
+    }
+
+    .chat-hint {
+      font-size: 12px;
+    }
+
+    .initial-input-container input,
+    .chat-input-container input {
+      font-size: 24px;
+      padding: 10px;
+    }
+
+    .initial-input-container button,
+    .chat-input-container button {
+      padding: 10px;
+    }
+
+    .initial-input-container button svg,
+    .chat-input-container button svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  /* Для очень маленьких экранов */
+  @media screen and (max-width: 480px) {
+    .heading_h1 {
+      font-size: 28px;
+    }
+
+    .hero-subtitle.heading_h4 {
+      font-size: 16px;
+    }
+
+    .chat-header {
+      padding: 10px 12px;
+    }
+
+    .chat-messages-container {
+      padding: 12px;
+    }
+  }
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -52,12 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (chatWidget) {
     chatWidget.style.opacity = '1';
     chatWidget.style.visibility = 'visible';
-    chatWidget.style.marginLeft = 'auto';
-    chatWidget.style.marginRight = 'auto';
-    chatWidget.style.transform = 'none';
-    chatWidget.style.left = '0';
-    chatWidget.style.right = '0';
-    console.log('Chat widget initialized with centered styles');
+    console.log('Chat widget initialized');
   }
 
   // Проверка загрузки GSAP
@@ -69,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Инициализация GSAP и ScrollTrigger
   gsap.registerPlugin(ScrollTrigger);
 
-  // Анимация чат-виджета
+  // Анимация чат-виджета (адаптирована для мобильных)
   gsap.fromTo(
     "#chatWidget",
     { opacity: 0, y: 80, scale: 0.9 },
@@ -81,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: "power3.out", 
       scrollTrigger: { 
         trigger: "#hero-chat", 
-        start: "top 80%", // Позднее появление
+        start: "top 90%", // Позднее появление
         end: "top 30%", 
         scrub: 1, 
         toggleActions: "play none none reverse",
@@ -90,10 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       onComplete: () => {
         chatWidget.style.transform = 'none';
-        chatWidget.style.marginLeft = 'auto';
-        chatWidget.style.marginRight = 'auto';
-        chatWidget.style.left = '0';
-        chatWidget.style.right = '0';
       }
     }
   );
@@ -110,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: "power2.out", 
       scrollTrigger: { 
         trigger: "#hero-chat", 
-        start: "top 90%", // Позднее появление
+        start: "top 90%", 
         end: "top 30%", 
         scrub: 1,
         onEnter: () => console.log('Chat header animation started'),
@@ -347,5 +427,19 @@ document.addEventListener('DOMContentLoaded', () => {
     sendButton.addEventListener('click', () => sendMessage(chatInput));
     chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(chatInput); });
   }
+
+  // Адаптация высоты для мобильных устройств
+  function adjustChatHeight() {
+    if (window.innerWidth <= 767) {
+      const chatWidget = document.getElementById('chatWidget');
+      const heroText = document.querySelector('.hero-text');
+      const availableHeight = window.innerHeight - (heroText ? heroText.offsetHeight : 0) - 40; // Учитываем заголовки и отступы
+      chatWidget.style.height = `${availableHeight}px`;
+    }
+  }
+
+  // Вызов при загрузке и изменении размера окна
+  adjustChatHeight();
+  window.addEventListener('resize', adjustChatHeight);
 });
 </script>

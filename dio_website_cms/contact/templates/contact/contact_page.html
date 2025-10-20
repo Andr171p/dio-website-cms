@@ -15,7 +15,7 @@
             <!-- Contact Information -->
             <div class="lg:col-span-1 space-y-8 animate-fadeInUp" data-delay="0.1">
                 <div class="heading_h3 card p-6   rounded-lg">
-                    <h2 class=" mb-4">Контактная информация</h2>
+                    <h2 class="font-bold mb-4">Контактная информация</h2>
                     <div class="space-y-4">
                         {% if page.address %}
                             <div class="flex items-center space-x-3">
@@ -48,7 +48,7 @@
                 <!-- Legal Information -->
                 {% if page.legal_name or page.inn or page.ogrn %}
                     <div class="heading_h4 card p-6   shadow-md rounded-lg">
-                        <h2 class=" mb-4">Юридические данные</h2>
+                        <h2 class="heading_h3 font-bold mb-4">Юридические данные</h2>
                         <div class="space-y-2 ">
                             {% if page.legal_name %}
                                 <p>{{ page.legal_name }}</p>
@@ -68,7 +68,7 @@
             {% if page.map_info %}
                 <div class="heading_h3 lg:col-span-2 animate-fadeInUp" data-delay="0.2">
                     <div class="card p-6  shadow-md rounded-lg h-full">
-                        <h2 class=" mb-4">Как нас найти</h2>
+                        <h2 class="heading_h3 font-bold text-center mb-4">Как нас найти</h2>
                         <div style="position:relative;overflow:hidden; ">
                             <a href="https://yandex.ru/maps/org/dio_konsalt/41393573854/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">ДИО-Консалт</a>
                             <a href="https://yandex.ru/maps/55/tyumen/category/document_management_automation/184105420/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:14px;">Автоматизация документооборота в Тюмени</a>

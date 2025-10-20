@@ -6,7 +6,7 @@
           
         {% elif block.block_type == 'services_section' %}
             <!-- Секция услуг -->
-            <section class="section is-secondary">
+            <section class="section is-secondary ">
                 <div class="container">
                     <!-- Заголовок -->
                     <div class="header">
@@ -24,7 +24,7 @@
                                 {% if service.image %}
                                     {% image service.image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
                                 {% endif %}
-                                <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/50 text-white">
+                                <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/25 text-white">
                                     <!-- Верхняя часть: Категория -->
                                     <div class="flex items-center justify-between mb-4">
                                         <div class="flex items-center gap-3">
