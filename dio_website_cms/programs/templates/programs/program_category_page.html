@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 {% block content %}
@@ -6,50 +7,43 @@
     <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
         <!-- Введение в категорию -->
         {% if page.intro %}
-            <div class="header is-align-center mb-8">
+            <div class="header is-align-center mb-12">
                 <div class="prose max-w-4xl mx-auto text-center">
                     {{ page.intro|richtext }}
                 </div>
             </div>
         {% endif %}
 
-        <!-- Фильтры по производителям -->
-        <div class="header is-align-center mb-8">
-            <div class="flex flex-wrap justify-center gap-2 mt-4">
-                <a href="{% pageurl page %}" class="px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 {% if not current_manufacturer %}bg-gray-600 text-white{% else %}bg-white text-gray-600 border border-gray-200 hover:bg-gray-100{% endif %}">
-                    Все
-                </a>
-                {% for value, name in manufacturer_choices %}
-                    <a href="?manufacturer={{ value }}" class="px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 {% if current_manufacturer == value %}bg-gray-600 text-white{% else %}bg-white text-gray-600 border border-gray-200 hover:bg-gray-100{% endif %}">
-                        {{ name }}
-                    </a>
-                {% endfor %}
+        <!-- Изображение категории -->
+        {% if page.image %}
+            <div class="mb-12">
+                {% image page.image fill-1200x400 class="w-full h-auto rounded-lg shadow-lg gs-reveal" %}
             </div>
-        </div>
+        {% endif %}
 
-        <!-- Сетка продуктов -->
-        <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
-            {% for product in products %}
-                <a href="{{ product.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
-                    {% if product.image %}
-                        {% image product.image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
+        <!-- Подкатегории -->
+        <div class="header is-align-center mb-8">
+            <h2 class="heading_h3 gs-reveal">Категории программ</h2>
+        </div>
+        <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mb-12">
+            {% for subcategory in page.get_children.live %}
+                <a href="{% pageurl subcategory %}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 300px;">
+                    {% if subcategory.specific.image %}
+                        {% image subcategory.specific.image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
                     {% else %}
                         <div class="w-full h-full bg-gray-200 absolute top-0 left-0 z-0"></div>
                     {% endif %}
-                    <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/50 text-white">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
-                                {{ product.get_manufacturer_display }}
-                            </span>
-                        </div>
+                    <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/10 text-white">
                         <div class="space-y-4 flex-grow">
-                            <h3 class="heading_h4 text-white">{{ product.headline }}</h3>
-                            <p class="subheading text-gray-200 line-clamp-3">
-                                {{ product.intro|striptags|truncatewords:14 }}
-                            </p>
+                            <h3 class="heading_h4">{{ subcategory.title }}</h3>
+                            {% if subcategory.specific.intro %}
+                                <p class="subheading text-gray-200 line-clamp-3">
+                                    {{ subcategory.specific.intro|striptags|truncatewords:10 }}
+                                </p>
+                            {% endif %}
                         </div>
                         <div class="mt-auto text-white text-sm font-medium">
-                            Подробнее
+                            Все продукты
                             <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
@@ -58,45 +52,33 @@
                 </a>
             {% empty %}
                 <div class="col-span-3 text-center py-12">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-600 mb-2">Продуктов пока нет</h3>
-                    <p class="text-gray-500 max-w-md mx-auto">Скоро здесь появятся продукты в этой категории.</p>
+                    <h3 class="text-xl font-semibold text-gray-600 mb-2">Подкатегорий пока нет</h3>
+                    <p class="text-gray-500">Скоро здесь появятся подкатегории программ.</p>
                 </div>
             {% endfor %}
         </div>
 
-        <!-- Пагинация -->
-        {% if products.has_other_pages %}
-            <div class="text-center mt-12">
-                <ul class="inline-flex gap-2">
-                    {% if products.has_previous %}
-                        <li>
-                            <a href="?page={{ products.previous_page_number }}{% if current_manufacturer %}&manufacturer={{ current_manufacturer }}{% endif %}" class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white">
-                                Предыдущая
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% for num in products.paginator.page_range %}
-                        <li>
-                            <a href="?page={{ num }}{% if current_manufacturer %}&manufacturer={{ current_manufacturer }}{% endif %}" class="px-4 py-2 rounded-full {% if products.number == num %}bg-blue-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-blue-600 hover:text-white">
-                                {{ num }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                    {% if products.has_next %}
-                        <li>
-                            <a href="?page={{ products.next_page_number }}{% if current_manufacturer %}&manufacturer={{ current_manufacturer }}{% endif %}" class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white">
-                                Следующая
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        {% endif %}
+        <!-- Форма обратной связи -->
+        <div class="header is-align-center mb-8">
+            <h2 class="heading_h3 gs-reveal">Нужна помощь с выбором?</h2>
+        </div>
+        <div class="w-layout-grid grid_1-col gap-2 lg:gap-3 mb-12">
+            <form class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg gs-reveal">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Имя *</label>
+                    <input type="text" id="name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <input type="email" id="email" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Телефон *</label>
+                    <input type="tel" id="phone" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">Отправить заявку</button>
+            </form>
+        </div>
     </div>
 </section>
 
@@ -133,6 +115,12 @@
         gap: 1rem;
     }
 
+    .grid_1-col {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
     @media (max-width: 900px) {
         .grid_3-col {
             grid-template-columns: repeat(2, 1fr);
@@ -145,24 +133,21 @@
         }
     }
 
-    .container {
-        margin: 0 auto;
-        max-width: 1280px;
-    }
+
 
     .prose {
-        color: var(--text-secondary) !important;
+        color: var(--text-secondary, #4b5563) !important;
         max-width: none !important;
     }
 
     .prose h2 {
-        color: var(--text-primary) !important;
+        color: var(--text-primary, #111827) !important;
         font-weight: 700 !important;
         font-size: 2rem !important;
     }
 
     .prose p {
-        color: var(--text-secondary) !important;
+        color: var(--text-secondary, #4b5563) !important;
         line-height: 1.75 !important;
     }
 

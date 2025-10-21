@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "services_1c",
     "programs",
 
-    # Установленные приложения
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
@@ -73,8 +72,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     'django_htmx',
-    "tailwind"
-    # "wagtailmenus",
+    "tailwind",
+    
     
 ]
 

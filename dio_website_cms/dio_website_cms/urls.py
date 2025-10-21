@@ -23,6 +23,7 @@ urlpatterns = [
     path("documents/delete/", chat_views.delete_document_, name="delete document"),
     path("feedback/", feedback_views.feedback_view, name="feedback"),
     path("vacancy/", vacancies_views.vacancy_view, name="vacancy"),
+    path('programs/', include('programs.urls')),
     path(
         "vacancy/resume/download/<int:vacancy_id>/",
         download_resume,

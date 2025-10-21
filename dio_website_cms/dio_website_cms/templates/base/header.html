@@ -1,203 +1,325 @@
 {% load wagtailcore_tags wagtailimages_tags wagtailsettings_tags static %}
 
-<div class="nav is-secondary">
-  <div
-    data-duration="400"
-    data-animation="default"
-    data-easing2="ease"
-    data-easing="ease"
-    data-collapse="medium"
-    role="banner"
-    data-no-scroll="1"
-    class="nav_container w-nav"
-  >
-    <div class="nav_left">
-      <a href="/" class="nav_logo w-inline-block">
+<!-- Основной хедер навигации -->
+<nav class="main-nav">
+  <div class="main-nav__container">
+    <!-- Логотип -->
+    <div class="main-nav__brand">
+      <a href="/" class="brand-link">
         {% get_settings use_default_site=True as settings %}
         {% if settings.base.HeaderSettings.logo %}
-          {% image settings.base.HeaderSettings.logo width-560 height-560 as logo %}
-          <div class="nav_logo-icon">
+          {% image settings.base.HeaderSettings.logo width-80 height-80 as logo %}
+          <div class="brand-logo">
             <img
               src="{{ logo.url }}"
               alt="{{ settings.base.HeaderSettings.site_title|default:'Логотип сайта' }}"
-              class="w-full h-full object-cover"
+              class="brand-logo__image"
             >
           </div>
         {% else %}
-          <div class="nav_logo-icon">
-            <svg width="100%" height="100%" viewBox="0 0 33 33" preserveAspectRatio="xMidYMid meet">
-              <path
-                d="M28,0H5C2.24,0,0,2.24,0,5v23c0,2.76,2.24,5,5,5h23c2.76,0,5-2.24,5-5V5c0-2.76-2.24-5-5-5ZM29,17c-6.63,0-12,5.37-12,12h-1c0-6.63-5.37-12-12-12v-1c6.63,0,12-5.37,12-12h1c0,6.63,5.37,12,12,12v1Z"
-                fill="currentColor"
-              ></path>
+          <div class="brand-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
+              <path d="M16 0C7.164 0 0 7.164 0 16s7.164 16 16 16 16-7.164 16-16S24.836 0 16 0zm0 28C9.373 28 4 22.627 4 16S9.373 4 16 4s12 5.373 12 12-5.373 12-12 12z"/>
+              <path d="M16 8c-4.418 0-8 3.582-8 8s3.582 8 8 8 8-3.582 8-8-3.582-8-8-8zm0 12c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"/>
             </svg>
           </div>
         {% endif %}
-        <div data-brand-name="true" class="paragraph_large margin-bottom_none">
-          {{ settings.base.HeaderSettings.site_title }}
-        </div>
+        <span class="heading_h3 brand-name">{{ settings.base.HeaderSettings.site_title }}</span>
       </a>
     </div>
-    <div class="nav_center">
-      <nav role="navigation" class="nav_menu w-nav-menu">
-        <ul role="list" class="nav_menu-list w-list-unstyled text-center">
+
+    <!-- Навигация -->
+    <div class="main-nav__menu  ">
+      <ul class="nav-list">
+        {% for item in settings.base.HeaderSettings.nav_items %}
+          <li class="nav-item {% if item.value.menu_type != 'none' %}nav-item--dropdown{% endif %}">
+            {% if item.value.menu_type == "none" %}
+              <a
+                href="{% if item.value.page %}{{ item.value.page.url }}{% else %}{{ item.value.external_url|default:'#' }}{% endif %}"
+                class="nav-link heading_h4"
+              >
+                {{ item.value.name }}
+              </a>
+            {% else %}
+              <div class="dropdown">
+                <!-- Кликабельная ссылка для родительского пункта -->
+                <a 
+                  href="{% if item.value.page %}{{ item.value.page.url }}{% else %}{{ item.value.external_url|default:'#' }}{% endif %}"
+                  class="dropdown__toggle-link heading_h4"
+                >
+                  {{ item.value.name }}
+                </a>
+                <button class="dropdown__toggle" aria-expanded="false">
+                  <svg class="dropdown__chevron" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M4 6l4 4 4-4"/>
+                  </svg>
+                </button>
+                
+                {% if item.value.menu_type == "simple" %}
+                  <div class="dropdown__menu heading_h4">
+                    <div class="dropdown__content">
+                      {% for subitem in item.value.simple_dropdown_items %}
+                        <a
+                          href="{% if subitem.page %}{{ subitem.page.url }}{% else %}{{ subitem.external_url|default:'#' }}{% endif %}"
+                          class="dropdown__link"
+                        >
+                          {{ subitem.name }}
+                        </a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% elif item.value.menu_type == "grouped" %}
+                  <div class="dropdown__menu dropdown__menu--mega heading_h4 ">
+                    <div class="dropdown__content">
+                      <div class="mega-grid">
+                        {% for group in item.value.dropdown_groups %}
+                          <div class="mega-group">
+                            <h4 class="mega-group__title">{{ group.group_title }}</h4>
+                            <div class="mega-group__items">
+                              {% for subitem in group.value.items %}
+                                <a
+                                  href="{% if subitem.value.page %}{{ subitem.value.page.url }}{% else %}{{ subitem.value.external_url|default:'#' }}{% endif %}"
+                                  class="mega-item"
+                                >
+                                  <div class="mega-item__icon">
+                                    {% if subitem.value.icon_svg %}
+                                      {{ subitem.value.icon_svg|safe }}
+                                    {% else %}
+                                      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                        <circle cx="10" cy="10" r="3"/>
+                                      </svg>
+                                    {% endif %}
+                                  </div>
+                                  <div class="mega-item__content">
+                                    <div class="mega-item__title">{{ subitem.value.name }}</div>
+                                    {% if subitem.value.description %}
+                                      <div class="mega-item__desc">{{ subitem.value.description }}</div>
+                                    {% endif %}
+                                  </div>
+                                </a>
+                              {% endfor %}
+                            </div>
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Кнопка CTA -->
+    <div class="main-nav__actions">
+      <button 
+        onclick="document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });"
+        class="button"
+      >
+        {{ settings.base.HeaderSettings.consultation_button_text }}
+      </button>
+    </div>
+
+    <!-- Мобильное меню -->
+    <button class="mobile-menu-toggle" aria-label="Открыть меню">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Мобильная навигация -->
+    <div class="mobile-nav heading_h3">
+      <div class="mobile-nav__header">
+        <div class="mobile-nav__brand">
+          <a href="/" class="brand-link">
+            {% if settings.base.HeaderSettings.logo %}
+              {% image settings.base.HeaderSettings.logo width-40 height-40 as logo %}
+              <div class="brand-logo">
+                <img src="{{ logo.url }}" alt="{{ settings.base.HeaderSettings.site_title }}" class="brand-logo__image">
+              </div>
+            {% endif %}
+            <span class="brand-name">{{ settings.base.HeaderSettings.site_title }}</span>
+          </a>
+        </div>
+        <button class="mobile-nav__close" aria-label="Закрыть меню">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="mobile-nav__content">
+        <ul class="mobile-nav__list">
           {% for item in settings.base.HeaderSettings.nav_items %}
-            <li class="nav_menu-list-item">
+            <li class="mobile-nav__item">
               {% if item.value.menu_type == "none" %}
                 <a
                   href="{% if item.value.page %}{{ item.value.page.url }}{% else %}{{ item.value.external_url|default:'#' }}{% endif %}"
-                  class="nav_link w-inline-block"
+                  class="mobile-nav__link"
+                  onclick="closeMobileMenu()"
                 >
-                  <div>{{ item.value.name }}</div>
+                  {{ item.value.name }}
                 </a>
               {% else %}
-                <div data-delay="0" data-hover="true" class="nav_dropdown-menu w-dropdown">
-                  <a
-                    href="{% if item.value.page %}{{ item.value.page.url }}{% else %}{{ item.value.external_url|default:'#' }}{% endif %}"
-                    class="nav_link w-dropdown-toggle"
-                    id="w-dropdown-toggle-{{ forloop.counter0 }}"
-                    aria-controls="w-dropdown-list-{{ forloop.counter0 }}"
-                    aria-haspopup="menu"
-                    aria-expanded="false"
-                    role="button"
-                    tabindex="0"
-                  >
-                    <div>{{ item.value.name }}</div>
-                    <div class="nav-caret w-icon-dropdown-toggle"></div>
-                  </a>
-                  {% if item.value.menu_type == "simple" %}
-                    <div
-                      class="nav_dropdown-list w-dropdown-list"
-                      id="w-dropdown-list-{{ forloop.counter0 }}"
-                      aria-labelledby="w-dropdown-toggle-{{ forloop.counter0 }}"
+                <div class="mobile-nav__dropdown">
+                  <div class="mobile-nav__link-container">
+                    <a
+                      href="{% if item.value.page %}{{ item.value.page.url }}{% else %}{{ item.value.external_url|default:'#' }}{% endif %}"
+                      class="mobile-nav__link"
+                      onclick="closeMobileMenu()"
                     >
-                      <div class="nav-menu_dropdown-list-wrapper">
-                        <ul role="list" class="flex_vertical margin-bottom_none w-list-unstyled">
-                          {% for subitem in item.value.simple_dropdown_items %}
-                            <li class="margin-bottom_none">
-                              <a
-                                href="{% if subitem.page %}{{ subitem.page.url }}{% else %}{{ subitem.external_url|default:'#' }}{% endif %}"
-                                class="nav_dropdown-link w-inline-block"
-                              >
-                                <div class="button_label">{{ subitem.name }}</div>
-                              </a>
-                            </li>
+                      {{ item.value.name }}
+                    </a>
+                    <button class="mobile-nav__dropdown-toggle" aria-expanded="false" onclick="toggleMobileDropdown(this)">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M4 6l4 4 4-4"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="mobile-nav__dropdown-content">
+                    {% if item.value.menu_type == "simple" %}
+                      {% for subitem in item.value.simple_dropdown_items %}
+                        <a
+                          href="{% if subitem.page %}{{ subitem.page.url }}{% else %}{{ subitem.external_url|default:'#' }}{% endif %}"
+                          class="mobile-nav__sublink"
+                          onclick="closeMobileMenu()"
+                        >
+                          {{ subitem.name }}
+                        </a>
+                      {% endfor %}
+                    {% elif item.value.menu_type == "grouped" %}
+                      {% for group in item.value.dropdown_groups %}
+                        <div class="mobile-nav__group">
+                          <div class="mobile-nav__group-title">{{ group.group_title }}</div>
+                          {% for subitem in group.value.items %}
+                            <a
+                              href="{% if subitem.value.page %}{{ subitem.value.page.url }}{% else %}{{ subitem.value.external_url|default:'#' }}{% endif %}"
+                              class="mobile-nav__sublink"
+                              onclick="closeMobileMenu()"
+                            >
+                              {{ subitem.value.name }}
+                            </a>
                           {% endfor %}
-                        </ul>
-                      </div>
-                    </div>
-                  {% elif item.value.menu_type == "grouped" %}
-                    <nav class="mega-nav_dropdown-list w-dropdown-list" id="w-dropdown-list-{{ forloop.counter0 }}" aria-labelledby="w-dropdown-toggle-{{ forloop.counter0 }}">
-                      <div class="mega-nav_dropdown-list-wrapper">
-                        <ul role="list" class="grid_3-col tablet-1-col gap-medium w-list-unstyled">
-                          {% if item.value.dropdown_groups and item.value.dropdown_groups|length > 0 %}
-                            <li id="w-node-{{ forloop.counter0 }}-nav-item" class="w-node-{{ forloop.counter0 }}-nav-item-group">
-                              <div class="w-layout-grid grid_3-col tablet-1-col gap-small">
-                                {% for group in item.value.dropdown_groups %}
-                                  <div>
-                                    <div class="eyebrow">{{ group.group_title|default:"No group title" }}</div>
-                                    <ul role="list" class="mega-nav_list w-list-unstyled">
-                                      {% for subitem in group.value.items %}
-                                        <li class="margin-bottom_none">
-                                          <a href="{% if subitem.value.page %}{{ subitem.value.page.url }}{% else %}{{ subitem.value.external_url|default:'#' }}{% endif %}" class="mega-nav_link-item w-inline-block" tabindex="0">
-                                            <div class="icon is-medium on-inverse">
-                                              {% if subitem.value.icon_svg %}
-                                                {{ subitem.value.icon_svg|safe }}
-                                              {% else %}
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
-                                                  <path d="m25.7 9.3l-7-7A.9.9 0 0 0 18 2H8a2.006 2.006 0 0 0-2 2v24a2.006 2.006 0 0 0 2 2h16a2.006 2.006 0 0 0 2-2V10a.9.9 0 0 0-.3-.7M18 4.4l5.6 5.6H18ZM24 28H8V4h8v6a2.006 2.006 0 0 0 2 2h6Z" stroke-linejoin="round"></path>
-                                                </svg>
-                                              {% endif %}
-                                            </div>
-                                            <div>
-                                              <strong>{{ subitem.value.name|default:"No name" }}</strong>
-                                              <span class="paragraph_small text-color_secondary">{{ subitem.value.description|default:"No description" }}</span>
-                                            </div>
-                                          </a>
-                                        </li>
-                                      {% empty %}
-                                        <li style="color: red;">No items in group {{ group.value.group_title|default:"unknown group" }}</li>
-                                      {% endfor %}
-                                    </ul>
-                                  </div>
-                                {% empty %}
-                                  <li style="color: red;">No dropdown_groups data for {{ item.value.name }}</li>
-                                {% endfor %}
-                              </div>
-                            </li>
-                          {% endif %}
-                        </ul>
-                      </div>
-                    </nav>
-                  {% endif %}
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
                 </div>
               {% endif %}
             </li>
           {% endfor %}
         </ul>
-      </nav>
-    </div>
-    <div class="nav_right">
-      
-
-      <div class="button-group margin-top_none">
-        
-        <a
-        onclick="document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' });"
-          href="{% if settings.base.HeaderSettings.consultation_page %}{{ settings.base.HeaderSettings.consultation_page.url }}{% else %}#{% endif %}"
-          class="button w-inline-block"
-        >
-          <div class="button_label">{{ settings.base.HeaderSettings.consultation_button_text }}</div>
-        </a>
-      </div>
-      <div class=" magicNoWrap heading_h5 button-group margin-top_none">
-        
-        +7 (3452) 50-06-90
-      </div>
-    </div>
-    <div class="nav_mobile-menu-button w-nav-button">
-      <div class="icon">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <g
-            class="nc-icon-wrapper"
-            stroke-linecap="square"
-            stroke-linejoin="miter"
-            stroke-width="1.5"
-            fill="none"
-            stroke="currentColor"
-            stroke-miterlimit="10"
+        <div class="mobile-nav__actions">
+          <button 
+            onclick="closeMobileMenu(); document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });"
+            class="button button--full"
           >
-            <line x1="1" y1="12" x2="23" y2="12" stroke="currentColor"></line>
-            <line x1="1" y1="5" x2="23" y2="5"></line>
-            <line x1="1" y1="19" x2="23" y2="19"></line>
-          </g>
-        </svg>
+            {{ settings.base.HeaderSettings.consultation_button_text }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</nav>
 
 <style>
-  /* Существующие стили остаются без изменений */
-  .nav.is-secondary {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000; /* Высокий z-index, чтобы был поверх контента */
-    /* Или ваш цвет фона */
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
-  }
 
-  /* Добавьте отступ для контента под хедером, чтобы он не перекрывался */
-  body {
-    padding-top: 60px; /* Высота хедера, подстройте под ваш дизайн */
+/* Отступ для контента под фиксированным хедером */
+body {
+  padding-top: 70px;
+}
+
+/* Предотвращение скролла при открытом мобильном меню */
+body.no-scroll {
+  overflow: hidden;
+}
+</style>
+
+<script>
+// Глобальные функции для работы мобильного меню
+function openMobileMenu() {
+  const mobileNav = document.querySelector('.mobile-nav');
+  const body = document.body;
+  if (mobileNav) {
+    mobileNav.classList.add('is-open');
+    body.classList.add('no-scroll');
   }
-.magicNoWrap { white-space: nowrap; }
+}
+
+function closeMobileMenu() {
+  const mobileNav = document.querySelector('.mobile-nav');
+  const body = document.body;
+  if (mobileNav) {
+    mobileNav.classList.remove('is-open');
+    body.classList.remove('no-scroll');
+    
+    // Закрываем все выпадающие меню
+    const dropdownContents = document.querySelectorAll('.mobile-nav__dropdown-content');
+    const dropdownToggles = document.querySelectorAll('.mobile-nav__dropdown-toggle');
+    
+    dropdownContents.forEach(content => content.classList.remove('is-open'));
+    dropdownToggles.forEach(toggle => toggle.classList.remove('is-open'));
+  }
+}
+
+function toggleMobileDropdown(button) {
+  // Предотвращаем всплытие события, чтобы не срабатывал клик по ссылке
+  event.stopPropagation();
   
-</style>  
+  const dropdownContent = button.parentElement.nextElementSibling;
+  const isOpen = dropdownContent.classList.contains('is-open');
+  
+  // Закрываем все другие открытые dropdown
+  const allDropdowns = document.querySelectorAll('.mobile-nav__dropdown-content');
+  const allToggles = document.querySelectorAll('.mobile-nav__dropdown-toggle');
+  
+  allDropdowns.forEach(dropdown => dropdown.classList.remove('is-open'));
+  allToggles.forEach(toggle => toggle.classList.remove('is-open'));
+  
+  // Открываем/закрываем текущий dropdown
+  if (!isOpen) {
+    dropdownContent.classList.add('is-open');
+    button.classList.add('is-open');
+  }
+}
+
+// Инициализация при загрузке DOM
+document.addEventListener('DOMContentLoaded', function() {
+  // Мобильное меню - открытие
+  const mobileToggle = document.querySelector('.mobile-menu-toggle');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', openMobileMenu);
+  }
+  
+  // Мобильное меню - закрытие
+  const mobileClose = document.querySelector('.mobile-nav__close');
+  if (mobileClose) {
+    mobileClose.addEventListener('click', closeMobileMenu);
+  }
+  
+  // Закрытие мобильного меню при клике на ссылки (уже обрабатывается в onclick)
+  
+  // Закрытие мобильного меню при клике вне контента
+  const mobileNav = document.querySelector('.mobile-nav');
+  if (mobileNav) {
+    mobileNav.addEventListener('click', function(e) {
+      if (e.target === mobileNav) {
+        closeMobileMenu();
+      }
+    });
+  }
+});
+
+// Резервная инициализация если DOM уже загружен
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initMobileMenu);
+} else {
+  initMobileMenu();
+}
+
+function initMobileMenu() {
+  // Функции уже объявлены глобально, просто проверяем элементы
+  console.log('Mobile menu initialized');
+}
+</script>
