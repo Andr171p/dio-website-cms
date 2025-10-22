@@ -38,7 +38,7 @@
                     </p>
                 {% endif %}
                 <a href="/cases" style=" color:white;    box-shadow: 0 0 0 2px white inset;" class="inline-block button is-secondary w-button px-6 py-3 rounded-lg shadow-lg hover:bg-red-50 hover:shadow-xl transition-all duration-300 animate-fadeIn" style="animation-delay: 0.3s;">
-                    Все кейсы
+                    Подробнее
                 </a>
             </div>
             <!-- Пустая колонка для баланса -->
@@ -63,7 +63,7 @@
                     {% else %}{{ block.block_type|title }}{% endif %}
                 </h2>
                 <!-- Контент -->
-                <div class="col-span-1 lg:col-span-2 text-lg leading-relaxed text-gray-700 prose">
+                <div class="heading_h5 col-span-1 lg:col-span-2 text-lg leading-relaxed text-gray-700 prose">
                     {% if block.block_type == "technologies" %}
                         <ul class="space-y-3">
                             {% for tech in block.value %}
@@ -120,7 +120,7 @@
                         {% endif %}
                         <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/50 text-white">
                             <!-- Верхняя часть: Индустрия -->
-                            <div class="flex items-center justify-between mb-4">
+                            <div class=" flex items-center justify-between mb-4">
                                 <div class="flex items-center gap-3">
                                     <!-- Можно добавить теги или иконки, если нужно -->
                                 </div>
@@ -130,10 +130,10 @@
                             </div>
 
                             <!-- Текст -->
-                            <div class="space-y-4 flex-grow">
-                                <h3 class="heading_h3 text-white text-xl font-semibold">{{ case.title }}</h3>
-                                <p class="subheading text-gray-200 text-sm">
-                                    {{ case.customer_name|truncatewords:14 }}
+                            <div class=" space-y-4 flex-grow">
+                                <h3 class="heading_h4 text-white ">{{ case.title }}</h3>
+                                <p class="  subheading text-white">
+                                    {{ case.intro|striptags|truncatewords:15 }}
                                 </p>
                             </div>
 

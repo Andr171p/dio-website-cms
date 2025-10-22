@@ -43,8 +43,9 @@ INSTALLED_APPS = [
     "contact",
     "faq",
     "services_1c",
-    "programs",
+    "programms", 
 
+    'wagtail.contrib.table_block',
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    'django.contrib.humanize',
     "django.contrib.staticfiles",
     "wagtail.api.v2",
     "rest_framework",
@@ -188,13 +190,18 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "ru"
+LANGUAGE_CODE = "ru-RU"
+
+
+USE_THOUSAND_SEPARATOR = True
 
 TIME_ZONE = "Asia/Yekaterinburg"
 USE_TZ = True
 USE_L10N = True
 USE_I18N = True
 
+THOUSAND_SEPARATOR = ' '
+DECIMAL_SEPARATOR = ','
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/

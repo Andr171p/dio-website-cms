@@ -8,8 +8,7 @@
                     <h2 class="heading_h2">{{ block.value.title|default:"Глобальное присутствие" }}</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div class="space-y-6">
-                        <div class="prose max-w-none heading_h5">
+                        <div class="prose  max-w-none heading_h4">
                             {% if block.value.description %}
                                 {{ block.value.description|richtext }}
                                 
@@ -17,7 +16,6 @@
                                 <p>Мы работаем в более чем 10 странах, предоставляя инновационные решения для автоматизации бизнеса. Наши эксперты обеспечивают локальную поддержку и адаптацию систем под ваши потребности.</p>
                             {% endif %}
                         </div>
-                    </div>
                     <div class="image-ratio ">
                         {% image block.value.image width-1920 height-1080 as presence_img %}
                         <img src="{{ presence_img.url }}" 

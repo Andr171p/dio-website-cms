@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+
+
+{% block content %}
+<section class="section"> 
+    <div class="container mx-auto ">
+        <h1 class="text-4xl font-bold mb-4">{{ page.title }}</h1>
+        
+        {% if page.description %}
+            <div class="my-6 prose max-w-none">{{ page.description|richtext }}</div>
+        {% endif %}
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {% for child in page.get_children.live %}
+                <a href="{% pageurl child %}" class="card card_body   hover:bg-red-900 ">
+                    <h2 class="text-xl font-semibold">{{ child.title }}</h2>
+                    {% if child.specific.description %}
+                        <p class="text-gray-600 mt-2">{{ child.specific.description|richtext|truncatewords:20 }}</p>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    </section>
+{% endblock %}

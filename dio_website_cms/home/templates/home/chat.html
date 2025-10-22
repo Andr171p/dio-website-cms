@@ -142,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (chatWidget) {
     chatWidget.style.opacity = '1';
     chatWidget.style.visibility = 'visible';
-    console.log('Chat widget initialized');
   }
 
   // Проверка загрузки GSAP
@@ -170,8 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         end: "top 30%", 
         scrub: 1, 
         toggleActions: "play none none reverse",
-        onEnter: () => console.log('Chat widget animation started'),
-        onComplete: () => console.log('Chat widget animation completed')
       },
       onComplete: () => {
         chatWidget.style.transform = 'none';
@@ -194,8 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
         start: "top 90%", 
         end: "top 30%", 
         scrub: 1,
-        onEnter: () => console.log('Chat header animation started'),
-        onComplete: () => console.log('Chat header animation completed')
       },
       onComplete: () => {
         document.getElementById('chatHeader').style.transform = 'none';

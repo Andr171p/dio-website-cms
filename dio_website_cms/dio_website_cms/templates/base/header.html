@@ -116,7 +116,7 @@
     <div class="main-nav__actions">
       <button 
         onclick="document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });"
-        class="button"
+        class="button w-button is-secondary"
       >
         {{ settings.base.HeaderSettings.consultation_button_text }}
       </button>
@@ -318,8 +318,4 @@ if (document.readyState === 'loading') {
   initMobileMenu();
 }
 
-function initMobileMenu() {
-  // Функции уже объявлены глобально, просто проверяем элементы
-  console.log('Mobile menu initialized');
-}
 </script>
