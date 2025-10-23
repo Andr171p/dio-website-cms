@@ -1,3 +1,39 @@
+/* Добавьте это в ваш основной CSS файл */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1 0 auto; /* Это заставляет main занимать всё доступное пространство */
+    width: 100%;
+}
+
+/* Если у вас есть дополнительные контейнеры внутри main */
+.main-content {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Гарантируем что секции растягиваются */
+.section {
+    flex: 1 0 auto;
+}
+
+/* Контакты и футер всегда внизу */
+.contact-section,
+.footer-section {
+    flex-shrink: 0;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -8975,8 +9011,6 @@ textarea.w-input, textarea.w-select {
 }
 
 .brand-name {
-  font-weight: 600;
-  font-size: 1.125rem;
   color: #ffffff;
   margin-bottom: 0px;
 }

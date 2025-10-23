@@ -234,7 +234,8 @@ class GlobalPresenceBlock(blocks.StructBlock):
         default="Глобальное присутствие",
         label="Заголовок"
     )
-    description = blocks.RichTextBlock(required=False, label="Описание")
+    description = blocks.RichTextBlock(
+                    features=["bold", "italic", "ol", "ul", "link", "superscript"],required=False, label="Описание")
     image = ImageChooserBlock(
         required=True,
         label="Изображение для локации",
@@ -338,32 +339,15 @@ class HomePage(Page):
     content_panels = Page.content_panels + [
          FieldPanel('global_presence'),
 
-        MultiFieldPanel(
-            [
-                FieldPanel("content"),
-            ],
-            heading="Секции страницы",
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("eyebrow"),
-                FieldPanel("heading"),
-                FieldPanel("subheading"),
-            ],
-            heading="Заголовок и описание",
-        ),
+        
+        
         MultiFieldPanel(
             [
                 FieldPanel("header_section"),
             ],
             heading="Главный блок",
         ),
-        MultiFieldPanel(
-            [
-                FieldPanel("achievements"),
-            ],
-            heading="Достижения",
-        ),
+        
         
         MultiFieldPanel(
             [
@@ -375,11 +359,9 @@ class HomePage(Page):
 
     api_fields = [
         APIField("header_section"),
-        APIField("hero_slides"),
         APIField("case_study_section"),
         APIField("achievements"),
         APIField("partners"),
-        APIField("certificates"),
         APIField("awards"),
         APIField("partnership_section"),
         APIField("content_panels"),

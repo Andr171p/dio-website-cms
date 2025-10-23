@@ -19,7 +19,7 @@
             <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'></svg>">
         {% endif %}
         <!-- Динамически подключаемый CSS -->
-        <link id="theme-style" href="{% static 'css/style4.css' %}?    " rel="stylesheet" type="text/css"/>
+        <link id="theme-style" href="{% static 'css/style4.css' %}?v=1.1    " rel="stylesheet" type="text/css"/>
         
         <link rel="icon" href="data:image/x-icon;base64,">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -218,7 +218,7 @@
 
                 // Устанавливаем начальную тему
                 if (currentTheme === 'dark') {
-                    themeStyle.href = "{% static 'css/theme-light.css' %}? ";
+                    themeStyle.href = "{% static 'css/theme-light.css' %}?v=1.1 ";
                     lightIcon.classList.add('hidden');
                     darkIcon.classList.remove('hidden');
                     themeToggle.classList.add('bg-gray-200', 'text-black');
@@ -226,7 +226,7 @@
                     document.body.classList.add('theme-dark');
                     document.body.classList.remove('theme-light');
                 } else {
-                    themeStyle.href = "{% static 'css/style4.css' %}?  ";
+                    themeStyle.href = "{% static 'css/style4.css' %}?v=1.1  ";
                     lightIcon.classList.remove('hidden');
                     darkIcon.classList.add('hidden');
                     themeToggle.classList.add('bg-gray-800', 'text-white');
@@ -238,7 +238,7 @@
                 // Переключение темы
                 themeToggle.addEventListener('click', function() {
                     if (currentTheme === 'light') {
-                        themeStyle.href = "{% static 'css/theme-light.css' %}? ";
+                        themeStyle.href = "{% static 'css/theme-light.css' %}?v=1.1 ";
                         currentTheme = 'dark';
                         lightIcon.classList.add('hidden');
                         darkIcon.classList.remove('hidden');
@@ -246,7 +246,7 @@
                         themeToggle.classList.replace('text-white', 'text-black');
                         document.body.classList.replace('theme-light', 'theme-dark');
                     } else {
-                        themeStyle.href = "{% static 'css/style4.css' %}?  ";
+                        themeStyle.href = "{% static 'css/style4.css' %}?v=1.1  ";
                         currentTheme = 'light';
                         lightIcon.classList.remove('hidden');
                         darkIcon.classList.add('hidden');

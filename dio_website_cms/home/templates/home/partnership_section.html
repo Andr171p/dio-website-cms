@@ -13,7 +13,7 @@
                         <div class="logos-grid">
                             {% for logo in block.value.logos %}
                                 <div class="logo-container1">
-                                    {% image logo.logo width-800 height-800 as img %}
+                                    {% image logo.logo width-800 height-900 as img %}
                                     {% if logo.link %}
                                         <a href="{{ logo.link }}" class="logo-link">
                                             <img src="{{ img.url }}" alt="Partner logo" class="partner-logo" loading="lazy">
@@ -60,11 +60,12 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 1rem;
         align-items: center;
+        justify-items: center; 
     }
 
     .logo-container1 {
-        width: 180px;
-        height: 90px;
+        width: 200px;
+        height: 100px;
         background: #ffffff;
         border-radius: 20px;
         overflow: hidden;

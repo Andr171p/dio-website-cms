@@ -1,3 +1,39 @@
+/* Добавьте это в ваш основной CSS файл */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1 0 auto; /* Это заставляет main занимать всё доступное пространство */
+    width: 100%;
+}
+
+/* Если у вас есть дополнительные контейнеры внутри main */
+.main-content {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Гарантируем что секции растягиваются */
+.section {
+    flex: 1 0 auto;
+}
+
+/* Контакты и футер всегда внизу */
+.contact-section,
+.footer-section {
+    flex-shrink: 0;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -8569,7 +8605,7 @@ textarea.w-input, textarea.w-select {
   animation: pulseBorder 2s infinite ease-in-out;
   max-width: 1700px;
   width: 100%;
-  height: 520px;
+  height: 720px;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -8645,9 +8681,11 @@ textarea.w-input, textarea.w-select {
 }
 
 .message {
+  font-family: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_typography---font--heading-font);
+  
   padding: 12px 16px 12px 20px !important;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 20px;
   line-height: 1.4;
   max-width: 80%;
   animation: fadeInUp 0.4s ease-out;
@@ -8741,20 +8779,31 @@ textarea.w-input, textarea.w-select {
 
 /* --- Стандартное поле ввода --- */
 .chat-input-container {
-  display: flex;
-  max-height: 50px;
-  background: #2e2e2e;
-  border-radius: 0 0 12px 12px;
-  overflow: hidden;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+  margin: 15px;
+    display: flex;
+    max-height: 50px;
+    background: #2e2e2e;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+    border: 2px solid;
+    border-image: linear-gradient(45deg, #ff6b6b, #4ecdc4) 1;
+    transition: border-image 0.4s ease, border-color 0.4s ease;
+}
+
+.chat-input-container:focus-within {
+    border-image: linear-gradient(45deg, transparent, transparent) 1;
+    border-color: transparent;
 }
 
 .chat-input-container input {
   flex: 1;
   padding: 12px;
   border: none;
+  font-family: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_typography---font--heading-font);
+
   outline: none;
-  font-size: 14px;
+  font-size: 20px;
   color: #ffffff;
   background: transparent;
   border-bottom: 2px solid #404040;
@@ -8776,8 +8825,8 @@ textarea.w-input, textarea.w-select {
   color: #ffffff;
   border: none;
   padding: 8px;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 50%;
@@ -8978,8 +9027,6 @@ textarea.w-input, textarea.w-select {
 }
 
 .brand-name {
-  font-weight: 600;
-  font-size: 1.125rem;
   color: #ffffff;
   margin-bottom: 0px;
 }

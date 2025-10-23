@@ -11,9 +11,10 @@
     <!-- Чат -->
     <div class="chat-widget" id="chatWidget">
       <div class="chat-header" id="chatHeader">
-        <h2 class="heading_h2">Алёша</h2>
-        <span class="chat-hint animate-pulse hidden">Спросите Алёшу</span>
-      </div>
+    <h2 class="heading_h2">Алёша</h2>
+    <span class="chat-hint animate-pulse hidden">Спросите Алёшу</span>
+    <button id="clearChatButton" class="clear-chat-button">Очистить чат</button>
+</div>
       <div class="chat-messages-container" id="chatMessagesContainer">
         <div class="chat-messages" id="chatMessages">
           <!-- Начальное сообщение бота (опционально, можно убрать) -->
@@ -43,7 +44,21 @@
 </section>
 
 <style>
-  
+  .clear-chat-button {
+    background: #920707;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-left: 10px;
+    transition: background 0.3s ease;
+}
+
+.clear-chat-button:hover {
+    background: #4a4a4a;
+}
 
   /* Мобильные стили */
   @media screen and (max-width: 767px) {
@@ -153,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Инициализация GSAP и ScrollTrigger
   gsap.registerPlugin(ScrollTrigger);
 
-  // Анимация чат-виджета (адаптирована для мобильных)
+  // Анимация чат-виджета
   gsap.fromTo(
     "#chatWidget",
     { opacity: 0, y: 80, scale: 0.9 },
@@ -165,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: "power3.out", 
       scrollTrigger: { 
         trigger: "#hero-chat", 
-        start: "top 90%", // Позднее появление
+        start: "top 90%", 
         end: "top 30%", 
         scrub: 1, 
         toggleActions: "play none none reverse",
@@ -207,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('.chat-messages-container');
   const initialInputContainer = document.getElementById('initialInputContainer');
   const chatInputContainer = document.getElementById('chatInputContainer');
+  const clearChatButton = document.getElementById('clearChatButton');
   const placeholders = ["Задайте свой вопрос...", "Опишите свою задачу...", "Расскажите, чем помочь...", "Введите ваш запрос..."];
 
   // Генерация или получение уникального chatId
@@ -248,11 +264,11 @@ document.addEventListener('DOMContentLoaded', () => {
       chatHint.classList.remove('hidden');
       gsap.fromTo(
         chatHint, 
-        { opacity: 1 }, 
-        { opacity: 0.8, duration: 1, repeat: -1, yoyo: true }
+        { opacity: 0.1 }, 
+        { opacity: 0.1, duration: 0.1, repeat: -1, yoyo: true }
       );
     }
-  }, 2000);
+  }, 2);
 
   // Логика смены placeholder
   let isTyping = false;
@@ -424,12 +440,17 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(chatInput); });
   }
 
+  // Обработчик для очистки чата
+  if (clearChatButton) {
+    clearChatButton.addEventListener('click', clearChat);
+  }
+
   // Адаптация высоты для мобильных устройств
   function adjustChatHeight() {
     if (window.innerWidth <= 767) {
       const chatWidget = document.getElementById('chatWidget');
       const heroText = document.querySelector('.hero-text');
-      const availableHeight = window.innerHeight - (heroText ? heroText.offsetHeight : 0) - 40; // Учитываем заголовки и отступы
+      const availableHeight = window.innerHeight - (heroText ? heroText.offsetHeight : 0) - 40;
       chatWidget.style.height = `${availableHeight}px`;
     }
   }
@@ -437,5 +458,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // Вызов при загрузке и изменении размера окна
   adjustChatHeight();
   window.addEventListener('resize', adjustChatHeight);
+
+  // Функция очистки чата
+  function clearChat() {
+    chatMessages.innerHTML = ''; // Очищаем сообщения на экране
+    chatHistory = []; // Очищаем историю
+    localStorage.removeItem(`chatHistory_${chatId}`); // Удаляем историю из localStorage
+    initialInputContainer.classList.remove('hidden'); // Показываем начальное поле
+    chatInputContainer.classList.add('hidden'); // Скрываем стандартное поле
+    chatInput.value = ''; // Очищаем поле ввода
+    gsap.fromTo(
+      initialInputContainer,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+    );
+  }
 });
 </script>

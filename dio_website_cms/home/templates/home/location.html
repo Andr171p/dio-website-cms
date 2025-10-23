@@ -8,7 +8,7 @@
                     <h2 class="heading_h2">{{ block.value.title|default:"Глобальное присутствие" }}</h2>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="prose  max-w-none heading_h4">
+                        <div class="rich-text w-richtext heading_h4">
                             {% if block.value.description %}
                                 {{ block.value.description|richtext }}
                                 

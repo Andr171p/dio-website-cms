@@ -3,7 +3,7 @@ from wagtail.models import Page
 from wagtail.fields import RichTextField, StreamField
 from wagtail.admin.panels import FieldPanel
 from wagtail.blocks import (
-    CharBlock, RichTextBlock, StructBlock, ListBlock, StreamBlock, RawHTMLBlock
+    CharBlock, RichTextBlock, StructBlock, ListBlock, StreamBlock, RawHTMLBlock,ChoiceBlock
 )
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.documents.blocks import DocumentChooserBlock
@@ -94,13 +94,13 @@ class SectionBlock(StructBlock):
                 help_text="Изображение для секции.",
                 required=True
             )),
-            ("image_position", CharBlock(
+            ("image_position", ChoiceBlock(
                 choices=[
-                    ("left", "Left"),
-                    ("right", "Right")
+                    ("left", "Слева"),
+                    ("right", "Справа")
                 ],
                 default="right",
-                help_text="Image position (Left or Right)."
+                help_text="Выберите позицию изображения"
             )),
             ("text_content", StructBlock([
                 ("heading", CharBlock(
