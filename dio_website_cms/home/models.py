@@ -135,10 +135,11 @@ class HeroSlideBlock(blocks.StructBlock):
     """Блок для слайдов hero-секции с несколькими изображениями"""
 
     headline = blocks.CharBlock(
-        max_length=MAX_HEADLINE_LENGTH, required=True, label="Заголовок слайда"
+         required=True, label="Заголовок слайда"
     )
-    subheadline = blocks.CharBlock(
-        max_length=MAX_SUBHEADLINE_LENGTH, required=False, label="Подзаголовок слайда"
+    subheadline = blocks.RichTextBlock(
+                    features=["bold", "italic", "ol", "ul", "link", "superscript"],
+         required=False, label="Подзаголовок слайда"
     )
     images = blocks.ListBlock(
         ImageChooserBlock(
@@ -308,10 +309,10 @@ class HomePage(Page):
     )
 
     eyebrow = models.CharField(
-        max_length=255, blank=True, help_text="Подзаголовок над основным заголовком"
+      blank=True, help_text="Подзаголовок над основным заголовком"
     )
     heading = models.CharField(
-        max_length=255, blank=True, help_text="Основной заголовок"
+      blank=True, help_text="Основной заголовок"
     )
     subheading = models.TextField(blank=True, help_text="Подзаголовок или описание")
 

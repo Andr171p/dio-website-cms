@@ -4,7 +4,7 @@
 {% block content %}
 <article class="w-full">
     <!-- Hero Section -->
-    <section class="section is-secondary relative min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden">
+    <section class="section is-secondary relative min-h-[700px] lg:min-h-[700px] flex items-center overflow-hidden">
         {% if page.image %}
             {% image page.image original as bg_image %}
             <div class="absolute inset-0 z-0">
@@ -12,7 +12,7 @@
                 <div class="absolute inset-0 bg-black/40"></div>
             </div>
         {% endif %}
-        <div class="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
+        <div class="container mx-auto px-4 lg:px-8  relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                 <div class="space-y-6">
                     <span class="inline-block px-4 py-2 rounded-full bg-red-600/80 text-red-100 text-sm font-semibold">
@@ -36,7 +36,7 @@
 
     <!-- Main Content -->
     <section class="section">
-        <div class="heading_h3 container mx-auto px-4 lg:px-8 max-w-4xl">
+        <div class="heading_h3 container mx-auto px-4 lg:px-8 ">
             <div class="prose prose-lg max-w-none news-content">
                 {{ page.content|richtext }}
             </div>
@@ -46,7 +46,7 @@
     <!-- Modern Gallery Carousel -->
     {% if page.gallery %}
     <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div class="container mx-auto px-4 lg:px-8 ">
             <div class="header is-align-center mb-12">
                 <h2 class="heading_h2">Галерея</h2>
             </div>
@@ -89,7 +89,7 @@
     <!-- Other News -->
     {% if other_news %}
     <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div class="container mx-auto px-4 lg:px-8 ">
             <div class="header is-align-center">
                 <h2 class="heading_h2">Другие новости</h2>
             </div>
@@ -162,7 +162,7 @@
         
         <!-- Миниатюры внизу -->
         <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-            <div class="flex gap-2 max-w-4xl overflow-x-auto px-4 py-2 scrollbar-hide">
+            <div class="flex gap-2  overflow-x-auto px-4 py-2 scrollbar-hide">
                 {% for item in page.gallery %}
                 {% image item.value.image fill-80x60 as thumb %}
                 <img src="{{ thumb.url }}" 

@@ -15,7 +15,7 @@
                         <div id="w-node-{{ block.id }}-header" class="header margin-bottom_none">
                             {% for slide in block.value.slides %}
                                 <h1 class="heading_h1">{{ slide.value.headline }}</h1>
-                                <p class="subheading">{{ slide.value.subheadline }}</p>
+                                <div class="subheading">{{ slide.value.subheadline }}</div>
                                 <div class="button-group">
                                     {% if block.value.buttons %}
                                         {% for button in block.value.buttons %}
