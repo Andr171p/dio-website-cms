@@ -1,4 +1,6 @@
 /* Добавьте это в ваш основной CSS файл */
+@import 'normalize.css';
+
 html, body {
     height: 100%;
     margin: 0;
@@ -8763,12 +8765,11 @@ textarea.w-input, textarea.w-select {
 /* --- Стандартное поле ввода --- */
 .chat-input-container {
   display: flex;
-  max-height: 50px;
+  max-height: 100px;
   background: #ffffff;
   border-radius: 0 0 12px 12px;
   overflow: hidden;
-  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
-  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.199);
 }
 
 .chat-input-container input {

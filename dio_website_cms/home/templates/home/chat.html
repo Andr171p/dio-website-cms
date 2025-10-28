@@ -1,39 +1,45 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-<!-- Hero с чатом -->
-<section id="hero-chat" class="hero-chat relative">
+<!-- Hero с чатом — СТЕКЛЯННЫЙ КАК В MAC -->
+<section id="hero-chat" class="hero-chat">
   <div class="container container_chat">
-    <!-- Заголовок и подзаголовок -->
+    <!-- Фоновые фигуры для стеклянного эффекта -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <!-- Заголовок -->
     <div class="hero-text text-center">
       <h1 class="heading_h1">AI-Алёша</h1>
       <p class="hero-subtitle heading_h4">Ваш AI-помощник Алёша всегда на связи. Задайте вопрос и получите быстрый ответ прямо здесь.</p>
     </div>
+
     <!-- Чат -->
     <div class="chat-widget" id="chatWidget">
       <div class="chat-header" id="chatHeader">
-    <h2 class="heading_h2">Алёша</h2>
-    <span class="chat-hint animate-pulse hidden">Спросите Алёшу</span>
-    <button id="clearChatButton" class="clear-chat-button">Очистить чат</button>
-</div>
+        <h2 class="heading_h2">Алёша</h2>
+        <span class="chat-hint animate-pulse hidden">Спросите Алёшу</span>
+        <button id="clearChatButton" class="heading_h5 clear-chat-button">Очистить чат</button>
+      </div>
+
       <div class="chat-messages-container" id="chatMessagesContainer">
-        <div class="chat-messages" id="chatMessages">
-          <!-- Начальное сообщение бота (опционально, можно убрать) -->
-          <!-- <div class="message bot-message1">Здравствуйте! Чем могу помочь?</div> -->
-        </div>
-        <!-- Большое поле ввода в центре -->
-        <div class=" initial-input-container" id="initialInputContainer">
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <!-- Начальное поле ввода -->
+        <div class="initial-input-container" id="initialInputContainer">
           <input type="text" id="initialChatInput" placeholder="Задайте свой вопрос..." aria-label="Введите первый вопрос">
-          <button id="initialSendButton" aria-label="Отправить сообщение">
+          <button id="initialSendButton" aria-label="Отправить">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="#fff"/>
             </svg>
           </button>
         </div>
       </div>
-      <!-- Стандартное поле ввода (скрыто по умолчанию) -->
+
+      <!-- Нижнее поле ввода -->
       <div class="chat-input-container hidden" id="chatInputContainer">
         <input type="text" id="chatInput" placeholder="С чем вам помочь?" aria-label="Введите сообщение">
-        <button id="sendButton" aria-label="Отправить сообщение">
+        <button id="sendButton" aria-label="Отправить">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="#fff"/>
           </svg>
@@ -44,114 +50,342 @@
 </section>
 
 <style>
-  .clear-chat-button {
-    background: #920707;
-    color: #ffffff;
-    border: none;
-    padding: 6px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-left: 10px;
-    transition: background 0.3s ease;
-}
-
-.clear-chat-button:hover {
-    background: #4a4a4a;
-}
-
-  /* Мобильные стили */
-  @media screen and (max-width: 767px) {
-    .hero-chat {
-      padding: 20px 0;
-    }
-
-    .container_chat {
-      padding: 0;
-      
-    }
-
-    .hero-text {
-      padding: 0 16px;
-      margin-bottom: 24px;
-    }
-
-    .heading_h1 {
-      font-size: 32px;
-    }
-
-    .hero-subtitle.heading_h4 {
-      font-size: 18px;
-    }
-
-    .chat-widget {
-      max-width: 100%;
-      width: 100%;
-      height: calc(100vh - 200px); /* Полная высота минус заголовки и отступы */
-      margin: 0;
-      border-radius: 0;
-      box-shadow: none;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .chat-messages-container {
-      flex: 1; /* Растягиваем контейнер сообщений на оставшееся пространство */
-      max-height: none; /* Убираем ограничение высоты */
-    }
-
-    .chat-header {
-      padding: 12px 16px;
-      font-size: 20px;
-    }
-
-    .chat-hint {
-      font-size: 12px;
-    }
-
-    .initial-input-container input,
-    .chat-input-container input {
-      font-size: 24px;
-      padding: 10px;
-    }
-
-    .initial-input-container button,
-    .chat-input-container button {
-      padding: 10px;
-    }
-
-    .initial-input-container button svg,
-    .chat-input-container button svg {
-      width: 20px;
-      height: 20px;
-    }
+  /* === ФОН С ФИГУРАМИ (чтобы стекло было видно) === */
+  .hero-chat {
+    background: linear-gradient(135deg, #141414 0%, #141414 50%, #141414 100%);
+    padding: 60px 20px 100px;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  /* Для очень маленьких экранов */
-  @media screen and (max-width: 480px) {
-    .heading_h1 {
-      font-size: 28px;
-    }
+  .bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(20px);
+    opacity: 0.4;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .shape-1 {
+    width: 600px;
+    height: 600px;
+    background: linear-gradient(45deg, #810000, #990612);
+    top: -200px;
+    left: -200px;
+    animation: float 20s infinite ease-in-out;
+  }
+  .shape-2 {
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(45deg, #333333, #775252);
+    bottom: -150px;
+    right: -150px;
+    animation: float 25s infinite ease-in-out reverse;
+  }
+  .shape-3 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(45deg, #252525, #8d6d6d);
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: float 18s infinite ease-in-out;
+  }
 
-    .hero-subtitle.heading_h4 {
-      font-size: 16px;
-    }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-40px) rotate(5deg); }
+  }
 
-    .chat-header {
-      padding: 10px 12px;
-    }
+  /* === КОНТЕЙНЕР === */
+  .container_chat {
+    max-width: 1700px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
 
-    .chat-messages-container {
-      padding: 12px;
+  /* === ТЕКСТ === */
+  .hero-text {
+    margin-bottom: 48px;
+    z-index: 1;
+  }
+  
+
+  /* === СТЕКЛЯННЫЙ ЧАТ (macOS-style) === */
+  .chat-widget {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 28px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-width: 1700px;
+    width: 100%;
+    height: 820px;
+    margin: 0 auto;
+    z-index: 1;
+  }
+
+  .chat-header {
+    background: rgba(255, 255, 255, 0.28);
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+ 
+  .chat-hint {
+    font-size: 14px;
+    color: #ffffff;
+  }
+
+  .clear-chat-button {
+    background: #920707;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: auto;
+  }
+  .clear-chat-button:hover {
+    background: #cc0a0a;
+    transform: translateY(-1px);
+  }
+
+  .chat-messages-container {
+    flex: 1;
+    padding: 24px;
+    padding-right: 16px;
+    overflow-y: auto;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Скролл */
+  .chat-messages-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  .chat-messages-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+  .chat-messages-container::-webkit-scrollbar-thumb {
+    background: rgba(203, 213, 225, 0.6);
+    border-radius: 3px;
+  }
+  .chat-messages-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.8);
+  }
+
+  .message {
+    padding: 14px 20px;
+    border-radius: 20px;
+    font-size: 20px;
+    line-height: 1.45;
+    max-width: 78%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    animation: fadeInUp 0.35s ease-out;
+    word-wrap: break-words;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .bot-message1 {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.5);
+    color: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    backdrop-filter: blur(10px);
+  }
+
+  .user-message1 {
+    align-self: flex-end;
+    background: rgba(204, 10, 10, 0.9);
+    color: #fff;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  /* === ПОЛЯ ВВОДА === */
+.initial-input-container,
+.chat-input-container {
+    position: relative;
+    background: transparent;
+    border-radius: 28px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.initial-input-container::before,
+.chat-input-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 28px;
+    z-index: -1;
+}
+
+  .initial-input-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 94%;
+    max-width: 1000px;
+    z-index: 10;
+  }
+
+  .chat-input-container {
+    margin: 0 20px 16px;
+    border-radius: 24px;
+  }
+
+  .initial-input-container input,
+  .chat-input-container input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 20px;
+    color: #ffffff;
+    border-bottom: 2px solid rgba(203, 213, 225, 0.7);
+    padding: 8px 0;
+    transition: border-color 0.3s ease;
+    font-weight: 500;
+  }
+
+  .initial-input-container input {
+    font-size: 28px;
+  }
+
+  .initial-input-container input::placeholder,
+  .chat-input-container input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .initial-input-container input:focus,
+  .chat-input-container input:focus,
+  .initial-input-container input:hover,
+  .chat-input-container input:hover {
+    border-color: #cc0a0a;
+  }
+
+  .initial-input-container button,
+  .chat-input-container button {
+    background: #cc0a0a;
+    color: white;
+    border: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(204, 10, 10, 0.35);
+  }
+
+  .chat-input-container button {
+    width: 44px;
+    height: 44px;
+  }
+
+  .initial-input-container button:hover,
+  .chat-input-container button:hover {
+    background: #a00808;
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: 0 8px 24px rgba(204, 10, 10, 0.45);
+  }
+
+  .hidden { display: none !important; }
+
+  /* === АДАПТИВ === */
+  @media (max-width: 767px) {
+    .shape-1 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(45deg, #810000, #990612);
+    top: -200px;
+    left: -200px;
+    animation: float 20s infinite ease-in-out;
+  }
+  .shape-2 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(45deg, #333333, #775252);
+    bottom: -150px;
+    right: -150px;
+    animation: float 25s infinite ease-in-out reverse;
+  }
+  .shape-3 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(45deg, #252525, #8d6d6d);
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: float 18s infinite ease-in-out;
+  }
+
+    .hero-chat { padding: 20px 0; }
+    .hero-text { padding: 0 16px; margin-bottom: 24px; }
+    
+    .chat-widget {
+      height: calc(100vh - 180px);
+      margin: 0;
+      box-shadow: none;
     }
+    .initial-input-container {
+      width: 90%;
+      max-width: 600px;
+      padding: 16px;
+    }
+    .initial-input-container input { font-size: 22px; }
+    .initial-input-container button { width: 48px; height: 48px; }
+    .message { font-size: 18px; padding: 12px 16px; max-width: 85%; }
+    .chat-messages-container { padding: 16px; }
+    .bg-shape { filter: blur(60px); }
+  }
+
+  @media (max-width: 480px) {
+    .heading_h1 { font-size: 28px; }
+    .heading_h4 { font-size: 16px; }
+    .chat-header { padding: 10px 12px; }
   }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
   // Страховка: сделать чат видимым и центрированным
   const chatWidget = document.getElementById('chatWidget');
   if (chatWidget) {
