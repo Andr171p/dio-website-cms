@@ -16,8 +16,8 @@
                         {% for case in page.get_cases %}
                             <a href="{{ case.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
                                 <!-- Фоновое изображение с анимацией -->
-                                {% if case.customer_logo %}
-                                    {% image case.customer_logo fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
+                                {% if case.main_image %}
+                                    {% image case.main_image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
                                 {% endif %}
                                 <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/25 text-white">
                                     <!-- Верхняя часть: Категория -->

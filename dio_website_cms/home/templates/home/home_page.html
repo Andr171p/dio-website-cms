@@ -15,12 +15,30 @@
                         <div id="w-node-{{ block.id }}-header" class="header margin-bottom_none">
                             {% for slide in block.value.slides %}
                                 <h1 class="heading_h1">{{ slide.value.headline }}</h1>
-                                <div class="subheading">{{ slide.value.subheadline }}</div>
+                                <div class="subheading heading_h4">{{ slide.value.subheadline }}</div>
                                 <div class="button-group">
                                     {% if block.value.buttons %}
+
+
+
+
                                         {% for button in block.value.buttons %}
-                                            <a href="{{ button.value.url }}" class="button{% if button.is_secondary %} is-secondary{% endif %} w-button">{{ button.text }}</a>
-                                        {% endfor %}
+  <a href="{{ button.value.url }}"
+     class="animated-btn-tilda{% if button.is_secondary %} is-secondary{% endif %} ">
+     
+     <svg viewBox="0 0 160 45" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
+       <rect x="0" y="0" width="160" height="45" rx="8" ry="8"
+             fill="none"
+             stroke="#fff"
+             stroke-width="2"
+             stroke-dasharray="0 422"
+             stroke-dashoffset="0"
+             style="transition: all 1.35s cubic-bezier(0.19,1,0.22,1);"/>
+     </svg>
+     
+     {{ button.text }}
+  </a>
+{% endfor %}
                                     {% endif %}
                                 </div>
                             {% endfor %}
@@ -46,10 +64,105 @@
         {% endif %}
     {% endfor %}
 {% endif %}
+<style>
+  .animated-btn-tilda {
+    font-family: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_typography---button--button-font);
+    font-size: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_typography---base-typography--base-font-size);
+    font-weight: 400;
+  line-height: 1.2;
+  text-decoration: none;
+    position: relative;
+    display: inline-block;
+    width: 160px;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 400;
+    color: #fff !important;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    overflow: hidden;
+    margin: 0 10px 2em 0;
+    box-sizing: border-box;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
 
+  .animated-btn-tilda:not(.is-secondary) {
+    background: #920707;
+  }
 
+  .animated-btn-tilda.is-secondary {
+    background: transparent;
+    box-shadow: 0 0 0 2px #000 inset;
+  }
 
+  .animated-btn-tilda:hover:not(.is-secondary) {
+    background: #a30707;
+  }
 
+  .animated-btn-tilda:hover.is-secondary {
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 0 3px #000 inset;
+  }
+
+  .animated-btn-tilda svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+
+  .animated-btn-tilda rect {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-dasharray: 0 422;
+    stroke-dashoffset: 0;
+    transition: all 1.35s cubic-bezier(0.19, 1, 0.22, 1);
+    width: 160;
+    height: 45;
+    x: 0;
+    y: 0;
+    rx: 8;
+    ry: 8;
+  }
+
+  .animated-btn-tilda:hover rect,
+  .animated-btn-tilda:active rect {
+    stroke-width: 4;
+    stroke-dasharray: 80 410;
+    stroke-dashoffset: -330;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.animated-btn-tilda').forEach(btn => {
+      const rect = btn.querySelector('rect');
+
+      btn.addEventListener('mouseenter', () => {
+        rect.setAttribute('stroke-width', '4');
+        rect.setAttribute('stroke-dasharray', '80 410');
+        rect.setAttribute('stroke-dashoffset', '-330');
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        rect.setAttribute('stroke-width', '2');
+        rect.setAttribute('stroke-dasharray', '0 422');
+        rect.setAttribute('stroke-dashoffset', '0');
+      });
+
+      // Поддержка тач-устройств
+      btn.addEventListener('touchstart', () => {
+        rect.setAttribute('stroke-width', '4');
+        rect.setAttribute('stroke-dasharray', '80 410');
+        rect.setAttribute('stroke-dashoffset', '-330');
+      });
+    });
+  });
+</script>
 
 <!-- Остальная часть контента -->
 {% include "home/chat.html" %}

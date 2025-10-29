@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
-
+{% load wagtailcore_tags wagtailimages_tags static %}
 {% block content %}
 <!-- Описание вакансии -->
 <section class="section">
@@ -9,13 +8,13 @@
         
         <div class="vacancy-content">
             <h2>Обязанности:</h2>
-            <p>{{ page.responsibilities|linebreaks }}</p>
+            <div>{{ page.responsibilities|linebreaks }}</div>
             
             <h2>Требования:</h2>
-            <p>{{ page.requirements|linebreaks }}</p>
+            <div>{{ page.requirements|linebreaks }}</div>
             
             <h2>Условия:</h2>
-            <p>{{ page.conditions|linebreaks }}</p>
+            <div>{{ page.conditions|linebreaks }}</div>
         </div>
     </div>
 </section>

@@ -1,5 +1,5 @@
 /* Добавьте это в ваш основной CSS файл */
-@import 'normalize.css';
+
 
 html, body {
     height: 100%;
@@ -8946,7 +8946,7 @@ textarea.w-input, textarea.w-select {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1900px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 0 1.5rem;
   height: 70px;
@@ -9010,9 +9010,9 @@ textarea.w-input, textarea.w-select {
 
 .nav-link {
   text-decoration: none;
-  color: #666;
+  color: #000000;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 1rem;
   transition: color 0.2s ease;
   white-space: nowrap;
   margin-bottom: 0px;
@@ -9020,7 +9020,7 @@ textarea.w-input, textarea.w-select {
 }
 
 .nav-link:hover {
-  color: #121212;
+  color: #838383;
 }
 
 /* Выпадающие меню */
@@ -9032,9 +9032,9 @@ textarea.w-input, textarea.w-select {
 
 .dropdown__toggle-link {
   text-decoration: none;
-  color: #666;
+  color: #000000;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 1rem;
   transition: color 0.2s ease;
   white-space: nowrap;
   margin-right: 0.25rem;
@@ -9043,7 +9043,7 @@ textarea.w-input, textarea.w-select {
 }
 
 .dropdown__toggle-link:hover {
-  color: #0f0f0f;
+  color: #535353;
 }
 
 .dropdown__toggle {
@@ -9099,15 +9099,15 @@ textarea.w-input, textarea.w-select {
   display: block;
   padding: 0.5rem 1.5rem;
   text-decoration: none;
-  color: #666;
-  font-size: 0.875rem;
+  color: #000000;
+  font-size: 1rem;
   transition: all 0.2s ease;
   white-space: nowrap;
 }
 
 .dropdown__link:hover {
-  background: rgba(0, 0, 0, 0.04);
-  color: #0f0f0f;
+  background: rgba(135, 135, 135, 0.04);
+  color: #666666;
 }
 
 /* Мега-меню */

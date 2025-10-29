@@ -12,7 +12,7 @@
                     <img src="{{ bg_image.url }}" alt="{{ block.value.title }}" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-black/50"></div>
                 </div>
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
+                <div class="container mx-auto px-4 lg:px-8  relative z-10">
                     <div class="grid grid-cols-1 gap-8 items-center">
                         <div class="space-y-6">
                             <span class="inline-block px-4 py-2 rounded-full bg-red-600/50 text-white text-sm font-semibold mb-4 animate-fadeIn">
@@ -33,7 +33,7 @@
         {% elif block.block_type == 'text' %}
             <!-- Text Section -->
             <section class="section">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="prose gs-reveal">
                         {{ block.value.content|richtext }}
                     </div>
@@ -43,7 +43,7 @@
         {% elif block.block_type == 'what_we_do' %}
             <!-- What We Do Section -->
             <section class="section is-secondary">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
                         <div class="image-ratio_auto">
                             {% image block.value.image fill-900x800 class="image_cover rounded-lg gs-reveal" alt=block.value.title %}
@@ -61,7 +61,7 @@
         {% elif block.block_type == 'image_card' %}
             <!-- Image Card Section -->
             <section class="section">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="w-layout-grid grid_1-col gap-2 lg:gap-3 mt-12">
                         <div class="card on-secondary gs-reveal">
                             <div class="card_body">
@@ -88,7 +88,7 @@
         {% elif block.block_type == 'card_grid' %}
             <!-- Card Grid Section -->
             <section class="section">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
                         <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
                     </div>
@@ -125,7 +125,7 @@
         {% elif block.block_type == 'metrics' %}
             <!-- Trust Metrics Section -->
             <section class="section is-secondary">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
                         <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
                     </div>
@@ -150,7 +150,7 @@
         {% elif block.block_type == 'gallery' %}
             <!-- Gallery Section -->
             <section class="section">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     {% if block.value.title %}
                         <div class="header is-align-center">
                             <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
@@ -169,7 +169,7 @@
         {% elif block.block_type == 'video' %}
             <!-- Video Section -->
             <section class="section is-secondary">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     {% if block.value.title %}
                         <div class="header is-align-center">
                             <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
@@ -196,7 +196,7 @@
         {% elif block.block_type == 'accordion' %}
             <!-- Accordion Section -->
             <section class="section">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
                         <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
                     </div>
@@ -219,7 +219,7 @@
         {% elif block.block_type == 'cta' %}
             <!-- CTA Section -->
             <section class="section is-accent-primary">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
                         <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
                         <div class="paragraph_large text-color_secondary prose gs-reveal">{{ block.value.description|richtext }}</div>
@@ -235,7 +235,7 @@
         {% elif block.block_type == 'supported_configurations' %}
             <!-- Supported Configurations Section -->
             <section class="section is-secondary">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
                         <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
                     </div>
@@ -263,7 +263,7 @@
         {% elif block.block_type == 'system_requirements' %}
             <!-- System Requirements Section -->
             <section class="section">
-                <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
                         <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
                     </div>
@@ -288,7 +288,7 @@
     {% if other_1c_services %}
     <!-- Секция других сервисов 1С -->
     <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div class="container mx-auto px-4 lg:px-8 ">
             <!-- Заголовок -->
             <div class="flex items-center justify-between mb-12">
                 <h2 class="heading_h2 max-width_large mb-0">Другие сервисы 1С</h2>
