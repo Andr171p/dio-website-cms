@@ -1,6 +1,24 @@
-/* Добавьте это в ваш основной CSS файл */
-
-
+/* Базовые сбросы и настройка фона */
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #333; /* Темный фон для пустых областей */
+    color: white; /* Цвет текста, если нужен */
+}
+.animated-btn-tilda.is-secondary {
+    background: transparent;
+    color:#000000 !important ; 
+    box-shadow: 0 0 0 2px #000 inset !important;
+  }
+/* Основной контейнер с контентом */
+.main-wrapper {
+    width: 100%;
+    max-width: 1200px; /* Ограничиваем ширину контента для удобочитаемости */
+    margin: 0 auto; /* Автоматические отступы слева/справа центрируют блок */
+    background-color: white; /* Фон самого контента */
+    color: black; /* Цвет текста внутри контейнера */
+    min-height: 100vh; /* Чтобы занимал всю высоту окна */
+}
 html, body {
     height: 100%;
     margin: 0;

@@ -6,7 +6,7 @@
     
 
     <!-- Hero Section -->
-    <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
+    <section class="section is-secondary  relative min-h-[700px] flex items-center overflow-hidden">
       {% if page.hero_image %}
         {% image page.hero_image original as bg_image %}
         <div class="absolute inset-0 z-0">
@@ -14,14 +14,14 @@
           <div class="absolute inset-0 bg-black/30"></div>
         </div>
       {% endif %}
-      <div class="container mx-auto px-4 lg:px-8  relative z-10">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      <div class="container mx-auto  relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8 lg:gap-12 items-center">
           <div class="space-y-6 ">
-            <h1 class="heading_h3  text-white drop-shadow-md gs-reveal">
+            <h1 class="heading_h3 pb-10 text-white drop-shadow-md gs-reveal">
               {{ page.hero_title }}
             </h1>
             {% if page.hero_description_1 %}
-              <p class="heading_h2  text-white/90 gs-reveal">
+              <p class="heading_h2 py-10 text-white/90 gs-reveal">
                 {{ page.hero_description_1|striptags }}
               </p>
             {% endif %}
@@ -175,17 +175,19 @@
         <div class="header is-align-center">
           <h2 class="heading_h2 gs-reveal">{{ page.industries_title }}</h2>
         </div>
-        <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
-          {% if page.industry_01 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_01 }}</h3></div>{% endif %}
-          {% if page.industry_02 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_02 }}</h3></div>{% endif %}
-          {% if page.industry_03 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_03 }}</h3></div>{% endif %}
-          {% if page.industry_04 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_04 }}</h3></div>{% endif %}
-          {% if page.industry_05 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_05 }}</h3></div>{% endif %}
-          {% if page.industry_06 %}<div class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_06 }}</h3></div>{% endif %}
+        <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12 text-center">
+          {% if page.industry_01 %}<div style="    border-left: 1px solid #7f0303;" class=" padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_01 }}</h3></div>{% endif %}
+          {% if page.industry_03 %}<div style="    border-left: 1px solid #7f0303;" class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_03 }}</h3></div>{% endif %}
+          {% if page.industry_04 %}<div style="    border-left: 1px solid #7f0303;" class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_04 }}</h3></div>{% endif %}
+          {% if page.industry_05 %}<div style="    border-left: 1px solid #7f0303;" class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_05 }}</h3></div>{% endif %}
+          {% if page.industry_06 %}<div style="    border-left: 1px solid #7f0303;" class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_06 }}</h3></div>{% endif %}
+          {% if page.industry_02 %}<div style="    border-left: 1px solid #7f0303;" class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_02 }}</h3></div>{% endif %}
         </div>
       </div>
     </section>
 {% include "home/statistics_section.html"  %}
+{% include "home/location.html"  %}
+
 
     <!-- Trust Metrics -->
 <section class="section is-secondary pt-2">

@@ -7,7 +7,7 @@ from wagtail.images.api.fields import ImageRenditionField as ImageAPIField
 from django.db import models
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import StreamField
-from home.models import MainAchievementBlock,AdditionalAchievementBlock
+from home.models import MainAchievementBlock,AdditionalAchievementBlock, GlobalPresenceBlock
 
 # Create your models here.
 class AboutPage(Page):
@@ -237,7 +237,23 @@ class AboutPage(Page):
         help_text="Ссылка для кнопки в секции 'Контакты'",
     )
 
+    global_presence = StreamField(
+        [
+            ("presence", GlobalPresenceBlock()),  # Это имя должно совпадать с block.block_type
+        ],
+        blank=True,
+        use_json_field=True,
+        verbose_name="Глобальное присутствие",
+        max_num=1,
+    )
+
     content_panels = Page.content_panels + [
+        MultiFieldPanel(
+            [
+                FieldPanel("global_presence"),
+            ],
+            heading="Секция 'Глобальное присутствие'",
+        ),
         MultiFieldPanel(
             [
                 FieldPanel("hero_title"),
@@ -312,6 +328,7 @@ class AboutPage(Page):
     ]
 
     api_fields = [
+        APIField("global_presence"),
         APIField("hero_title"),
         APIField("hero_description_1"),
         APIField("hero_description_2"),
@@ -364,15 +381,14 @@ class AboutPage(Page):
             for block in self.achievements
             if block.block_type == "additional_achievement"
         ]
+        from home.models import HomePage
+        home_page = HomePage.objects.live().first()
+        if home_page:
+            context['home_global_presence'] = home_page.global_presence
         context["hero_service_list_items"] = self.hero_service_list.split("\n") if self.hero_service_list else []
         context["career_items_list"] = self.career_items.split("\n") if self.career_items else []
         return context
-    def get_location(self):
-        """Получить последние кейсы"""
-        from home.models import GlobalPresenceBlock
-
-
-        return GlobalPresenceBlock.objects.live()
+  
 
     class Meta:
         verbose_name = "Страница 'О компании'"

@@ -67,8 +67,8 @@
                     {% if block.block_type == "technologies" %}
                         <ul class="space-y-3">
                             {% for tech in block.value %}
-                                <li class="flex items-center gap-2 text-gray-600">
-                                    <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                <li class="flex items-center gap-2 ">
+                                    <svg class="w-5 h-5 " fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                     </svg>
                                     <span>{{ tech }}</span>
@@ -80,12 +80,12 @@
                             {% for metric in block.value %}
                                 <div class="bg-gray-50 p-4 rounded-lg shadow-md">
                                     <div class="text-xl font-bold text-gray-800 mb-1">{{ metric.value }}</div>
-                                    <div class="text-sm text-gray-600">{{ metric.description }}</div>
+                                    <div class="text-sm ">{{ metric.description }}</div>
                                 </div>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ block.value|richtext }}
+                        <div class="heading_h4 text-white">{{ block.value|richtext }}</div>
                     {% endif %}
                 </div>
             </div>
@@ -174,7 +174,7 @@
     margin-bottom: 0.75rem !important;
 }
 .prose p {
-    color: #64748b !important;
+    color: #ffffff !important;
     line-height: 1.75 !important;
     margin-bottom: 1.25rem !important;
 }
