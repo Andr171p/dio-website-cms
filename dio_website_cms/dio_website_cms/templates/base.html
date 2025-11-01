@@ -67,22 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('a[href^="?"]').forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        const url = link.href;
-        document.querySelector('#cases-section').style.opacity = '0.5';
-        setTimeout(() => { window.location = url; }, 150);
-      });
-    });
-  });
+
 </script>
 
 </head>
-
-<body class="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+<body class="min-h-screen bg-white transition-colors duration-300" id="body-theme"></body>
     {% wagtailuserbar %}
 
     {% include "base/header.html" %}
@@ -193,31 +182,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     <!-- Переключение темы -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggle = document.getElementById('theme-toggle');
-            const style = document.getElementById('theme-style');
-            const light = document.getElementById('light-icon');
-            const dark = document.getElementById('dark-icon');
-            let theme = localStorage.getItem('theme') || 'light';
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggle = document.getElementById('theme-toggle');
+        const style = document.getElementById('theme-style');
+        const light = document.getElementById('light-icon');
+        const dark = document.getElementById('dark-icon');
+        const body = document.body;
 
-            const apply = (t) => {
-                theme = t;
-                localStorage.setItem('theme', t);
-                style.href = t === 'dark' ? "{% static 'css/theme-light.css' %}?v=1.0" : "{% static 'css/theme-dark.css' %}?v=1.0";
-                document.body.classList.toggle('theme-dark', t === 'dark');
-                document.body.classList.toggle('theme-light', t === 'light');
-                light.classList.toggle('hidden', t === 'dark');
-                dark.classList.toggle('hidden', t === 'light');
-                toggle.classList.toggle('bg-gray-200', t === 'dark');
-                toggle.classList.toggle('bg-gray-800', t === 'light');
-                toggle.classList.toggle('text-black', t === 'dark');
-                toggle.classList.toggle('text-white', t === 'light');
-            };
+        let theme = localStorage.getItem('theme') || 'light';
 
-            apply(theme);
-            toggle.addEventListener('click', () => apply(theme === 'light' ? 'dark' : 'light'));
-        });
-    </script>
+        const apply = (t) => {
+            theme = t;
+            localStorage.setItem('theme', t);
+
+            // Меняем CSS-файл
+            style.href = t === 'dark' 
+                ? "{% static 'css/theme-light.css' %}?v=1.0" 
+                : "{% static 'css/theme-dark.css' %}?v=1.0";
+
+            // КЛЮЧЕВОЕ: добавляем/удаляем класс `dark`
+            body.classList.toggle('dark', t === 'dark');
+
+            // Иконки
+            light.classList.toggle('hidden', t === 'dark');
+            dark.classList.toggle('hidden', t === 'light');
+
+            // Кнопка
+            toggle.classList.remove('bg-gray-200', 'bg-gray-800', 'text-black', 'text-white');
+            if (t === 'dark') {
+                toggle.classList.add('bg-gray-200', 'text-black');
+            } else {
+                toggle.classList.add('bg-gray-800', 'text-white');
+            }
+        };
+
+        apply(theme);
+        toggle.addEventListener('click', () => apply(theme === 'light' ? 'dark' : 'light'));
+    });
+</script>
 
     <!-- Дополнительные стили -->
     <style>

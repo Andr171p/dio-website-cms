@@ -1,35 +1,52 @@
+# programms/models.py
 from django.db import models
 from wagtail.models import Page
 from wagtail.fields import RichTextField, StreamField
 from wagtail.admin.panels import FieldPanel
 from wagtail.blocks import (
-    CharBlock, RichTextBlock, StructBlock, ListBlock, StreamBlock, RawHTMLBlock,ChoiceBlock
+    CharBlock, RichTextBlock, StructBlock, ListBlock, StreamBlock,
+    RawHTMLBlock, ChoiceBlock
 )
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.contrib.table_block.blocks import TableBlock
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from wagtail.snippets.models import register_snippet
+from modelcluster.models import ClusterableModel
 
 
-# ------------------------------------------
-# Базовые составные блоки 
-# ------------------------------------------
+# ========================================
+# ДИНАМИЧЕСКИЕ КАТЕГОРИИ (через админку)
+# ========================================
+@register_snippet
+class ProductCategory(ClusterableModel):
+    name = models.CharField(max_length=100, verbose_name="Название")
+    slug = models.SlugField(max_length=100, unique=True, verbose_name="Slug")
 
+    panels = [
+        FieldPanel('name'),
+        FieldPanel('slug'),
+    ]
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Категория продукта"
+        verbose_name_plural = "Категории продуктов"
+# ========================================
+# БЛОКИ — как в cases
+# ========================================
 class NumberedListBlock(StructBlock):
-    items = ListBlock(
-        RichTextBlock(features=['bold', 'italic'], help_text="Элемент списка.")
-    )
-
+    items = ListBlock(RichTextBlock(features=['bold', 'italic']))
     class Meta:
         icon = "list-ol"
         label = "Нумерованный список"
 
 
 class BulletListBlock(StructBlock):
-    items = ListBlock(
-        RichTextBlock(features=['bold', 'italic'], help_text="Элемент списка.")
-    )
-
+    items = ListBlock(RichTextBlock(features=['bold', 'italic']))
     class Meta:
         icon = "list-ul"
         label = "Маркированный список"
@@ -39,11 +56,9 @@ class ImageCarouselBlock(ListBlock):
     def __init__(self, **kwargs):
         super().__init__(
             StructBlock([
-                ('image', ImageChooserBlock(help_text="Изображение для карусели.")),
-                ('caption', CharBlock(required=False, help_text="Подпись к изображению.")),
+                ('image', ImageChooserBlock()),
+                ('caption', CharBlock(required=False)),
             ]),
-            verbose_name="Карусель изображений",
-            help_text="Список изображений для карусели.",
             **kwargs
         )
 
@@ -52,11 +67,9 @@ class ImageGridBlock(ListBlock):
     def __init__(self, **kwargs):
         super().__init__(
             StructBlock([
-                ('image', ImageChooserBlock(help_text="Изображение для сетки.")),
-                ('caption', CharBlock(required=False, help_text="Подпись к изображению.")),
+                ('image', ImageChooserBlock()),
+                ('caption', CharBlock(required=False)),
             ]),
-            verbose_name="Сетка изображений",
-            help_text="Сетка изображений с подписями.",
             **kwargs
         )
 
@@ -65,215 +78,159 @@ class CardsBlock(ListBlock):
     def __init__(self, **kwargs):
         super().__init__(
             StructBlock([
-                ('title', CharBlock(help_text="Заголовок карточки.")),
-                ('image', ImageChooserBlock(required=False, help_text="Изображение для карточки.")),
-                ('description', RichTextBlock(help_text="Описание карточки.")),
-                ('button_text', CharBlock(required=False, help_text="Текст кнопки.")),
-                ('button_url', CharBlock(required=False, help_text="URL для кнопки.")),
+                ('title', CharBlock()),
+                ('image', ImageChooserBlock(required=False)),
+                ('description', RichTextBlock()),
+                ('button_text', CharBlock(required=False)),
+                ('button_url', CharBlock(required=False)),
             ]),
-            verbose_name="Карточки",
-            help_text="Сетка карточек с заголовком, изображением и описанием.",
             **kwargs
         )
 
 
-# ------------------------------------------
-# Универсальный блок секции 
-# ------------------------------------------
-
 class SectionBlock(StructBlock):
-    heading = CharBlock(
-        verbose_name="Заголовок секции",
-        help_text="Например: 'Описание', 'Преимущества', 'Основная информация'."
-    )
+    heading = CharBlock()
 
     content = StreamBlock([
-        ("paragraph", RichTextBlock(features=["bold", "italic", "ol", "ul", "link", "superscript"], label="Параграф")),
+        ("paragraph", RichTextBlock(features=["bold", "italic", "ol", "ul", "link"])),
         ("image", StructBlock([
-            ("image", ImageChooserBlock(
-                help_text="Изображение для секции.",
-                required=True
-            )),
-            ("image_position", ChoiceBlock(
-                choices=[
-                    ("left", "Слева"),
-                    ("right", "Справа")
-                ],
-                default="right",
-                help_text="Выберите позицию изображения"
-            )),
+            ("image", ImageChooserBlock(required=True)),
+            ("image_position", ChoiceBlock(choices=[("left", "Слева"), ("right", "Справа")], default="right")),
             ("text_content", StructBlock([
-                ("heading", CharBlock(
-                    help_text="Heading text.",
-                    required=True
-                )),
-                ("description", RichTextBlock(
-                    features=["bold", "italic", "ol", "ul", "link", "superscript"],
-                    help_text="Description text.",
-                    required=False
-                )),
-                ("button_text", CharBlock(
-                    default="",
-                    help_text="Button text.",
-                    required=False
-                )),
-                ("button_url", CharBlock(
-                    help_text="Button URL.",
-                    required=False
-                )),
-            ], help_text="Text content block.", required=True, default={"heading": "Default Heading"}))
-        ], verbose_name="Image with Text", help_text="Block with image and text on the left or right.", default={"image": None, "image_position": "right", "text_content": {"heading": "Default Heading"}})),
+                ("heading", CharBlock(required=True)),
+                ("description", RichTextBlock(required=False)),
+                ("button_text", CharBlock(required=False)),
+                ("button_url", CharBlock(required=False)),
+            ]))
+        ])),
         ("image_carousel", ImageCarouselBlock()),
         ("image_grid", ImageGridBlock()),
-        ("table", TableBlock(label="Таблица")),
+        ("table", TableBlock()),
         ("numbered_list", NumberedListBlock()),
         ("bullet_list", BulletListBlock()),
         ("quote", StructBlock([
-            ("text", RichTextBlock(help_text="Текст цитаты.")),
-            ("author", CharBlock(required=False, help_text="Автор цитаты.")),
-        ], verbose_name="Цитата", icon="openquote")),
-        ("embed", EmbedBlock(verbose_name="Видео")),
-        ("raw_html", RawHTMLBlock(verbose_name="HTML-код")),
+            ("text", RichTextBlock()),
+            ("author", CharBlock(required=False)),
+        ])),
+        ("embed", EmbedBlock()),
+        ("raw_html", RawHTMLBlock()),
         ("button", StructBlock([
-            ("text", CharBlock(default="Нажмите здесь", help_text="Текст кнопки.")),
-            ("url", CharBlock(help_text="URL для кнопки.")),
-        ], verbose_name="Кнопка", icon="link")),
-        ("accordion", ListBlock(
-            StructBlock([
-                ("title", CharBlock(help_text="Заголовок аккордеона.")),
-                ("content", RichTextBlock(help_text="Содержимое аккордеона.")),
-            ]),
-            verbose_name="Аккордеон",
-            help_text="Раскрывающиеся секции."
-        )),
-        ("tabs", ListBlock(
-            StructBlock([
-                ("title", CharBlock(help_text="Заголовок вкладки.")),
-                ("content", RichTextBlock(help_text="Содержимое вкладки.")),
-            ]),
-            verbose_name="Вкладки",
-            help_text="Переключаемые вкладки."
-        )),
+            ("text", CharBlock()),
+            ("url", CharBlock()),
+        ])),
+        ("accordion", ListBlock(StructBlock([
+            ("title", CharBlock()),
+            ("content", RichTextBlock()),
+        ]))),
+        ("tabs", ListBlock(StructBlock([
+            ("title", CharBlock()),
+            ("content", RichTextBlock()),
+        ]))),
         ("call_to_action", StructBlock([
-            ("title", CharBlock(help_text="Заголовок призыва к действию.")),
-            ("description", RichTextBlock(help_text="Описание призыва к действию.")),
-            ("button_text", CharBlock(default="Узнать больше", help_text="Текст кнопки.")),
-            ("button_url", CharBlock(help_text="URL для кнопки.")),
-        ], verbose_name="Призыв к действию", icon="pick")),
-        ("divider", StructBlock([], verbose_name="Разделитель")),
+            ("title", CharBlock()),
+            ("description", RichTextBlock()),
+            ("button_text", CharBlock()),
+            ("button_url", CharBlock()),
+        ])),
+        ("divider", StructBlock([])),
         ("spoiler", StructBlock([
-            ("title", CharBlock(help_text="Заголовок спойлера.")),
-            ("content", RichTextBlock(help_text="Содержимое спойлера.")),
-        ], verbose_name="Спойлер", icon="collapse")),
+            ("title", CharBlock()),
+            ("content", RichTextBlock()),
+        ])),
         ("cards", CardsBlock()),
-        ("document", DocumentChooserBlock(icon="doc-full", verbose_name="Документ")),
+        ("document", DocumentChooserBlock()),
         ("metrics", StructBlock([
-            ("items", ListBlock(
-                StructBlock([
-                    ("icon", ImageChooserBlock(required=False, help_text="Иконка для метрики.")),
-                    ("value", CharBlock(help_text="Числовое значение метрики.")),
-                    ("label", CharBlock(help_text="Подпись к метрике.")),
-                ])
-            )),
-        ], verbose_name="Метрики", icon="table")),
-    ], verbose_name="Содержимое секции", required=False)
+            ("items", ListBlock(StructBlock([
+                ("icon", ImageChooserBlock(required=False)),
+                ("value", CharBlock()),
+                ("label", CharBlock()),
+            ])))
+        ])),
+    ], required=False)
 
     class Meta:
         icon = "placeholder"
         label = "Секция с заголовком"
-        help_text = "Блок с заголовком и контентом (содержит любые внутренние элементы)."
 
-
-# ------------------------------------------
-# Страницы сайта
-# ------------------------------------------
-
+# ========================================
+# СТРАНИЦА-КАТАЛОГ: ProgramsPage
+# ========================================
 class ProgramsPage(Page):
-    intro = RichTextField(
-        blank=True,
-        features=['bold', 'italic'],
-        verbose_name="Введение",
-        help_text="Краткое описание страницы программ."
-    )
+    intro = RichTextField(blank=True, features=['bold', 'italic'], verbose_name="Введение")
 
-    content_panels = Page.content_panels + [FieldPanel('intro')]
-    subpage_types = ['programms.CategoryPage']
+    content_panels = Page.content_panels + [
+        FieldPanel('intro'),
+    ]
 
-    class Meta:
-        verbose_name = "Программы"
-        verbose_name_plural = "Программы"
-
-
-class CategoryPage(Page):
-    description = RichTextField(
-        blank=True,
-        verbose_name="Описание",
-        help_text="Описание категории программ."
-    )
-
-    content_panels = Page.content_panels + [FieldPanel('description')]
-    parent_page_types = ['programms.ProgramsPage']
     subpage_types = ['programms.ProductPage']
+    parent_page_types = ['home.HomePage']
 
     class Meta:
-        verbose_name = "Категория"
-        verbose_name_plural = "Категории"
+        verbose_name = "Лента Программ"
+
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        products = ProductPage.objects.live().order_by('title')
+        category_slug = request.GET.get('category')
+
+        # Фильтр по slug
+        if category_slug and category_slug != 'all':
+            products = products.filter(category__slug=category_slug)
+
+        # Пагинация
+        paginator = Paginator(products, 9)
+        page = request.GET.get('page')
+        try:
+            products = paginator.page(page)
+        except PageNotAnInteger:
+            products = paginator.page(1)
+        except EmptyPage:
+            products = paginator.page(paginator.num_pages)
+
+        # Все категории
+        categories = ProductCategory.objects.all()
+
+        context.update({
+            'products': products,
+            'categories': categories,
+            'selected_category': category_slug or 'all',
+        })
+        return context
 
 
+# ========================================
+# СТРАНИЦА-ПРОДУКТ: ProductPage
+# ========================================
 class ProductPage(Page):
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=0,
-        blank=True,
-        null=True,
-        verbose_name="Цена",
-        help_text="Цена продукта в рублях."
-    )
-
-    description = RichTextField(
-        blank=True,
-        features=['bold', 'italic', 'ol', 'ul', 'link'],
-        verbose_name="Описание",
-        help_text="Подробное описание продукта."
-    )
-
-    buy_link = models.URLField(
-        blank=True,
-        verbose_name="Ссылка на покупку",
-        help_text="URL для покупки продукта."
-    )
-
-    hero_image = models.ForeignKey(
-        'wagtailimages.Image',
+    category = models.ForeignKey(
+        'programms.ProductCategory',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+',
-        verbose_name="Фоновое изображение",
-        help_text="Фоновое изображение для hero-секции."
+        related_name='products',
+        verbose_name="Категория"
     )
+    price = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    description = RichTextField(blank=True, features=['bold', 'italic', 'ol', 'ul', 'link'])
+    buy_link = models.URLField(blank=True)
+    hero_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
-    content = StreamField(
-        [
-            ('section', SectionBlock()),  # 💡 Новый универсальный блок-секция
-        ],
-        blank=True,
-        null=True,
-        verbose_name="Содержимое",
-        help_text="Гибкое содержимое страницы с секциями."
-    )
+    content = StreamField([
+        ('section', SectionBlock()),
+    ], blank=True, null=True, use_json_field=True)
 
     content_panels = Page.content_panels + [
-        FieldPanel('price', heading="Цена"),
-        FieldPanel('description', heading="Описание"),
-        FieldPanel('buy_link', heading="Ссылка на покупку"),
-        FieldPanel('hero_image', heading="Фоновое изображение"),
-        FieldPanel('content', heading="Содержимое"),
+        FieldPanel('category'),
+        FieldPanel('price'),
+        FieldPanel('description'),
+        FieldPanel('buy_link'),
+        FieldPanel('hero_image'),
+        FieldPanel('content'),
     ]
 
-    parent_page_types = ['programms.CategoryPage']
+    parent_page_types = ['programms.ProgramsPage']
     subpage_types = []
 
     class Meta:
         verbose_name = "Продукт"
-        verbose_name_plural = "Продукты"

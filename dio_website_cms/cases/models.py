@@ -96,6 +96,10 @@ class CaseStudyPage(Page):
         index.SearchField("content"),
     ]
 
+
+    parent_page_types = ['cases.CaseStudyIndexPage']
+    subpage_types = []
+
     def get_context(self, request):
         context = super().get_context(request)
         # Другие кейсы (исключая текущую)
@@ -122,6 +126,9 @@ class CaseStudyIndexPage(Page):
         FieldPanel("intro"),
         FieldPanel("items_per_page"),
     ]
+
+    subpage_types = ['cases.CaseStudyPage']
+    parent_page_types = ['home.HomePage']
 
     def get_context(self, request):
         context = super().get_context(request)

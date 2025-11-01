@@ -9,6 +9,10 @@ html, body {
     margin: 0;
     padding: 0;
 }
+.dark {
+    background-color: #151515;
+    color: #e5e7eb;
+}
 
 body {
     display: flex;
@@ -9442,3 +9446,4 @@ textarea.w-input, textarea.w-select {
     padding-right: 1rem;
   }
 }
+

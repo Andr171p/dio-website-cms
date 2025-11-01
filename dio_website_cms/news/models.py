@@ -71,6 +71,9 @@ class NewsPage(Page):
         index.SearchField("content"),
     ]
 
+    parent_page_types = ['news.NewsIndexPage']
+    subpage_types = []
+
     def get_context(self, request):
         context = super().get_context(request)
         context["other_news"] = (
@@ -92,6 +95,9 @@ class NewsIndexPage(Page):
         FieldPanel("intro"),
         FieldPanel("items_per_page"),
     ]
+
+    subpage_types = ['news.NewsPage']
+    parent_page_types = ['home.HomePage']
 
     def get_context(self, request):
         context = super().get_context(request)

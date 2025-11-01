@@ -17,6 +17,7 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("settings/", include("wagtail.contrib.settings.urls")),
+    
     path("chat/", chat_views.chat, name="chat"),
     path("documents/add/", chat_views.add_document_, name="add document"),
     path("documents/upload/", chat_views.upload_document_, name="upload document"),

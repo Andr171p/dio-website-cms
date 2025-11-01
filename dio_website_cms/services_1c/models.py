@@ -198,6 +198,8 @@ class SystemRequirementsBlock(StructBlock):
 
 # Модель для страницы 1С-сервиса
 class Single1CServicePage(Page):
+
+
     date = models.DateField("Дата публикации", default=timezone.now)
     category = models.CharField(
         max_length=100,
@@ -256,6 +258,9 @@ class Single1CServicePage(Page):
         index.SearchField("content"),
     ]
 
+    parent_page_types = ["services_1c.Service1CIndexPage"]   # только под каталогом
+    subpage_types = []
+
     def get_context(self, request):
         context = super().get_context(request)
         # Отображаем другие 1С-сервисы
@@ -270,6 +275,8 @@ class Single1CServicePage(Page):
 
 # Модель для ленты 1С-сервисов (аналогично ServiceIndexPage)
 class Service1CIndexPage(Page):
+
+
     intro = RichTextField("Введение", features=["bold", "italic", "link"], blank=True)
     items_per_page = models.PositiveIntegerField("Сервисов на странице", default=9)
 
@@ -278,6 +285,9 @@ class Service1CIndexPage(Page):
         FieldPanel("items_per_page"),
     ]
 
+    subpage_types = ['services_1c.Single1CServicePage']
+    parent_page_types = ['home.HomePage']
+    
     def get_context(self, request):
         context = super().get_context(request)
         services = Single1CServicePage.objects.live().order_by("-date")

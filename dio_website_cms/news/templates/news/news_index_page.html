@@ -9,17 +9,21 @@
             <h2 class="heading_h3">Новости</h2>
         </div>
 
-        <!-- Фильтры -->
-        <div class="flex flex-wrap justify-center gap-2 mb-8">
-            <a href="{% pageurl page %}" class="heading_h1 px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 flex items-center {% if not current_category %}bg-gray-600 text-white{% else %}bg-white text-gray-600 hover:text-gray-600 border border-gray-200 hover:border-gray-200{% endif %}">
-                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+        <!-- ФИЛЬТРЫ -->
+        <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-12">
+            <a href="{% pageurl page %}"
+               class="group relative px-5 py-2 transition-all duration-300 heading_h5  z-20">
                 Все новости
+                <span class="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-red-700 to-red-900 rounded-full transition-all duration-300
+                    {% if not current_category %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
             </a>
-            {% for category, label in NEWS_CATEGORY_CHOICES %}
-            <a href="?category={{ category }}" class="heading_h1 px-3 py-1.5 rounded-full font-medium text-sm transition-colors duration-200 {% if current_category == category %}bg-gray-600 text-white{% else %}bg-white text-gray-600 hover:text-gray-600 border border-gray-200 hover:border-gray-200{% endif %}">
+
+            {% for value, label in NEWS_CATEGORY_CHOICES %}
+            <a href="?category={{ value }}"
+               class="group relative px-5 py-2 transition-all duration-300 heading_h5  z-20">
                 {{ label }}
+                <span class="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-red-700 to-red-900 rounded-full transition-all duration-300
+                    {% if current_category == value %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
             </a>
             {% endfor %}
         </div>
