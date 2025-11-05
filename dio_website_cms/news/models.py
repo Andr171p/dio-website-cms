@@ -88,7 +88,7 @@ class NewsPage(Page):
 class NewsIndexPage(Page):
     """Главная страница новостей"""
 
-    intro = RichTextField("Введение", features=["bold", "italic", "link"], blank=True)
+    intro = RichTextField("Введение", features=[ "italic", "link"], blank=True)
     items_per_page = models.PositiveIntegerField("Новостей на странице", default=9)
 
     content_panels = Page.content_panels + [

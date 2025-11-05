@@ -2,172 +2,164 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 {% block content %}
-    
+<section class="section pt-10">
+    <div class="container ">
 
-    <!-- Сетка услуг -->
-    <section class="section pt-10">
-        <div class="  container">
-            <!-- Заголовок + кнопка -->
-        <div class="header mb-0 pt-0">
-                        <h2 class="heading_h3 ">Наши Услуги</h2>
+        <!-- Заголовок -->
+        <div class="header mb-0 pt-0 ">
+            <h2 class="heading_h3  font-bold"> Услуги</h2>
         </div>
-            
-<!-- ФИЛЬТРЫ -->
+
+        <!-- ФИЛЬТРЫ — как у Сервисов 1С -->
         <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-12">
-            <a href="?category=all"
-               class="group relative px-5 py-2 transition-all duration-300 heading_h5  z-20">
-                Все сервисы
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-red-700 to-red-900 rounded-full transition-all duration-300
-                    {% if current_category == 'all' or not current_category %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
+            <a href="{{ request.path }}"
+               class="group relative px-5 py-2 transition-all duration-300 heading_h5 z-20">
+                Все услуги
+                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-900 rounded-full transition-all duration-300
+                    {% if not current_category %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
             </a>
 
             {% for value, label in SERVICE_CATEGORY_CHOICES %}
             <a href="?category={{ value }}"
-               class="group relative px-5 py-2 transition-all duration-300 heading_h5  z-20">
+               class="group relative px-5 py-2 transition-all duration-300 heading_h5 z-20">
                 {{ label }}
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-red-700 to-red-900 rounded-full transition-all duration-300
+                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-900 rounded-full transition-all duration-300
                     {% if current_category == value %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
             </a>
             {% endfor %}
         </div>
 
-            <!-- Сетка услуг -->
-            <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
-                {% for service in services %}
-                    <a href="{{ service.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
-                        <!-- Фоновое изображение с анимацией -->
-                        {% if service.image %}
-                            {% image service.image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
-                        {% endif %}
-                        <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/50 text-white">
-                            <!-- Верхняя часть: Категория -->
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center gap-3">
-                                    <!-- Технологии пока отсутствуют, можно добавить позже -->
-                                </div>
-                                <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
-                                    {{ service.get_category_display }}
-                                </span>
-                            </div>
+        <!-- Сетка услуг — 1-в-1 как у Сервисов 1С -->
+        <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
+            {% for service in services %}
+            <a href="{{ service.url }}"
+               class="card relative overflow-hidden rounded-xl shadow-lg group"
+               style="height: 400px;">
 
-                            <!-- Текст -->
-                            <div class="space-y-4 flex-grow">
-                                <h3 class="heading_h4 text-white">{{ service.headline }}</h3>
-                                <p class="subheading text-gray-200">
-                                    {{ service.intro|striptags|truncatewords:14 }}
-                                </p>
-                            </div>
+                <!-- Фоновое изображение с hover-увеличением -->
+                {% if service.image %}
+                    {% image service.image fill-600x400 as img %}
+                    <img src="{{ img.url }}"
+                         alt="{{ service.headline }}"
+                         class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125">
+                {% endif %}
 
-                            <!-- Текст вместо кнопки -->
-                            <div class="mt-auto text-white text-sm font-medium">
-                                Подробнее
-                                <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </a>
-                {% empty %}
-                    <div class="col-span-3 text-center py-12">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-600 mb-2">Услуг пока нет</h3>
-                        <p class="text-gray-500 max-w-md mx-auto">Скоро здесь появятся наши услуги.</p>
+                <!-- Тёмный оверлей + контент -->
+                <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/15 text-white">
+                    <!-- Категория -->
+                    <div class="flex items-center justify-between mb-4">
+                        <div></div>
+                        <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
+                            {{ service.get_category_display }}
+                        </span>
                     </div>
-                {% endfor %}
-            </div>
 
-            <!-- Пагинация -->
-            {% if services.has_other_pages %}
-                <div class="text-center mt-12">
-                    <ul class="inline-flex gap-2">
-                        {% if services.has_previous %}
-                            <li>
-                                <a href="?page={{ services.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white">
-                                    Предыдущая
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% for num in services.paginator.page_range %}
-                            <li>
-                                <a href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}" class="px-4 py-2 rounded-full {% if services.number == num %}bg-blue-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-blue-600 hover:text-white">
-                                    {{ num }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                        {% if services.has_next %}
-                            <li>
-                                <a href="?page={{ services.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}" class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white">
-                                    Следующая
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
+                    <!-- Заголовок и описание -->
+                    <div class="space-y-3 flex-grow">
+                        <h3 class="heading_h4 text-white">{{ service.headline }}</h3>
+                        <p class="subheading text-gray-200 line-clamp-2">
+                            {{ service.intro|striptags|truncatewords:14 }}
+                        </p>
+                    </div>
+
+                    <!-- Подробнее -->
+                    <div class="mt-auto text-white text-sm font-medium">
+                        Подробнее
+                        <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
                 </div>
-            {% endif %}
+            </a>
+            {% empty %}
+            <div class="col-span-3 py-12 text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100/20 text-red-400 rounded-full mb-4 backdrop-blur-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-400 mb-2">
+                    {% if current_category %}
+                        Нет услуг в категории «{{ current_category.get_category_display }}»
+                    {% else %}
+                        Услуг пока нет
+                    {% endif %}
+                </h3>
+                <p class="text-gray-500 max-w-md mx-auto">
+                    {% if current_category %}
+                        Попробуйте выбрать другую категорию
+                    {% else %}
+                        Скоро здесь появятся наши услуги
+                    {% endif %}
+                </p>
+            </div>
+            {% endfor %}
         </div>
-    </section>
+
+        <!-- Пагинация — как у Сервисов 1С -->
+        {% if services.has_other_pages %}
+        <div class="mt-12 text-center">
+            <ul class="inline-flex gap-2">
+                {% if services.has_previous %}
+                <li>
+                    <a href="?page={{ services.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}"
+                       class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
+                        Предыдущая
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in services.paginator.page_range %}
+                <li>
+                    <a href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}"
+                       class="px-4 py-2 rounded-full {% if services.number == num %}bg-red-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-red-600 hover:text-white transition-all">
+                        {{ num }}
+                    </a>
+                </li>
+                {% endfor %}
+
+                {% if services.has_next %}
+                <li>
+                    <a href="?page={{ services.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}"
+                       class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
+                        Следующая
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<!-- Стили — минимальные, без анимаций появления -->
+<style>
+    .grid_3-col {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .grid_3-col { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+        .grid_3-col { grid-template-columns: 1fr; }
+    }
+
+    /* Доступность */
+    a:focus-visible {
+        outline: 3px solid rgba(239, 68, 68, 0.4);
+        outline-offset: 3px;
+        border-radius: 1rem;
+    }
+</style>
+
 {% endblock %}
-
-<style>
-
-
-.grid_3-col {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-
-
-.mb-8 {
-    margin-bottom: 2rem;
-}
-
-.rich-text.w-richtext {
-    max-width: 800px;
-    margin: 0 auto;
-}
-</style>
-
-<style>
-.prose h1, h1 {
-    font-weight: 700;
-}
-.prose {
-    color: #4B5563;
-}
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.animate-fadeInUp {
-    animation: fadeInUp 0.8s ease-out forwards;
-}
-.line-clamp-2, .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-.line-clamp-2 { -webkit-line-clamp: 2; }
-.line-clamp-3 { -webkit-line-clamp: 3; }
-</style>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const element = entry.target;
-                const delay = parseInt(element.getAttribute('data-delay') || '0') * 100;
-                setTimeout(() => {
-                    element.classList.add("animate-fadeInUp");
-                }, delay);
-            }
-        });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll("[data-animate]:not([data-animated])").forEach(item => observer.observe(item));
-});
-</script>

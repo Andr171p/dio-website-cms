@@ -1,105 +1,204 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags %}
 
-
-
 {% block content %}
-<article class="w-full ">
-    <!-- Hero Section с фиксированным фоном только в секции -->
-<section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
-    <!-- Фоновое изображение -->
-    {% if page.main_image %}
-        {% image page.main_image original as bg_image %}
-        <div class="absolute inset-0 z-0">
-            <img 
-                src="{{ bg_image.url }}" 
-                alt="{{ page.title }}"
-                class="w-full h-full object-cover  top-0 left-0"
-                
-            >
-            <div class="absolute inset-0 bg-black/50"></div>
-        </div>
-    {% endif %}
-    
-    <!-- Контент поверх фона -->
-    <div class="container ">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <!-- Текстовая часть -->
-            <div class="relative z-10 space-y-6">
-                <span class="inline-block px-4 py-2 rounded-full bg-red-800 text-white heading_h5 mb-4 animate-fadeIn">
-                    {{ page.get_industry_display }}
-                </span>
-                <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white drop-shadow-md animate-fadeIn" style="animation-delay: 0.1s;">
-                    {{ page.title }}
-                </h1>
-                {% if page.intro %}
-                    <p class="heading_h3 text-lg lg:text-xl mb-8 max-w-prose leading-relaxed text-white/90 animate-fadeIn" style="animation-delay: 0.2s;">
-                        {{ page.intro|striptags }}
-                    </p>
-                {% endif %}
-                <a href="/cases" style=" color:white;    box-shadow: 0 0 0 2px white inset;" class="inline-block button is-secondary w-button px-6 py-3 rounded-lg shadow-lg hover:bg-red-50 hover:shadow-xl transition-all duration-300 animate-fadeIn" style="animation-delay: 0.3s;">
-                    Подробнее
-                </a>
+<article class="w-full">
+    <!-- HERO -->
+    <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
+        {% if page.main_image %}
+            {% image page.main_image original as bg_image %}
+            <div class="absolute inset-0 z-0">
+                <img src="{{ bg_image.url }}" alt="{{ page.title }}" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/20"></div>
             </div>
-            <!-- Пустая колонка для баланса -->
-            <div></div>
-        </div>
-    </div>
-</section>
+        {% endif %}
 
-    <!-- Основное содержание -->
-<section class="section py-16 lg:py-20">
-    <div class="container  mx-auto px-4 lg:px-8">
-        {% for block in page.content %}
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 animate-fadeInUp">
-                <!-- Заголовок -->
-                <h2 class="heading_h2 text-2xl lg:text-3xl ">
-                    {% if block.block_type == "description" %}Описание проекта
-                    {% elif block.block_type == "challenge" %}Задача
-                    {% elif block.block_type == "solution" %}Решение
-                    {% elif block.block_type == "results" %}Результаты
-                    {% elif block.block_type == "technologies" %}Технологии
-                    {% elif block.block_type == "metrics" %}Ключевые метрики
-                    {% else %}{{ block.block_type|title }}{% endif %}
-                </h2>
-                <!-- Контент -->
-                <div class="heading_h5 col-span-1 lg:col-span-2 text-lg leading-relaxed  prose">
-                    {% if block.block_type == "technologies" %}
-                        <ul class="space-y-3">
-                            {% for tech in block.value %}
-                                <li class="flex items-center gap-2 ">
-                                    <svg class="w-5 h-5 " fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                    </svg>
-                                    <span>{{ tech }}</span>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% elif block.block_type == "metrics" %}
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {% for metric in block.value %}
-                                <div class="bg-gray-50 p-4 rounded-lg shadow-md">
-                                    <div class="text-xl font-bold text-gray-800 mb-1">{{ metric.value }}</div>
-                                    <div class="text-sm ">{{ metric.description }}</div>
-                                </div>
-                            {% endfor %}
+        <div class="container relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                <div class="space-y-6">
+                    <span class="inline-block px-4 py-2 rounded-full bg-red-800 text-white heading_h5 mb-4">
+                        {{ page.get_industry_display }}
+                    </span>
+                    <h1 class="heading_h1 text-4xl lg:text-5xl leading-tight text-white drop-shadow-md">
+                        {{ page.customer_name }}
+                    </h1>
+                    {% if page.intro %}
+                        <div class="heading_h3 text-lg lg:text-xl text-white/90 leading-relaxed max-w-prose">
+                            {{ page.intro|richtext }}
                         </div>
-                    {% else %}
-                        <div class="heading_h4 text-white">{{ block.value|richtext }}</div>
                     {% endif %}
+                    <a href="/cases" class="inline-block button is-secondary px-6 py-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-red-900/50 transition-all duration-300">
+                        Все кейсы
+                    </a>
+                </div>
+                <div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTENT BLOCKS -->
+    {% for block in page.content %}
+        {% cycle 'black' 'secondary' 'darkred' as bg_cycle silent %}
+
+        <section class="section 
+            {% if bg_cycle == 'black' %}bg-black text-white
+            {% elif bg_cycle == 'secondary' %}is-secondary bg-gray-900 text-white
+            {% else %}bg-darkred text-white{% endif %} 
+            py-16 lg:py-24">
+            <div class="container mx-auto px-4 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 animate-fadeInUp">
+                    <!-- Заголовок -->
+                    <h2 class="heading_h2 text-white col-span-full lg:col-span-1">
+                        {% if block.block_type == "description" %}Описание проекта
+                        {% elif block.block_type == "challenge" %}Задача
+                        {% elif block.block_type == "solution" %}Решение
+                        {% elif block.block_type == "results" %}Результаты
+                        {% elif block.block_type == "technologies" %}Технологии
+                        {% elif block.block_type == "metrics" %}Ключевые метрики
+                        {% else %}{{ block.block_type|title }}{% endif %}
+                    </h2>
+
+                    <!-- Контент -->
+                    <div class="col-span-full lg:col-span-2 space-y-6 heading_h5 leading-relaxed prose prose-invert max-w-none">
+                        <!-- 1. ОПИСАНИЕ -->
+                        {% if block.block_type == "description" %}
+                            {{ block.value|richtext }}
+
+                        <!-- 2. ЗАДАЧА -->
+                        {% elif block.block_type == "challenge" %}
+                            <div class="space-y-6">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-xl text-white mb-2">Проблема</h4>
+                                        <div class="text-gray-300">{{ block.value.problem|richtext }}</div>
+                                    </div>
+                                </div>
+                                {% if block.value.context %}
+                                <div class="ml-16 pl-4 border-l-2 border-red-500/30">
+                                    <p class="text-sm text-gray-400 italic">{{ block.value.context|richtext }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                        <!-- 3. РЕШЕНИЕ (шаги) -->
+                        {% elif block.block_type == "solution" %}
+                            <div class="space-y-6">
+                                {% for step in block.value %}
+                                    <div class="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-red-500/30 transition-all duration-300">
+                                        <div class="flex items-start gap-4">
+                                            <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/30 transition-colors">
+                                                {% if step.icon == 'gear' %}
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.065 2.572c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.065c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.065-2.572c-.94-1.543.826-3.31 2.37-2.37 1.19.726 2.573 1.065 2.573 1.065zM15.5 12a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z"/></svg>
+                                                {% elif step.icon == 'code' %}
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 20l-6-6 6-6m4 12l6-6-6-6"/></svg>
+                                                {% elif step.icon == 'database' %}
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                                                {% elif step.icon == 'eye' %}
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                {% elif step.icon == 'check' %}
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                                {% elif step.icon == 'rocket' %}
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                                {% else %}
+                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <h4 class="font-semibold text-lg text-white mb-1">{{ step.title }}</h4>
+                                                <div class="text-sm text-gray-300">{{ step.description|richtext }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        <!-- 4. РЕЗУЛЬТАТЫ (карточки) -->
+                        {% elif block.block_type == "results" %}
+                            <div class="space-y-8">
+                                <p class="text-xl font-medium text-red-400">Ключевые достижения</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {% for card in block.value %}
+                                        <div class="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-red-500/30 transition-all duration-300">
+                                            <div class="flex items-start gap-4">
+                                                <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/30 transition-colors">
+                                                    {% if card.icon == 'zap' %}
+                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                                    {% elif card.icon == 'link' %}
+                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m4.536-4.536l1.101-1.102a4 4 0 105.656 5.656l-4 4a4 4 0 01-5.656 0"/></svg>
+                                                    {% elif card.icon == 'eye' %}
+                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                    {% elif card.icon == 'shield' %}
+                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                                    {% elif card.icon == 'chart' %}
+                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                                                    {% else %}
+                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                    {% endif %}
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-semibold text-lg text-white mb-1">{{ card.title }}</h4>
+                                                    <p class="text-sm text-gray-300 leading-relaxed">{{ card.description }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="pt-6 border-t border-white/10">
+                                    <a href="#contact" class="inline-flex items-center gap-2 text-red-400 hover:text-red-300 font-medium transition-colors">
+                                        Оставить заявку
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+
+                        <!-- 5. ТЕХНОЛОГИИ -->
+                        {% elif block.block_type == "technologies" %}
+                            <ul class="space-y-4">
+                                {% for tech in block.value %}
+                                    <li class="flex items-center gap-3">
+                                        <svg class="w-6 h-6 text-red-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-lg">{{ tech }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                        <!-- 6. МЕТРИКИ -->
+                        {% elif block.block_type == "metrics" %}
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {% for metric in block.value %}
+                                    <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 shadow-lg hover:shadow-red-500/10 transition-shadow">
+                                        <div class="text-2xl lg:text-3xl font-bold text-red-400 mb-2">
+                                            {{ metric.value }}
+                                        </div>
+                                        <div class="text-base text-gray-200">
+                                            {{ metric.description }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        {% else %}
+                            {{ block.value|richtext }}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        {% endfor %}
-    </div>
-</section>
-    
+        </section>
+    {% endfor %}
 
-    <!-- Другие кейсы -->
+    <!-- ДРУГИЕ КЕЙСЫ -->
     {% if other_cases %}
-    <!-- Секция других кейсов -->
     <section class="section is-secondary">
-        <div class="container  mx-auto ">
-            <!-- Заголовок с кнопкой справа - компактный -->
+        <div class="container mx-auto">
             <div class="flex items-center justify-between mb-12">
                 <h2 class="heading_h2 text-3xl lg:text-4xl mb-0">Другие кейсы</h2>
                 <a href="/cases" class="button is-secondary text-white hover:text-red-300 font-medium text-sm inline-flex items-center transition-colors duration-200 shrink-0 ml-6">
@@ -110,144 +209,63 @@
                 </a>
             </div>
 
-            <!-- Сетка кейсов -->
-            <div class="w-layout-grid grid_3-col gap-2 lg:gap-3">
+            <div class="space-y-6">
                 {% for case in other_cases %}
-                    <a href="{{ case.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
-                        <!-- Фоновое изображение с анимацией -->
-                        {% if case.main_image %}
-                            {% image case.main_image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
-                        {% endif %}
-                        <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/50 text-white">
-                            <!-- Верхняя часть: Индустрия -->
-                            <div class=" flex items-center justify-between mb-4">
-                                <div class="flex items-center gap-3">
-                                    <!-- Можно добавить теги или иконки, если нужно -->
-                                </div>
-                                <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
-                                    {{ case.get_industry_display }}
-                                </span>
-                            </div>
-
-                            <!-- Текст -->
-                            <div class=" space-y-4 flex-grow">
-                                <h3 class="heading_h4 text-white ">{{ case.title }}</h3>
-                                <p class="  subheading text-white">
-                                    {{ case.intro|striptags|truncatewords:15 }}
-                                </p>
-                            </div>
-
-                            <!-- Текст вместо кнопки -->
-                            <div class="mt-auto text-white text-sm font-medium">
-                                Подробнее
-                                <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </div>
+                <a href="{{ case.url }}" class="case-bg case-item block group relative p-8 sm:p-10 rounded-3xl transition-colors duration-300 bg-[#151515] hover:bg-[#1e1e1e] overflow-hidden cursor-pointer">
+                    <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                        <div class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 flex items-center justify-center rounded-2xl overflow-hidden">
+                            {% if case.customer_logo %}
+                                {% image case.customer_logo width-140 height-140 as case_img %}
+                                <img src="{{ case_img.url }}" alt="{{ case.title }}" class="max-w-full max-h-full object-contain p-2 md:p-4">
+                            {% else %}
+                                <span class="text-3xl md:text-5xl font-bold text-red-500">{{ case.title|first }}</span>
+                            {% endif %}
                         </div>
-                    </a>
+                        <div class="flex-1 min-w-0 text-left">
+                            {% if case.get_industry_display %}
+                            <span class="inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-full mb-3 heading_h5 font-semibold bg-red-600 text-white text-xs md:text-sm">
+                                {{ case.get_industry_display }}
+                            </span>
+                            {% endif %}
+                            <h3 class="heading_h3 font-bold text-lg md:text-xl leading-tight group-hover:text-red-400 transition-colors duration-300 text-white">
+                                {{ case.title }}
+                            </h3>
+                            <p class="heading_h5 line-clamp-2 leading-relaxed mt-2 text-sm md:text-base text-gray-300">
+                                {{ case.intro|striptags|truncatewords:28 }}
+                            </p>
+                        </div>
+                        <div class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <svg class="w-8 h-8 md:w-9 md:h-9 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
                 {% endfor %}
             </div>
         </div>
     </section>
-{% endif %}
+    {% endif %}
 </article>
 
+<!-- СТИЛИ -->
 <style>
+    .bg-black { background-color: #000000; }
+    .bg-gray-900 { background-color: #111827; }
+    .bg-darkred { background: linear-gradient(135deg, #1a0d0d 0%, #2d0f12 100%); }
 
-.prose {
-    color: #4b5563 !important;
-    max-width: none !important;
-}
-.prose h2 {
-    color: #1e293b !important;
-    font-weight: 700 !important;
-    font-size: 2rem !important;
-    margin-top: 2rem !important;
-    margin-bottom: 1rem !important;
-}
-.prose h3 {
-    color: #1e293b !important;
-    font-weight: 600 !important;
-    font-size: 1.5rem !important;
-    margin-top: 1.5rem !important;
-    margin-bottom: 0.75rem !important;
-}
-.prose p {
-    color: #ffffff !important;
-    line-height: 1.75 !important;
-    margin-bottom: 1.25rem !important;
-}
-.prose ul, .prose ol {
-    color: #ffffff !important;
-    padding-left: 2rem !important;
-    margin-bottom: 1.25rem !important;
-}
-.prose ul li, .prose ol li {
-    margin-bottom: 0.5rem !important;
-    padding-left: 0.5rem !important;
-}
-.prose blockquote {
-    color: #475569 !important;
-    font-style: italic !important;
-    border-left: 4px solid #3b82f6 !important;
-    padding-left: 1rem !important;
-    margin: 1.5rem 0 !important;
-}
-.prose a {
-    color: #3b82f6 !important;
-    text-decoration: underline !important;
-    transition: color 0.3s !important;
-}
-.prose a:hover {
-    color: #2563eb !important;
-}
-.animate-fadeIn {
-    animation: fadeIn 0.5s ease-out forwards;
-}
-.animate-fadeInUp {
-    animation: fadeInUp 0.5s ease-out forwards;
-}
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+    .prose-invert { color: #f1f5f9 !important; max-width: none !important; }
+    .prose-invert h2, .prose-invert h3, .prose-invert h4 { color: #ffffff !important; font-weight: 700 !important; margin-top: 1.5rem !important; margin-bottom: 0.75rem !important; }
+    .prose-invert p { color: #d1d5db !important; font-size: 1.125rem !important; line-height: 1.75 !important; margin-bottom: 1.25rem !important; }
+    .prose-invert ul, .prose-invert ol { padding-left: 1.5rem !important; margin: 1.25rem 0 !important; }
+    .prose-invert li { margin-bottom: 0.75rem !important; font-size: 1.125rem !important; line-height: 1.75 !important; position: relative; }
+    .prose-invert ul > li::before { content: "•"; color: #f87171; font-weight: bold; position: absolute; left: -1.5rem; }
+    .prose-invert a { color: #f87171 !important; text-decoration: underline !important; }
+    .prose-invert a:hover { color: #fca5a5 !important; }
 
-article {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-}
+    .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; animation-fill-mode: both; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .line-clamp-2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 </style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const element = entry.target;
-                const delay = parseFloat(element.getAttribute('data-delay') || '0') * 1000;
-                setTimeout(() => {
-                    element.classList.add('animate-fadeInUp');
-                    element.dataset.animated = 'true';
-                }, delay);
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '50px 0px' });
-
-    document.querySelectorAll('[data-animate]:not([data-animated])').forEach(el => {
-        observer.observe(el);
-    });
-});
-</script>
 {% endblock %}

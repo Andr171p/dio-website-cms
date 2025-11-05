@@ -156,7 +156,7 @@ class SectionBlock(StructBlock):
 # СТРАНИЦА-КАТАЛОГ: ProgramsPage
 # ========================================
 class ProgramsPage(Page):
-    intro = RichTextField(blank=True, features=['bold', 'italic'], verbose_name="Введение")
+    intro = RichTextField(blank=True, features=[ 'italic'], verbose_name="Введение")
 
     content_panels = Page.content_panels + [
         FieldPanel('intro'),
@@ -212,7 +212,7 @@ class ProductPage(Page):
         verbose_name="Категория"
     )
     price = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    description = RichTextField(blank=True, features=['bold', 'italic', 'ol', 'ul', 'link'])
+    description = RichTextField(blank=True, features=[ 'italic', 'ol', 'ul', 'link'])
     buy_link = models.URLField(blank=True)
     hero_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 

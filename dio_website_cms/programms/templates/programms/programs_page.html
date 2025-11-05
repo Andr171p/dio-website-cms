@@ -2,176 +2,135 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 {% block content %}
-<section  class="section pt-10  ">
+  <section class="section pt-10">
+    <div class="container ">
 
-    <div class="container  z-10">
-        <!-- Заголовок -->
-        <div class="mb-12 ">
-            <h2 class="heading_h3  drop-shadow-lg">{{ page.title }}</h2>
-            {% if page.intro %}
-            <div class="max-w-3xl mx-auto mt-4 prose prose-lg text-gray-200">
-                {{ page.intro|richtext }}
-            </div>
+      <!-- Заголовок -->
+      <div class="header mb-0 pt-0">
+        <h2 class="heading_h3  font-bold">Программы</h2>
+      </div>
+
+      <!-- ФИЛЬТРЫ -->
+      <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-12">
+        <a href="?category=all"
+           class="group relative px-5 py-2 transition-all duration-300 heading_h5 z-20">
+          Все программы
+          <span class="absolute -bottom-1 left-0 h-0.5 bg-red-900 rounded-full transition-all duration-300
+              {% if selected_category == 'all' or not selected_category %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
+        </a>
+
+        {% for cat in categories %}
+          <a href="?category={{ cat.slug }}"
+             class="group relative px-5 py-2 transition-all duration-300 heading_h5 z-20">
+            {{ cat.name }}
+            <span class="absolute -bottom-1 left-0 h-0.5 bg-red-900 rounded-full transition-all duration-300
+                {% if selected_category == cat.slug %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
+          </a>
+        {% endfor %}
+      </div>
+
+      <!-- Сетка программ -->
+      <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
+        {% for product in products %}
+          <a href="{% pageurl product %}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
+            <!-- Фоновое изображение -->
+            {% if product.hero_image %}
+              {% image product.hero_image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
             {% endif %}
-        </div>
-
-        <!-- ФИЛЬТРЫ -->
-        <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-12">
-            <a href="?category=all"
-            class="group relative px-5 py-2 transition-all duration-300 heading_h5  z-20"
-            style="position: relative; z-index: 20;">
-                Все программы
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-red-700 to-red-900 rounded-full transition-all duration-300
-                    {% if selected_category == 'all' or not selected_category %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
-            </a>
-
-            {% for cat in categories %}
-            <a href="?category={{ cat.slug }}"
-            class="group relative px-5 py-2 transition-all duration-300 heading_h5  z-20"
-            style="position: relative; z-index: 20;">
-                {{ cat.name }}
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-red-700 to-red-900 rounded-full transition-all duration-300
-                    {% if selected_category == cat.slug %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
-            </a>
-            {% endfor %}
-        </div>
-
-        <!-- ПРОДУКТЫ -->
-        <div class="space-y-8 relative z-10">
-            {% for product in products %}
-            <a href="{% pageurl product %}"
-               class="program-item block group relative p-8 sm:p-10 rounded-3xl transition-all duration-500 ease-out
-                      bg-white/6 backdrop-blur-xl border border-white/10
-                      hover:bg-white/12 hover:border-white/30
-                      hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/10
-                      overflow-hidden cursor-pointer"
-               style="position: relative; z-index: 10;">
-
-                <!-- СТЕКЛЯННЫЙ БЛЕСК -->
-                <div class="glass-shine"></div>
-
-                <!-- Внутренний контент -->
-                <div class="flex flex-col md:flex-row items-center gap-8 relative z-10">
-                    <div class="flex-shrink-0 w-28 h-28 flex items-center justify-center">
-                        {% if product.hero_image %}
-                            {% image product.hero_image width-120 height-120 as img %}
-                            <img src="{{ img.url }}" alt="{{ product.title }}"
-                                 class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-110">
-                        {% else %}
-                            <span class="text-4xl font-bold  drop-shadow">{{ product.title|first }}</span>
-                        {% endif %}
-                    </div>
-
-                    <div class="flex-1 min-w-0 text-left">
-                        {% if product.category %}
-                        <span class="inline-block px-3 py-1.5 bg-red-800  heading_h5 rounded-full mb-3">
-                            {{product.category.name }}
-                        </span>
-                        {% endif %}
-                        <h3 class="heading_h3  group-hover:text-gray-50 transition-colors duration-300">
-                            {{ product.title }}
-                        </h3>
-                        {% if product.description %}
-                        <p class="heading_h5 text-gray-200 line-clamp-2 leading-relaxed mt-1">
-                            {{ product.description|striptags|truncatewords:25 }}
-                        </p>
-                        {% endif %}
-                    </div>
-
-                    <div class="hidden md:flex opacity-0 group-hover:opacity-100 translate-x-0 group-hover:translate-x-3 transition-all duration-500">
-                        <svg class="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </div>
-                </div>
-            </a>
-            {% empty %}
-            <div class="text-center py-20 text-gray-300">
-                <h3 class="text-2xl font-semibold mb-3">Программы не найдены</h3>
-                <p class="max-w-md mx-auto">Скоро здесь появятся наши решения</p>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- ПАГИНАЦИЯ -->
-        {% if products.has_other_pages %}
-        <div class="text-center mt-16 relative z-10">
-            <div class="inline-flex items-center gap-1 bg-white/10 backdrop-blur-xl rounded-xl p-2 border border-white/30">
-                {% if products.has_previous %}
-                <a href="?page={{ products.previous_page_number }}{% if selected_category and selected_category != 'all' %}&category={{ selected_category }}{% endif %}"
-                   class="px-4 py-2 text-sm text-gray-200 hover: hover:bg-white/20 rounded-lg transition-all">Назад</a>
+            <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/15 text-white">
+              <!-- Категория -->
+              <div class="flex items-center justify-between mb-4">
+                <div></div>
+                {% if product.category %}
+                  <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
+                    {{ product.category.name }}
+                  </span>
                 {% endif %}
+              </div>
 
-                {% for num in products.paginator.page_range %}
-                    {% if products.number == num %}
-                    <span class="px-4 py-2 text-sm font-bold bg-gradient-to-r from-red-600 to-gray-600  rounded-lg">{{ num }}</span>
-                    {% elif num > products.number|add:-3 and num < products.number|add:3 %}
-                    <a href="?page={{ num }}{% if selected_category and selected_category != 'all' %}&category={{ selected_category }}{% endif %}"
-                       class="px-4 py-2 text-sm text-gray-200 hover: hover:bg-white/20 rounded-lg transition-all">{{ num }}</a>
-                    {% endif %}
-                {% endfor %}
-
-                {% if products.has_next %}
-                <a href="?page={{ products.next_page_number }}{% if selected_category and selected_category != 'all' %}&category={{ selected_category }}{% endif %}"
-                   class="px-4 py-2 text-sm text-gray-200 hover: hover:bg-white/20 rounded-lg transition-all">Вперед</a>
+              <!-- Заголовок и описание -->
+              <div class="space-y-3 flex-grow">
+                <h3 class="heading_h4 text-white">{{ product.title }}</h3>
+                {% if product.description %}
+                  <p class="subheading text-gray-200 line-clamp-2">
+                    {{ product.description|striptags|truncatewords:14 }}
+                  </p>
                 {% endif %}
+              </div>
+
+              <!-- Подробнее -->
+              <div class="mt-auto text-white text-sm font-medium">
+                Подробнее
+                <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </div>
             </div>
+          </a>
+        {% empty %}
+          <div class="col-span-3 py-12">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100/20 text-red-400 rounded-full mb-4 backdrop-blur-sm">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-400 mb-2">Программы не найдены</h3>
+            <p class="text-gray-500 max-w-md mx-auto">Скоро здесь появятся наши решения</p>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Пагинация -->
+      {% if products.has_other_pages %}
+        <div class="mt-12">
+          <ul class="inline-flex gap-2">
+            {% if products.has_previous %}
+              <li>
+                <a href="?page={{ products.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
+                  Предыдущая
+                </a>
+              </li>
+            {% endif %}
+            {% for num in products.paginator.page_range %}
+              <li>
+                <a href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="px-4 py-2 rounded-full {% if products.number == num %}bg-red-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-red-600 hover:text-white transition-all">
+                  {{ num }}
+                </a>
+              </li>
+            {% endfor %}
+            {% if products.has_next %}
+              <li>
+                <a href="?page={{ products.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}" class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
+                  Следующая
+                </a>
+              </li>
+            {% endif %}
+          </ul>
         </div>
-        {% endif %}
+      {% endif %}
     </div>
-</section>
+  </section>
 
-<style>
+  <!-- Стили — без анимаций появления -->
+  <style>
+    .grid_3-col {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
     .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        -webkit-line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
     }
 
-    a:focus-visible { 
-        outline: 3px solid rgba(59, 130, 246, 0.5); 
-        outline-offset: 2px; 
+    /* Responsive Grid */
+    @media (max-width: 900px) {
+      .grid_3-col { grid-template-columns: repeat(2, 1fr); }
     }
-
-    .program-item {
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.6s ease-out forwards;
+    @media (max-width: 600px) {
+      .grid_3-col { grid-template-columns: 1fr; }
     }
+  </style>
 
-    @keyframes fadeInUp { 
-        to { opacity: 1; transform: translateY(0); } 
-    }
-
-    .glass-shine {
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-        transform: skewX(-25deg);
-        transition: left 0.8s ease;
-        pointer-events: none;
-    }
-
-    .program-item:hover .glass-shine {
-        left: 100%;
-    }
-
-    /* Исправление для кликабельных элементов */
-    .flex a {
-        position: relative;
-        z-index: 20;
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.program-item').forEach((el, i) => {
-            el.style.animationDelay = `${i * 0.1}s`;
-        });
-    });
-</script>
 {% endblock %}

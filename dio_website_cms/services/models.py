@@ -19,6 +19,7 @@ SERVICE_CATEGORY_CHOICES = [
     ("design", "Дизайн"),
     ("support", "Поддержка"),
     ("training", "Обучение"),
+    ("1_c", "1С"),
 ]
 
 # Блок для Hero
@@ -228,7 +229,7 @@ class SingleServicePage(Page):
         verbose_name_plural = "Услуги"
 
 class ServiceIndexPage(Page):
-    intro = RichTextField("Введение", features=["bold", "italic", "link"], blank=True)
+    intro = RichTextField("Введение", features=[ "italic", "link"], blank=True)
     items_per_page = models.PositiveIntegerField("Услуг на странице", default=9)
 
     content_panels = Page.content_panels + [
@@ -241,11 +242,15 @@ class ServiceIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
+        
         services = SingleServicePage.objects.live().order_by("-date")
+
         category = request.GET.get("category")
-        if category:
+
+        if category and category in dict(SERVICE_CATEGORY_CHOICES):
             services = services.filter(category=category)
-        context["current_category"] = category
+
+        context["current_category"] = category if category and category in dict(SERVICE_CATEGORY_CHOICES) else None
 
         paginator = Paginator(services, self.items_per_page)
         page = request.GET.get("page")
