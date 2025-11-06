@@ -6,27 +6,52 @@
     <div class="container">
         <!-- Заголовок -->
         <div class="header mb-8 pt-0">
-            <h2 class="heading_h3">Новости</h2>
+            <h2 class="heading_h2">Новости</h2>
         </div>
 
         <!-- ФИЛЬТРЫ -->
-        <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-12">
-            <a href="{% pageurl page %}"
-               class="group relative px-5 py-2 transition-all duration-300 heading_h5  z-20">
-                Все новости
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-red-700 to-red-900 rounded-full transition-all duration-300
-                    {% if not current_category %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
-            </a>
+<!-- filter_news.html -->
+<div class="mb-16">
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-5">
+        <!-- Все новости -->
+        <a href="{% pageurl page %}"
+           class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
+                  {% if not current_category %}
+                      bg-red-600 text-white shadow-sm
+                  {% else %}
+                      hover:text-gray-700
+                  {% endif %}">
+            <span>Все новости</span>
+            {% if not current_category %}
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                </svg>
+            {% else %}
+                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-red-700 to-red-900 rounded-full transition-all duration-300 group-hover:w-6"></span>
+            {% endif %}
+        </a>
 
-            {% for value, label in NEWS_CATEGORY_CHOICES %}
-            <a href="?category={{ value }}"
-               class="group relative px-5 py-2 transition-all duration-300 heading_h5  z-20">
-                {{ label }}
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-red-700 to-red-900 rounded-full transition-all duration-300
-                    {% if current_category == value %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
-            </a>
-            {% endfor %}
-        </div>
+        <!-- Категории -->
+        {% for value, label in NEWS_CATEGORY_CHOICES %}
+        <a href="?category={{ value }}"
+           class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
+                  {% if current_category == value %}
+                      bg-red-600 text-white shadow-sm
+                  {% else %}
+                      hover:text-gray-700
+                  {% endif %}">
+            <span>{{ label }}</span>
+            {% if current_category == value %}
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                </svg>
+            {% else %}
+                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-red-700 to-red-900 rounded-full transition-all duration-300 group-hover:w-6"></span>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
 
         <!-- Сетка новостей -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -51,15 +76,18 @@
             {% endif %}
         </div>
         <div class="heading_h5 p-4">
-            <div class="flex items-center gap-4 text-gray-400 text-sm mb-3">
+            <div class="flex justify-between items-center text-gray-400 mb-3 text-sm">
+                <!-- Дата слева -->
                 <span class="flex items-center">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                     {{ news_item.date|date:"d.m.Y" }}
                 </span>
+
+                <!-- Время чтения справа -->
                 <span class="flex items-center">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     {{ news_item.read_time }} мин

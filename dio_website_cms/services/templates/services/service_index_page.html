@@ -7,27 +7,52 @@
 
         <!-- Заголовок -->
         <div class="header mb-0 pt-0 ">
-            <h2 class="heading_h3  font-bold"> Услуги</h2>
+            <h2 class="heading_h2  font-bold"> Услуги</h2>
         </div>
 
         <!-- ФИЛЬТРЫ — как у Сервисов 1С -->
-        <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-12">
-            <a href="{{ request.path }}"
-               class="group relative px-5 py-2 transition-all duration-300 heading_h5 z-20">
-                Все услуги
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-900 rounded-full transition-all duration-300
-                    {% if not current_category %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
-            </a>
+<!-- filter_services.html -->
+<div class="mb-16">
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-5">
+        <!-- Все услуги -->
+        <a href="{{ request.path }}"
+           class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
+                  {% if not current_category %}
+                      bg-red-600 text-white shadow-sm
+                  {% else %}
+                      hover:text-gray-700
+                  {% endif %}">
+            <span>Все услуги</span>
+            {% if not current_category %}
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                </svg>
+            {% else %}
+                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-red-900 rounded-full transition-all duration-300 group-hover:w-6"></span>
+            {% endif %}
+        </a>
 
-            {% for value, label in SERVICE_CATEGORY_CHOICES %}
-            <a href="?category={{ value }}"
-               class="group relative px-5 py-2 transition-all duration-300 heading_h5 z-20">
-                {{ label }}
-                <span class="absolute -bottom-1 left-0 h-0.5 bg-red-900 rounded-full transition-all duration-300
-                    {% if current_category == value %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
-            </a>
-            {% endfor %}
-        </div>
+        <!-- Категории -->
+        {% for value, label in SERVICE_CATEGORY_CHOICES %}
+        <a href="?category={{ value }}"
+           class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
+                  {% if current_category == value %}
+                      bg-red-600 text-white shadow-sm
+                  {% else %}
+                      hover:text-gray-700
+                  {% endif %}">
+            <span>{{ label }}</span>
+            {% if current_category == value %}
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                </svg>
+            {% else %}
+                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-red-900 rounded-full transition-all duration-300 group-hover:w-6"></span>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
 
         <!-- Сетка услуг — 1-в-1 как у Сервисов 1С -->
         <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
@@ -49,7 +74,7 @@
                     <!-- Категория -->
                     <div class="flex items-center justify-between mb-4">
                         <div></div>
-                        <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
+                        <span class="heading_h5 px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
                             {{ service.get_category_display }}
                         </span>
                     </div>
@@ -57,13 +82,13 @@
                     <!-- Заголовок и описание -->
                     <div class="space-y-3 flex-grow">
                         <h3 class="heading_h4 text-white">{{ service.headline }}</h3>
-                        <p class="subheading text-gray-200 line-clamp-2">
+                        <p class="subheading text-gray-200 ">
                             {{ service.intro|striptags|truncatewords:14 }}
                         </p>
                     </div>
 
                     <!-- Подробнее -->
-                    <div class="mt-auto text-white text-sm font-medium">
+                    <div class="mt-auto text-white text-xl">
                         Подробнее
                         <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

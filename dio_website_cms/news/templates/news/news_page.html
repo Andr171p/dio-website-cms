@@ -88,39 +88,63 @@
 
     <!-- Other News -->
     {% if other_news %}
-    <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8 ">
-            <div class="header is-align-center">
-                <h2 class="heading_h2">Другие новости</h2>
-            </div>
-            <div class="w-layout-grid grid_3-col tablet-1-col gap-large mt-12">
-                {% for news in other_news %}
-                <article class="card on-secondary">
-                    <a href="{% pageurl news %}">
-                        {% if news.image %}
-                        <div class="image-ratio_16x9">
-                            {% image news.image fill-400x225 class="image_cover" %}
-                        </div>
-                        {% endif %}
-                    </a>
-                    <div class="card_body space-y-4 p-6">
-                        <span class="inline-block px-3 py-1 bg-red-50 text-red-700 heading_h5 rounded-full">
-                            {{ news.get_category_display }}
-                        </span>
-                        <h3 class="heading_h4  ">
-                            <a href="{% pageurl news %}" class="hover:text-red-600">{{ news.headline }}</a>
-                        </h3>
-                        <div class="flex items-center justify-between ">
-                            <span>{{ news.date|date:"d.m.Y" }}</span>
-                            <span>{{ news.read_time }} мин</span>
-                        </div>
-                    </div>
-                </article>
-                {% endfor %}
-            </div>
+<section class="section pt-16 ">
+    <div class="container">
+        <!-- Заголовок -->
+        <div class="text-center mb-12">
+            <h2 class="heading_h2">Другие новости</h2>
         </div>
-    </section>
-    {% endif %}
+
+        <!-- Сетка новостей — ТОЧНО КАК ОСНОВНЫЕ -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for news_item in other_news %}
+            <a href="{% pageurl news_item %}" class="group block rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 ">
+                <div class="relative h-48 overflow-hidden bg-gray-50">
+                    {% if news_item.image %}
+                        <!-- Категория на фото -->
+                        <div class="absolute top-3 left-3 z-10">
+                            <span class="px-2 py-1 rounded-full bg-red-600/50 text-white heading_h5 backdrop-blur-sm">
+                                {{ news_item.get_category_display }}
+                            </span>
+                        </div>
+                        
+                        {% image news_item.image width-500 height-500 loading="lazy" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt=news_item.headline %}
+                    {% else %}
+                        <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+                            <svg class="w-12 h-12 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="heading_h5 p-4">
+                    <div class="flex justify-between items-center  mb-3 text-sm">
+                        <!-- Дата слева -->
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            {{ news_item.date|date:"d.m.Y" }}
+                        </span>
+
+                        <!-- Время чтения справа -->
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            {{ news_item.read_time }} мин
+                        </span>
+                    </div>
+                    <h3 class="mb-2 hover:text-red-600 transition-colors duration-300 line-clamp-2">
+                        {{ news_item.headline }}
+                    </h3>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
 </article>
 
 <!-- Fullscreen Modal -->

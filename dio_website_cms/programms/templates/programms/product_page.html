@@ -310,7 +310,7 @@
                                         <div class="flex items-center justify-between mb-4">
                                             <div></div>
                                             {% if service.category %}
-                                                <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
+                                                <span class="heading_h5 px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
                                                     {{ service.category.name }}
                                                 </span>
                                             {% endif %}
@@ -322,7 +322,7 @@
                                                 {{ service.title }}
                                             </h3>
                                             {% if service.description %}
-                                                <div class=" heading_h5 text-gray-200 line-clamp-2">
+                                                <div class=" heading_h5 text-gray-200 ">
                                                     {{ service.description|striptags|truncatewords:14 }}
                                                 </div>
                                             {% endif %}
