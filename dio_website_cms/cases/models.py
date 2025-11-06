@@ -1,4 +1,3 @@
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from django.utils import timezone
 from wagtail import blocks
@@ -6,12 +5,8 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.search import index
-from wagtail import blocks
-from wagtail.images.blocks import ImageChooserBlock
-from django.utils import timezone
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-
+# Константы для отраслей
 INDUSTRY_CHOICES = [
     ("oil-gas", "Нефтегаз"),
     ("manufacturing", "Производство"),
@@ -23,57 +18,10 @@ INDUSTRY_CHOICES = [
     ("healthcare", "Здравоохранение"),
 ]
 
-# === НОВЫЕ БЛОКИ ===
-class ChallengeBlock(blocks.StructBlock):
-    problem = blocks.RichTextBlock(label="Проблема", features=['bold', 'italic'])
-    context = blocks.RichTextBlock(label="Контекст (необязательно)", features=['bold', 'italic', 'link'], required=False)
 
-    class Meta:
-        template = 'blocks/challenge.html'
-        icon = 'warning'
-        label = 'Задача (с выделением)'
-
-class SolutionStepBlock(blocks.StructBlock):
-    title = blocks.CharBlock(label="Название шага")
-    description = blocks.RichTextBlock(label="Описание", features=['bold', 'italic', 'link'])
-    icon = blocks.ChoiceBlock(
-        choices=[
-            ('gear', 'Настройка'),
-            ('code', 'Разработка'),
-            ('database', 'Интеграция'),
-            ('eye', 'Визуализация'),
-            ('check', 'Тестирование'),
-            ('rocket', 'Запуск'),
-        ],
-        label="Иконка",
-        required=False,
-        default='gear'
-    )
-
-    class Meta:
-        icon = 'cogs'
-
-class ResultCardBlock(blocks.StructBlock):
-    title = blocks.CharBlock(label="Заголовок")
-    description = blocks.TextBlock(label="Описание")
-    icon = blocks.ChoiceBlock(
-        choices=[
-            ('zap', 'Скорость'),
-            ('link', 'Интеграция'),
-            ('eye', 'Визуализация'),
-            ('shield', 'Безопасность'),
-            ('chart', 'Аналитика'),
-            ('check', 'Надёжность'),
-        ],
-        default='check',
-        required=False
-    )
-
-    class Meta:
-        icon = 'success'
-
-# === ОСНОВНАЯ МОДЕЛЬ ===
 class CaseStudyPage(Page):
+    """Страница отдельного кейса"""
+
     customer_name = models.CharField("Название компании-клиента", max_length=255)
     industry = models.CharField("Отрасль", max_length=100, choices=INDUSTRY_CHOICES)
     project_date = models.DateField("Дата реализации проекта", default=timezone.now)
@@ -82,28 +30,70 @@ class CaseStudyPage(Page):
 
     customer_logo = models.ForeignKey(
         "wagtailimages.Image",
-        null=True, blank=True, on_delete=models.SET_NULL, related_name="+",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
         verbose_name="Логотип клиента",
     )
-    intro = RichTextField("Краткое описание", blank=True)
+    
+    intro = RichTextField("Краткое описание", blank=True, help_text="1-3 предложения для анонса")
+    
     main_image = models.ForeignKey(
         "wagtailimages.Image",
-        null=True, blank=True, on_delete=models.SET_NULL, related_name="+",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
         verbose_name="Основное изображение",
     )
 
-    # === УЛУЧШЕННЫЙ StreamField ===
+    # УПРОЩЁННЫЙ StreamField — только RichText
     content = StreamField([
         ('description', blocks.RichTextBlock(
             label="Описание проекта",
-            features=['h2', 'h3', 'bold', 'italic', 'link', 'ol', 'ul']
+            features=['bold', 'italic', 'link',
+        'h2', 'h3', 'h4',
+        'ol', 'ul',
+        'image', 'embed',
+        'code', 'blockquote',
+        'hr', 'document-link',
+        'superscript', 'strikethrough']
         )),
-        ('challenge', ChallengeBlock()),
-        ('solution', blocks.ListBlock(SolutionStepBlock(), label="Шаги решения")),
-        ('results', blocks.ListBlock(ResultCardBlock(), label="Результаты (карточки)")),
+        ('challenge', blocks.RichTextBlock(
+            label="Задача",
+            features=['bold', 'italic', 'link',
+        'h2', 'h3', 'h4',
+        'ol', 'ul',
+        'image', 'embed',
+        'code', 'blockquote',
+        'hr', 'document-link',
+        'superscript', 'strikethrough']
+        )),
+        ('solution', blocks.RichTextBlock(
+            label="Решение",
+            features=['bold', 'italic', 'link',
+        'h2', 'h3', 'h4',
+        'ol', 'ul',
+        'image', 'embed',
+        'code', 'blockquote',
+        'hr', 'document-link',
+        'superscript', 'strikethrough']
+        )),
+        # В models.py — замени блок results на ЭТО:
+
+        ('results', blocks.ListBlock(
+            blocks.StructBlock([
+                ('text', blocks.RichTextBlock(
+                    label="Текст результата",
+                    features=['bold', 'italic']
+                )),
+            ], icon='success', label="Результат"),
+            label="Результаты (добавляй сколько угодно)"
+        )),
         ('technologies', blocks.ListBlock(
             blocks.CharBlock(label="Технология"),
-            label="Технологии"
+            label="Используемые технологии"
         )),
         ('metrics', blocks.ListBlock(
             blocks.StructBlock([
@@ -134,29 +124,32 @@ class CaseStudyPage(Page):
     search_fields = Page.search_fields + [
         index.SearchField("customer_name"),
         index.SearchField("intro"),
+        index.SearchField("content"),
     ]
 
     parent_page_types = ['cases.CaseStudyIndexPage']
     subpage_types = []
-    template = "cases/case_study_page.html"
 
     def get_context(self, request):
         context = super().get_context(request)
         context['other_cases'] = CaseStudyPage.objects.live().exclude(id=self.id).order_by('-project_date')[:3]
         return context
 
+    template = "cases/case_study_page.html"
+
     class Meta:
         verbose_name = "Кейс"
         verbose_name_plural = "Кейсы"
 
 
-# @ai_indexable(
-#     AIPanel("into"),
-# )
 class CaseStudyIndexPage(Page):
-    """Главная страница кейсов"""
-
-    intro = RichTextField("Введение", features=[ "italic", "link"], blank=True)
+    intro = RichTextField("Введение", features=['bold', 'italic', 'link',
+        'h2', 'h3', 'h4',
+        'ol', 'ul',
+        'image', 'embed',
+        'code', 'blockquote',
+        'hr', 'document-link',
+        'superscript', 'strikethrough'], blank=True)
     items_per_page = models.PositiveIntegerField("Кейсов на странице", default=9)
 
     content_panels = Page.content_panels + [
@@ -171,13 +164,11 @@ class CaseStudyIndexPage(Page):
         context = super().get_context(request)
         cases = CaseStudyPage.objects.live().order_by("-project_date")
 
-        # Фильтрация по отрасли
         industry = request.GET.get("industry")
         if industry:
             cases = cases.filter(industry=industry)
         context["current_industry"] = industry
 
-        # Пагинация
         paginator = Paginator(cases, self.items_per_page)
         page = request.GET.get("page")
         try:

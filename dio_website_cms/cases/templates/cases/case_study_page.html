@@ -1,271 +1,361 @@
-{% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+    {% extends "base.html" %}
+    {% load wagtailcore_tags wagtailimages_tags %}
 
-{% block content %}
-<article class="w-full">
-    <!-- HERO -->
-    <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
-        {% if page.main_image %}
-            {% image page.main_image original as bg_image %}
-            <div class="absolute inset-0 z-0">
-                <img src="{{ bg_image.url }}" alt="{{ page.title }}" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-black/20"></div>
-            </div>
-        {% endif %}
+    {% block content %}
+    <article class="case-study font-sans">
 
-        <div class="container relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                <div class="space-y-6">
-                    <span class="inline-block px-4 py-2 rounded-full bg-red-800 text-white heading_h5 mb-4">
-                        {{ page.get_industry_display }}
-                    </span>
-                    <h1 class="heading_h1 text-4xl lg:text-5xl leading-tight text-white drop-shadow-md">
-                        {{ page.customer_name }}
-                    </h1>
-                    {% if page.intro %}
-                        <div class="heading_h3 text-lg lg:text-xl text-white/90 leading-relaxed max-w-prose">
-                            {{ page.intro|richtext }}
-                        </div>
-                    {% endif %}
-                    <a href="/cases" class="inline-block button is-secondary px-6 py-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-red-900/50 transition-all duration-300">
-                        Все кейсы
-                    </a>
-                </div>
-                <div></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CONTENT BLOCKS -->
-    {% for block in page.content %}
-        {% cycle 'black' 'secondary' 'darkred' as bg_cycle silent %}
-
-        <section class="section 
-            {% if bg_cycle == 'black' %}bg-black text-white
-            {% elif bg_cycle == 'secondary' %}is-secondary bg-gray-900 text-white
-            {% else %}bg-darkred text-white{% endif %} 
-            py-16 lg:py-24">
-            <div class="container mx-auto px-4 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 animate-fadeInUp">
-                    <!-- Заголовок -->
-                    <h2 class="heading_h2 text-white col-span-full lg:col-span-1">
-                        {% if block.block_type == "description" %}Описание проекта
-                        {% elif block.block_type == "challenge" %}Задача
-                        {% elif block.block_type == "solution" %}Решение
-                        {% elif block.block_type == "results" %}Результаты
-                        {% elif block.block_type == "technologies" %}Технологии
-                        {% elif block.block_type == "metrics" %}Ключевые метрики
-                        {% else %}{{ block.block_type|title }}{% endif %}
-                    </h2>
-
-                    <!-- Контент -->
-                    <div class="col-span-full lg:col-span-2 space-y-6 heading_h5 leading-relaxed prose prose-invert max-w-none">
-                        <!-- 1. ОПИСАНИЕ -->
-                        {% if block.block_type == "description" %}
-                            {{ block.value|richtext }}
-
-                        <!-- 2. ЗАДАЧА -->
-                        {% elif block.block_type == "challenge" %}
-                            <div class="space-y-6">
-                                <div class="flex items-start gap-4">
-                                    <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h4 class="font-semibold text-xl text-white mb-2">Проблема</h4>
-                                        <div class="text-gray-300">{{ block.value.problem|richtext }}</div>
-                                    </div>
-                                </div>
-                                {% if block.value.context %}
-                                <div class="ml-16 pl-4 border-l-2 border-red-500/30">
-                                    <p class="text-sm text-gray-400 italic">{{ block.value.context|richtext }}</p>
-                                </div>
-                                {% endif %}
+        <!-- HERO -->
+        <section class="section is-secondary hero relative min-h-[700px] flex items-center bg-cover bg-center bg-fixed"
+                {% if page.main_image %}
+                    style="background-image: url('{% image page.main_image fill-1920x1080 as hero_img %}{{ hero_img.url }}');"
+                {% else %}
+                    style="background: linear-gradient(135deg, #111827 0%, #1f2937 100%);"
+                {% endif %}>
+            <div class="absolute inset-0 bg-black/60"></div>
+            <div class="container relative z-10">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="text-white space-y-6 max-w-2xl">
+                        <span class="inline-block px-4 py-2 bg-red-800 rounded-full text-sm font-bold tracking-wider">
+                            {{ page.get_industry_display }}
+                        </span>
+                        <h1 class="text-5xl lg:text-6xl font-bold leading-tight">
+                            {{ page.title }}
+                        </h1>
+                        {% if page.intro %}
+                            <div class="text-lg lg:text-xl opacity-90 leading-relaxed">
+                                {{ page.intro|richtext }}
                             </div>
-
-                        <!-- 3. РЕШЕНИЕ (шаги) -->
-                        {% elif block.block_type == "solution" %}
-                            <div class="space-y-6">
-                                {% for step in block.value %}
-                                    <div class="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-red-500/30 transition-all duration-300">
-                                        <div class="flex items-start gap-4">
-                                            <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/30 transition-colors">
-                                                {% if step.icon == 'gear' %}
-                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.065 2.572c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.065c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.065-2.572c-.94-1.543.826-3.31 2.37-2.37 1.19.726 2.573 1.065 2.573 1.065zM15.5 12a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z"/></svg>
-                                                {% elif step.icon == 'code' %}
-                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 20l-6-6 6-6m4 12l6-6-6-6"/></svg>
-                                                {% elif step.icon == 'database' %}
-                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
-                                                {% elif step.icon == 'eye' %}
-                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                                {% elif step.icon == 'check' %}
-                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-                                                {% elif step.icon == 'rocket' %}
-                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                                                {% else %}
-                                                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                                                {% endif %}
-                                            </div>
-                                            <div>
-                                                <h4 class="font-semibold text-lg text-white mb-1">{{ step.title }}</h4>
-                                                <div class="text-sm text-gray-300">{{ step.description|richtext }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-
-                        <!-- 4. РЕЗУЛЬТАТЫ (карточки) -->
-                        {% elif block.block_type == "results" %}
-                            <div class="space-y-8">
-                                <p class="text-xl font-medium text-red-400">Ключевые достижения</p>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {% for card in block.value %}
-                                        <div class="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-red-500/30 transition-all duration-300">
-                                            <div class="flex items-start gap-4">
-                                                <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-500/30 transition-colors">
-                                                    {% if card.icon == 'zap' %}
-                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                                                    {% elif card.icon == 'link' %}
-                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m4.536-4.536l1.101-1.102a4 4 0 105.656 5.656l-4 4a4 4 0 01-5.656 0"/></svg>
-                                                    {% elif card.icon == 'eye' %}
-                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                                    {% elif card.icon == 'shield' %}
-                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                                                    {% elif card.icon == 'chart' %}
-                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                                                    {% else %}
-                                                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                                    {% endif %}
-                                                </div>
-                                                <div>
-                                                    <h4 class="font-semibold text-lg text-white mb-1">{{ card.title }}</h4>
-                                                    <p class="text-sm text-gray-300 leading-relaxed">{{ card.description }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                <div class="pt-6 border-t border-white/10">
-                                    <a href="#contact" class="inline-flex items-center gap-2 text-red-400 hover:text-red-300 font-medium transition-colors">
-                                        Оставить заявку
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-
-                        <!-- 5. ТЕХНОЛОГИИ -->
-                        {% elif block.block_type == "technologies" %}
-                            <ul class="space-y-4">
-                                {% for tech in block.value %}
-                                    <li class="flex items-center gap-3">
-                                        <svg class="w-6 h-6 text-red-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                        </svg>
-                                        <span class="text-lg">{{ tech }}</span>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-
-                        <!-- 6. МЕТРИКИ -->
-                        {% elif block.block_type == "metrics" %}
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {% for metric in block.value %}
-                                    <div class="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 shadow-lg hover:shadow-red-500/10 transition-shadow">
-                                        <div class="text-2xl lg:text-3xl font-bold text-red-400 mb-2">
-                                            {{ metric.value }}
-                                        </div>
-                                        <div class="text-base text-gray-200">
-                                            {{ metric.description }}
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-
-                        {% else %}
-                            {{ block.value|richtext }}
                         {% endif %}
+                        <a href="/cases" class="inline-flex items-center gap-2 text-red-400 hover:text-red-300 font-medium transition-colors">
+                            Все кейсы
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
-    {% endfor %}
 
-    <!-- ДРУГИЕ КЕЙСЫ -->
-    {% if other_cases %}
-    <section class="section is-secondary">
-        <div class="container mx-auto">
-            <div class="flex items-center justify-between mb-12">
-                <h2 class="heading_h2 text-3xl lg:text-4xl mb-0">Другие кейсы</h2>
-                <a href="/cases" class="button is-secondary text-white hover:text-red-300 font-medium text-sm inline-flex items-center transition-colors duration-200 shrink-0 ml-6">
-                    Все кейсы
-                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-            </div>
+        <!-- СЕКЦИИ -->
+        {% for block in page.content %}
+            {% cycle 'bg-gray-900' 'bg-gray-800/80' 'bg-gray-900/90' 'bg-gray-800/70' as bg_color silent %}
+    {% cycle 'text-white' 'text-gray-100' as text_color silent %}
 
-            <div class="space-y-6">
-                {% for case in other_cases %}
-                <a href="{{ case.url }}" class="case-bg case-item block group relative p-8 sm:p-10 rounded-3xl transition-colors duration-300 bg-[#151515] hover:bg-[#1e1e1e] overflow-hidden cursor-pointer">
-                    <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
-                        <div class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 flex items-center justify-center rounded-2xl overflow-hidden">
-                            {% if case.customer_logo %}
-                                {% image case.customer_logo width-140 height-140 as case_img %}
-                                <img src="{{ case_img.url }}" alt="{{ case.title }}" class="max-w-full max-h-full object-contain p-2 md:p-4">
+            <section class="section py-16 lg:py-24 {{ bg_color }}">
+                <div class="container">
+
+                    <!-- МАКЕТ 1: СЛЕВА ЗАГОЛОВОК, СПРАВА КОНТЕНТ -->
+                    {% if block.block_type in "challenge solution technologies metrics" %}
+                        <div class="grid lg:grid-cols-3 gap-12 items-start">
+                            <h2 class="text-3xl lg:text-4xl font-bold {{ text_color }} leading-tight">
+                                {% if block.block_type == "challenge" %}Задача
+                                {% elif block.block_type == "solution" %}Решение
+                                {% elif block.block_type == "technologies" %}Технологии
+                                {% elif block.block_type == "metrics" %}Ключевые метрики{% endif %}
+                            </h2>
+                            <div class="lg:col-span-2">
+
+                                <!-- ЗАДАЧА / РЕШЕНИЕ — RICHTEXT -->
+                                {% if block.block_type in "challenge solution" %}
+                                    <div class="rich-content {{ text_color }}">
+                                        {{ block.value|richtext }}
+                                    </div>
+
+                                <!-- ТЕХНОЛОГИИ -->
+                                {% elif block.block_type == "technologies" %}
+                                    <ul class="space-y-4">
+                                        {% for tech in block.value %}
+                                            <li class="flex items-center gap-3 {{ text_color }}">
+                                                <div class="w-3 h-3 bg-red-600 rounded-full flex-shrink-0"></div>
+                                                <span class="text-lg font-medium">{{ tech }}</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+
+                                <!-- МЕТРИКИ -->
+                                {% elif block.block_type == "metrics" %}
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {% for m in block.value %}
+                                            <div class="bg-black/30 backdrop-blur-sm p-6 rounded-xl border border-red-900/50 shadow-lg">
+                                                <div class="text-3xl font-bold text-red-500">{{ m.value }}</div>
+                                                <div class="text-sm {{ text_color }} opacity-80 mt-1">{{ m.description }}</div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+                    <!-- МАКЕТ 2: ОПИСАНИЕ И РЕЗУЛЬТАТЫ — ЗАГОЛОВОК СВЕРХУ, КОНТЕНТ НИЖЕ -->
+                    {% else %}
+                        <div class="">
+                            <h2 class="text-3xl lg:text-4xl font-bold {{ text_color }} mb-8 text-center lg:text-left">
+                                {% if block.block_type == "description" %}Описание проекта
+                                {% elif block.block_type == "results" %}Результаты{% endif %}
+                            </h2>
+
+                            <!-- ОПИСАНИЕ — ТЕКСТ + ФОТО МЕЖДУ АБЗАЦАМИ -->
+                            {% if block.block_type == "description" %}
+                                <div class="rich-content {{ text_color }}">
+                                    {{ block.value|richtext }}
+                                </div>
+
+                            <!-- РЕЗУЛЬТАТЫ — БЛОКИ С ГАЛОЧКОЙ -->
+                            {% elif block.block_type == "results" %}
+                                <div class="results-blocks">
+                                    {% for result in block.value %}
+                                        <div class="result-block">
+                                            <div class="icon">
+                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                </svg>
+                                            </div>
+                                            <div class="text">
+                                                {{ result.text|richtext }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                </div>
+            </section>
+        {% endfor %}
+
+        <!-- ДРУГИЕ КЕЙСЫ -->
+        {% if other_cases %}
+        <section class="section is-secondary py-20">
+            <div class="container">
+                <div class="flex justify-between items-center mb-12">
+                    <h2 class="text-4xl font-bold text-white">Другие кейсы</h2>
+                    <a href="/cases" class="text-red-500 hover:text-red-400 font-medium flex items-center gap-2 transition-colors">
+                        Все кейсы
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {% for case in other_cases %}
+                        <a href="{{ case.url }}" class="group block relative h-96 rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                            {% if case.main_image %}
+                                {% image case.main_image fill-800x600 as img %}
+                                <img src="{{ img.url }}" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                             {% else %}
-                                <span class="text-3xl md:text-5xl font-bold text-red-500">{{ case.title|first }}</span>
+                                <div class="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900"></div>
                             {% endif %}
-                        </div>
-                        <div class="flex-1 min-w-0 text-left">
-                            {% if case.get_industry_display %}
-                            <span class="inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-full mb-3 heading_h5 font-semibold bg-red-600 text-white text-xs md:text-sm">
-                                {{ case.get_industry_display }}
-                            </span>
-                            {% endif %}
-                            <h3 class="heading_h3 font-bold text-lg md:text-xl leading-tight group-hover:text-red-800 transition-colors duration-300 ">
-                                {{ case.title }}
-                            </h3>
-                            <p class="heading_h5 line-clamp-2 leading-relaxed mt-2 text-sm md:text-base ">
-                                {{ case.intro|striptags|truncatewords:28 }}
-                            </p>
-                        </div>
-                        <div class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <svg class="w-8 h-8 md:w-9 md:h-9 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                            <div class="absolute bottom-0 p-6 text-white">
+                                <span class="inline-block px-3 py-1 bg-red-600/80 text-xs font-medium rounded-full mb-2">
+                                    {{ case.get_industry_display }}
+                                </span>
+                                <h3 class="text-xl font-bold line-clamp-2 mb-1">{{ case.title }}</h3>
+                                <p class="text-sm opacity-80 line-clamp-2">{{ case.intro|striptags|truncatewords:12 }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    </section>
-    {% endif %}
-</article>
+        </section>
+        {% endif %}
 
-<!-- СТИЛИ -->
-<style>
-    .bg-black { background-color: #000000; }
-    .bg-gray-900 { background-color: #111827; }
-    .bg-darkred { background: linear-gradient(135deg, #1a0d0d 0%, #2d0f12 100%); }
+    </article>
 
-    .prose-invert { color: #f1f5f9 !important; max-width: none !important; }
-    .prose-invert h2, .prose-invert h3, .prose-invert h4 { color: #ffffff !important; font-weight: 700 !important; margin-top: 1.5rem !important; margin-bottom: 0.75rem !important; }
-    .prose-invert p { color: #d1d5db !important; font-size: 1.125rem !important; line-height: 1.75 !important; margin-bottom: 1.25rem !important; }
-    .prose-invert ul, .prose-invert ol { padding-left: 1.5rem !important; margin: 1.25rem 0 !important; }
-    .prose-invert li { margin-bottom: 0.75rem !important; font-size: 1.125rem !important; line-height: 1.75 !important; position: relative; }
-    .prose-invert ul > li::before { content: "•"; color: #f87171; font-weight: bold; position: absolute; left: -1.5rem; }
-    .prose-invert a { color: #f87171 !important; text-decoration: underline !important; }
-    .prose-invert a:hover { color: #fca5a5 !important; }
+    <style>
+    /* === RICHTEXT — ОПИСАНИЕ (ФОТО МЕЖДУ ТЕКСТОМ) === */
+    .rich-content {
+        font-size: 1.125rem;
+        line-height: 2;
+        color: inherit;
+    }
+    .rich-content > * + * { margin-top: 1.5rem; }
+    .rich-content p { margin-bottom: 1.5rem; }
 
-    .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; animation-fill-mode: both; }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    /* ФОТО — ПОТОКОВО, МЕЖДУ АБЗАЦАМИ */
+    .rich-content img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        border: 1px solid rgba(239,68,68,0.2);
+    }
 
-    .line-clamp-2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
-</style>
-{% endblock %}
+    /* СПИСКИ (для Задачи/Решения) */
+    .rich-content ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 1.5rem 0;
+    }
+    .rich-content ul > li {
+        position: relative;
+        padding-left: 2.5rem;
+        margin-bottom: 1.2rem;
+        line-height: 1.8;
+    }
+    .rich-content ul > li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.75rem;
+        width: 12px;
+        height: 12px;
+        border: 2px solid #ef4444;
+        border-radius: 50%;
+        background: transparent;
+    }
+    .rich-content ul.filled > li::before {
+        background: #ef4444;
+        border-color: #ef4444;
+    }
+
+    /* НУМЕРОВКА */
+    .rich-content ol {
+        counter-reset: list-item;
+        list-style: none;
+        padding-left: 0;
+        margin: 1.5rem 0;
+    }
+    .rich-content ol > li {
+        counter-increment: list-item;
+        position: relative;
+        padding-left: 2.5rem;
+        margin-bottom: 1.2rem;
+        line-height: 1.8;
+    }
+    .rich-content ol > li::before {
+        content: counter(list-item) ".";
+        position: absolute;
+        left: 0;
+        color: #ef4444;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+/* === РЕЗУЛЬТАТЫ — КВАДРАТНАЯ ГАЛОЧКА + ТЕКСТ ПОД НЕЙ === */
+.results-blocks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+.result-block {
+    background: rgba(31, 41, 55, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+.result-block:hover {
+    border-color: #ef4444;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+.result-block .icon {
+    width: 48px;
+    height: 48px;
+    border: 2px solid #ef4444;
+    border-radius: 12px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    margin-bottom: 1rem;
+}
+.result-block .icon svg {
+    width: 28px;
+    height: 28px;
+    color: #ef4444;
+}
+.result-block .text {
+    flex: 1;
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+.result-block strong {
+    color: #fca5a5;
+    font-weight: 600;
+}
+
+.rich-content img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 2rem auto;
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    border: 1px solid rgba(239,68,68,0.2);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    transform: translateZ(0);
+}
+
+    </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Функция для улучшения качества изображений
+    function enhanceRichTextImages() {
+        const images = document.querySelectorAll('.rich-content img');
+        
+        images.forEach(img => {
+            const originalSrc = img.src;
+            
+            // Заменяем width-500 на width-1200
+            if (originalSrc.includes('.width-500.')) {
+                const enhancedSrc = originalSrc.replace('.width-500.', '.width-1200.');
+                
+                // Создаем новое изображение для предзагрузки
+                const newImage = new Image();
+                newImage.onload = function() {
+                    // Если изображение загрузилось успешно, заменяем src
+                    img.src = enhancedSrc;
+                    console.log('Улучшено качество изображения:', enhancedSrc);
+                };
+                newImage.onerror = function() {
+                    // Если width-1200 не существует, пробуем original
+                    const fallbackSrc = originalSrc.replace('.width-500.', '.original.');
+                    const fallbackImage = new Image();
+                    
+                    fallbackImage.onload = function() {
+                        img.src = fallbackSrc;
+                        console.log('Использовано оригинальное изображение:', fallbackSrc);
+                    };
+                    fallbackImage.onerror = function() {
+                        console.log('Не удалось улучшить изображение:', originalSrc);
+                    };
+                    
+                    fallbackImage.src = fallbackSrc;
+                };
+                
+                newImage.src = enhancedSrc;
+            }
+        });
+    }
+
+    // Вызываем сразу после загрузки DOM
+    enhanceRichTextImages();
+    
+    // Также вызываем при динамических изменениях (если есть SPA-функциональность)
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length) {
+                enhanceRichTextImages();
+            }
+        });
+    });
+    
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+});
+</script>
+    {% endblock %}

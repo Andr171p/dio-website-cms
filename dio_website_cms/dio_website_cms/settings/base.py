@@ -244,7 +244,18 @@ CACHES = {
 # can exceed this limit within Wagtail's page editor.
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
 
+# settings.py
 
+# Увеличьте максимальный размер рендеринга
+WAGTAILIMAGES_MAX_UPLOAD_SIZE = 20 * 1024 * 1024  # 20MB
+# settings.py
+WAGTAILIMAGES_JPEG_QUALITY = 95
+WAGTAILIMAGES_WEBP_QUALITY = 95
+WAGTAILIMAGES_PNG_QUALITY = 95
+
+# Отключите сжатие для PNG если нужно 
+
+WAGTAILIMAGES_OPTIMIZE_IMAGES = False
 
  
 # Wagtail settings
