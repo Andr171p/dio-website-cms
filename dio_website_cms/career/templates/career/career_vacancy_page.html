@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% block content %}
+
+<style>
+  :root {
+    --accent: #e11d48;        /* rose-600 */
+    --accent-hover: #be123c;
+    --bg-dark: #0a0a0a;
+    --bg-card: #111111;
+    --text-muted: #94a3b8;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .badge-hot { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+  .badge-new { background: linear-gradient(135deg, #10b981, #059669); }
+  .badge-remote { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+  .badge-urgent { background: linear-gradient(135deg, #f59e0b, #d97706); }
+</style>
+
+<article class="min-h-screen bg-[#0a0a0a] text-white overflow-hidden">
+
+  <!-- HERO -->
+  <section class="relative min-h-screen flex items-center">
+    {% if page.background %}
+      {% image page.background fill-1920x1080 as bg %}
+      <div class="absolute inset-0 -z-10">
+        <img src="{{ bg.url }}" alt="{{ page.title }}"
+             class="w-full h-full object-cover"
+             loading="eager">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/90"></div>
+      </div>
+    {% endif %}
+
+    <div class="container mx-auto px-6 lg:px-8">
+      <div class="max-w-4xl">
+        <div class="reveal space-y-8">
+          <!-- Department -->
+          <span class="inline-block px-5 py-2 bg-white/10 backdrop-blur-md rounded-full text-sm font-medium tracking-wider uppercase border border-white/20">
+            {{ page.department }}
+          </span>
+
+          <!-- Title -->
+          <h1 class="text-5xl md:text-6xl lg:text-7xl font-black leading-tight">
+            {{ page.title }}
+          </h1>
+
+          <!-- Salary + Badge -->
+          <div class="flex flex-wrap items-center gap-6">
+            <span class="text-4xl md:text-5xl font-black bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">
+              {{ page.salary }}
+            </span>
+
+            {% if page.badge %}
+              <span class="px-6 py-3 rounded-full text-white font-bold text-sm tracking-wider
+                           {% if page.badge == 'hot' %}badge-hot{% elif page.badge == 'new' %}badge-new{% elif page.badge == 'remote' %}badge-remote{% elif page.badge == 'urgent' %}badge-urgent{% endif %}">
+                {% if page.badge == 'hot' %}Горячая
+                {% elif page.badge == 'new' %}Новинка
+                {% elif page.badge == 'remote' %}Удалённо
+                {% elif page.badge == 'urgent' %}Срочно{% endif %}
+              </span>
+            {% endif %}
+          </div>
+
+          {% if page.experience %}
+            <p class="text-xl text-gray-400">Опыт работы: <span class="text-white font-medium">{{ page.experience }}</span></p>
+          {% endif %}
+
+          <a href="#content" class="group inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-bold text-lg hover:bg-gray-200 transition-all">
+            Подробности вакансии
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <div id="content" class="pt-24 pb-32">
+    {% for block in page.body %}
+      <section class="py-20 border-t border-white/10">
+        <div class="container mx-auto px-6 lg:px-8">
+          <div class="grid lg:grid-cols-4 gap-12 items-start">
+
+            <!-- Заголовок блока -->
+            <div class="reveal">
+              <h2 class="text-3xl md:text-4xl font-black text-white">
+                {% if block.block_type == "duties" %}Обязанности
+                {% elif block.block_type == "requirements" %}Требования
+                {% elif block.block_type == "bonus" %}Будет плюсом
+                {% elif block.block_type == "conditions" %}Условия
+                {% elif block.block_type == "gallery" %}{{ block.value.title }}
+                {% elif block.block_type == "video" %}Видео о компании
+                {% elif block.block_type == "cta" %}Готов присоединиться?{% endif %}
+              </h2>
+            </div>
+
+            <!-- Контент -->
+            <div class="lg:col-span-3 space-y-12 reveal">
+
+              {# Списки: обязанности, требования, плюсы #}
+              {% if block.block_type in "duties,requirements,bonus" %}
+                <ul class="space-y-5">
+                  {% for item in block.value.items %}
+                    <li class="flex items-start gap-4 text-lg leading-relaxed">
+                      <span class="text-rose-500 mt-1.5">▹</span>
+                      <span class="text-gray-300">{{ item }}</span>
+                    </li>
+                  {% endfor %}
+                </ul>
+
+              {# Условия #}
+              {% elif block.block_type == "conditions" %}
+                <div class="grid md:grid-cols-2 gap-8">
+                  {% for cond in block.value.conditions %}
+                    <div class="flex items-start gap-5">
+                      <div class="w-12 h-12 rounded-xl bg-white/5 backdrop-blur-md flex-center flex-shrink-0 border border-white/10">
+                        {% if cond.value.icon == "briefcase" %}💼
+                        {% elif cond.value.icon == "clock" %}🕐
+                        {% elif cond.value.icon == "ruble" %}₽
+                        {% elif cond.value.icon == "heart" %}❤️
+                        {% elif cond.value.icon == "dumbbell" %}🏋️
+                        {% elif cond.value.icon == "pizza" %}🍕
+                        {% elif cond.value.icon == "home" %}🏠
+                        {% else %}🎁{% endif %}
+                      </div>
+                      <p class="text-lg text-gray-300">{{ cond.value.text }}</p>
+                    </div>
+                  {% endfor %}
+                </div>
+
+              {# Галерея #}
+              {% elif block.block_type == "gallery" %}
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {% for img in block.value.images %}
+                    {% image img fill-800x800 as pic %}
+                    <div class="overflow-hidden rounded-2xl group cursor-pointer">
+                      <img src="{{ pic.url }}" alt="" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                  {% endfor %}
+                </div>
+
+              {# Видео #}
+              {% elif block.block_type == "video" %}
+                <div class="rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                  {{ block.value.embed|safe }}
+                </div>
+
+              {# CTA #}
+              {% elif block.block_type == "cta" %}
+                <div class="text-center py-16 px-12 bg-gradient-to-br from-rose-600/20 to-rose-900/20 rounded-3xl border border-rose-500/30">
+                  <p class="text-3xl md:text-4xl font-bold mb-8 max-w-3xl mx-auto">
+                    {{ block.value.text }}
+                  </p>
+                  <a href="{{ block.value.url|default:page.get_parent.url }}#vacancy-form"
+                     class="inline-flex items-center gap-4 px-10 py-5 bg-rose-600 hover:bg-rose-700 rounded-full text-xl font-bold shadow-xl transition-all">
+                    {{ block.value.button_text|default:"Откликнуться прямо сейчас" }}
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                  </a>
+                </div>
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+</article>
+
+<script>
+  // Плавное появление блоков
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+{% endblock %}

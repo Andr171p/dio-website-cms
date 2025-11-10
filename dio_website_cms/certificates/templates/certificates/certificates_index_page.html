@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block content %}
+<section class="py-20 bg-[#0a0a0a]">
+    <div class="container mx-auto px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h1 class="heading_h1 font-black text-white">Наши сертификаты</h1>
+            {% if page.intro %}
+                <p class="mt-6 max-w-2xl mx-auto text-xl text-gray-400">{{ page.intro }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Фильтры -->
+        <div class="flex flex-wrap justify-center gap-4 mb-16">
+            <a href="{% pageurl page %}" class="px-8 py-4 rounded-2xl font-medium transition-all {% if not current_year and not current_badge %}bg-rose-600 text-white{% else %}bg-white/10 hover:bg-white/20 border border-white/20{% endif %}">
+                Все
+            </a>
+            {% for color, name in badge_colors %}
+                <a href="?badge={{ color }}{% if current_year %}&year={{ current_year }}{% endif %}"
+                   class="px-8 py-4 rounded-2xl font-medium transition-all
+                          {% if current_badge == color %}bg-{{ color }}-600 text-white{% else %}bg-white/10 hover:bg-white/20{% endif %}">
+                    {{ name }}
+                </a>
+            {% endfor %}
+            {% for y in years %}
+                <a href="?year={{ y }}{% if current_badge %}&badge={{ current_badge }}{% endif %}"
+                   class="px-6 py-3 rounded-full text-sm font-medium transition-all
+                          {% if current_year == y|stringformat:"s" %}bg-rose-600 text-white{% else %}bg-white/10 hover:bg-white/20{% endif %}">
+                    {{ y }}
+                </a>
+            {% endfor %}
+        </div>
+
+        <!-- Сетка -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {% for cert in certificates %}
+                <div class="group block bg-[#111111] rounded-3xl overflow-hidden border border-white/10 hover:border-rose-500/50 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl">
+                    <div class="aspect-[3/4] relative">
+                        {% if cert.thumbnail %}
+                            {% image cert.thumbnail fill-600x800 as img %}
+                            <img src="{{ img.url }}" alt="{{ cert.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        {% else %}
+                            <div class="w-full h-full bg-gradient-to-br from-rose-600 to-purple-800 flex items-center justify-center">
+                                <span class="text-6xl font-black text-white/90">C</span>
+                            </div>
+                        {% endif %}
+                        {% if cert.badge_text %}
+                            <span class="absolute top-4 left-4 px-4 py-2 rounded-full text-xs font-bold text-white bg-{{ cert.badge_color }}-600">
+                                {{ cert.badge_text }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="p-6 space-y-2">
+                        <h3 class="text-lg font-bold text-white group-hover:text-rose-400 transition-colors">
+                            {{ cert.title }}
+                        </h3>
+                        <p class="text-sm text-gray-400">{{ cert.issuer }}</p>
+                        <p class="text-xs text-gray-500">
+                            {{ cert.issue_date|date:"F Y" }}
+                            {% if cert.expiry_date %} → {{ cert.expiry_date|date:"F Y" }}{% endif %}
+                        </p>
+                        {% if cert.document %}
+                            <a href="{{ cert.document.url }}" target="_blank" class="inline-block mt-4 text-rose-400 hover:text-rose-300 text-sm font-medium">
+                                Скачать PDF →
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-span-full text-center py-24 text-gray-500">
+                    <p class="text-2xl">Сертификатов пока нет</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация -->
+        {% if certificates.has_other_pages %}
+            <div class="flex justify-center mt-16">
+                <div class="inline-flex gap-2 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
+                    {% if certificates.has_previous %}
+                        <a href="?page={{ certificates.previous_page_number }}{% if request.GET.badge %}&badge={{ request.GET.badge }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" 
+                           class="px-6 py-3 rounded-xl hover:bg-white/20 transition-all">«</a>
+                    {% endif %}
+                    <span class="px-6 py-3 text-rose-400 font-bold">Страница {{ certificates.number }} из {{ certificates.paginator.num_pages }}</span>
+                    {% if certificates.has_next %}
+                        <a href="?page={{ certificates.next_page_number }}{% if request.GET.badge %}&badge={{ request.GET.badge }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" 
+                           class="px-6 py-3 rounded-xl hover:bg-white/20 transition-all">»</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

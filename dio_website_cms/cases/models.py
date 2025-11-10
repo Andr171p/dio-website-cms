@@ -5,7 +5,7 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.search import index
-
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 # Константы для отраслей
 INDUSTRY_CHOICES = [
     ("oil-gas", "Нефтегаз"),

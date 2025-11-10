@@ -5,42 +5,51 @@
     <article class="case-study font-sans">
 
         <!-- HERO -->
-        <section class="section is-secondary hero relative min-h-[700px] flex items-center bg-cover bg-center bg-fixed"
-                {% if page.main_image %}
-                    style="background-image: url('{% image page.main_image fill-1920x1080 as hero_img %}{{ hero_img.url }}');"
-                {% else %}
-                    style="background: linear-gradient(135deg, #111827 0%, #1f2937 100%);"
-                {% endif %}>
-            <div class="absolute inset-0 bg-black/60"></div>
-            <div class="container relative z-10">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="text-white space-y-6 max-w-2xl">
-                        <span class="inline-block px-4 py-2 bg-red-800 rounded-full text-sm font-bold tracking-wider">
-                            {{ page.get_industry_display }}
-                        </span>
-                        <h1 class="text-5xl lg:text-6xl font-bold leading-tight">
-                            {{ page.title }}
-                        </h1>
-                        {% if page.intro %}
-                            <div class="text-lg lg:text-xl opacity-90 leading-relaxed">
-                                {{ page.intro|richtext }}
-                            </div>
-                        {% endif %}
-                        <a href="/cases" class="inline-flex items-center gap-2 text-red-400 hover:text-red-300 font-medium transition-colors">
-                            Все кейсы
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
+       <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
+    <!-- Фоновое изображение -->
+    {% if page.main_image %}
+        {% image page.main_image original as bg_image %}
+        <div class="absolute inset-0 z-0">
+            <img 
+                src="{{ bg_image.url }}" 
+                alt="{{ page.title }}"
+                class="w-full h-full object-cover  top-0 left-0"
+                
+            >
+            <div class="absolute inset-0 bg-black/50"></div>
+        </div>
+    {% endif %}
+    
+    <!-- Контент поверх фона -->
+    <div class="container ">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <!-- Текстовая часть -->
+            <div class="relative z-10 space-y-6">
+                <span class="inline-block px-4 py-2 rounded-full bg-red-800 text-white heading_h5 mb-4 animate-fadeIn">
+                    {{ page.get_industry_display }}
+                </span>
+                <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white drop-shadow-md animate-fadeIn" style="animation-delay: 0.1s;">
+                    {{ page.title }}
+                </h1>
+                {% if page.intro %}
+                    <p class="heading_h3 text-lg lg:text-xl mb-8 max-w-prose leading-relaxed text-white/90 animate-fadeIn" style="animation-delay: 0.2s;">
+                        {{ page.intro|striptags }}
+                    </p>
+                {% endif %}
+                <a href="/cases" style=" color:white;    box-shadow: 0 0 0 2px white inset;" class="inline-block button is-secondary w-button px-6 py-3 rounded-lg shadow-lg hover:bg-red-50 hover:shadow-xl transition-all duration-300 animate-fadeIn" style="animation-delay: 0.3s;">
+                    Подробнее
+                </a>
             </div>
-        </section>
+            <!-- Пустая колонка для баланса -->
+            <div></div>
+        </div>
+    </div>
+</section>
 
         <!-- СЕКЦИИ -->
         {% for block in page.content %}
-            {% cycle 'bg-gray-900' 'bg-gray-800/80' 'bg-gray-900/90' 'bg-gray-800/70' as bg_color silent %}
-    {% cycle 'text-white' 'text-gray-100' as text_color silent %}
+           {% cycle 'bg-[#0b0b0b]' 'bg-[#131313] via-red-950/6' 'bg-[#0d0d0d]' 'bg-[#111111] via-red-950/5' as bg_color silent %}
+    {% cycle 'text-white heading_h5' 'text-gray-100 heading_h5' as text_color silent %}
 
             <section class="section py-16 lg:py-24 {{ bg_color }}">
                 <div class="container">
@@ -102,23 +111,31 @@
                                     {{ block.value|richtext }}
                                 </div>
 
-                            <!-- РЕЗУЛЬТАТЫ — БЛОКИ С ГАЛОЧКОЙ -->
-                            {% elif block.block_type == "results" %}
-                                <div class="results-blocks">
-                                    {% for result in block.value %}
-                                        <div class="result-block">
-                                            <div class="icon">
-                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                                </svg>
-                                            </div>
-                                            <div class="text">
-                                                {{ result.text|richtext }}
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
+                           {% elif block.block_type == "results" %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for result in block.value %}
+            <div class="case-bg case-item group relative p-8 sm:p-10 rounded-3xl transition-colors duration-300 
+                        bg-[#151515] hover:bg-[#1e1e1e] overflow-hidden cursor-default
+                        ">
+                
+                <div class="relative z-10 flex items-start gap-6 h-full">
+                    <!-- Галочка — чисто, без лишнего -->
+                    <div class="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-2xl 
+                                bg-red-800/20 border-2 border-red-800/50">
+                        <svg class="w-9 h-9 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+
+                    <!-- Текст — heading_h5, как везде -->
+                    <div class="flex-1 heading_h5 text-gray-100 leading-relaxed">
+                        {{ result.text|richtext }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
                         </div>
                     {% endif %}
 
@@ -127,42 +144,56 @@
         {% endfor %}
 
         <!-- ДРУГИЕ КЕЙСЫ -->
-        {% if other_cases %}
-        <section class="section is-secondary py-20">
-            <div class="container">
-                <div class="flex justify-between items-center mb-12">
-                    <h2 class="text-4xl font-bold text-white">Другие кейсы</h2>
-                    <a href="/cases" class="text-red-500 hover:text-red-400 font-medium flex items-center gap-2 transition-colors">
-                        Все кейсы
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {% for case in other_cases %}
-                        <a href="{{ case.url }}" class="group block relative h-96 rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:scale-[1.02]">
-                            {% if case.main_image %}
-                                {% image case.main_image fill-800x600 as img %}
-                                <img src="{{ img.url }}" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                            {% else %}
-                                <div class="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900"></div>
-                            {% endif %}
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-                            <div class="absolute bottom-0 p-6 text-white">
-                                <span class="inline-block px-3 py-1 bg-red-600/80 text-xs font-medium rounded-full mb-2">
-                                    {{ case.get_industry_display }}
-                                </span>
-                                <h3 class="text-xl font-bold line-clamp-2 mb-1">{{ case.title }}</h3>
-                                <p class="text-sm opacity-80 line-clamp-2">{{ case.intro|striptags|truncatewords:12 }}</p>
-                            </div>
-                        </a>
-                    {% endfor %}
-                </div>
+            {% if other_cases %}
+    <section class="section is-secondary">
+        <div class="container mx-auto">
+            <div class="flex items-center justify-between mb-12">
+                <h2 class="heading_h2 text-3xl lg:text-4xl mb-0">Другие кейсы</h2>
+                <a href="/cases" class="button is-secondary">
+                    Все кейсы
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
             </div>
-        </section>
-        {% endif %}
 
+            <div class="space-y-6">
+                {% for case in other_cases %}
+                <a href="{{ case.url }}" class="case-bg case-item block group relative p-8 sm:p-10 rounded-3xl transition-colors duration-300 bg-[#151515] hover:bg-[#1e1e1e] overflow-hidden cursor-pointer">
+                    <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                        <div class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 flex items-center justify-center rounded-2xl overflow-hidden">
+                            {% if case.customer_logo %}
+                                {% image case.customer_logo width-140 height-140 as case_img %}
+                                <img src="{{ case_img.url }}" alt="{{ case.title }}" class="max-w-full max-h-full object-contain p-2 md:p-4">
+                            {% else %}
+                                <span class="text-3xl md:text-5xl font-bold text-red-500">{{ case.title|first }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="flex-1 min-w-0 text-left">
+                            {% if case.get_industry_display %}
+                            <span class="inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-full mb-3 heading_h5 font-semibold bg-red-600 text-white text-xs md:text-sm">
+                                {{ case.get_industry_display }}
+                            </span>
+                            {% endif %}
+                            <h3 class="heading_h3 font-bold text-lg md:text-xl leading-tight group-hover:text-red-800 transition-colors duration-300 ">
+                                {{ case.title }}
+                            </h3>
+                            <p class="heading_h5 line-clamp-2 leading-relaxed mt-2 text-sm md:text-base ">
+                                {{ case.intro|striptags|truncatewords:28 }}
+                            </p>
+                        </div>
+                        <div class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <svg class="w-8 h-8 md:w-9 md:h-9 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
     </article>
 
     <style>

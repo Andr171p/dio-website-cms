@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "contact",
     "faq",
     "services_1c",
+    'certificates',
     "programms", 
 
     'wagtail.contrib.table_block',
