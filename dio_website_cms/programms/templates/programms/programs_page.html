@@ -18,9 +18,9 @@
         <a href="?category=all"
            class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
                   {% if selected_category == 'all' or not selected_category %}
-                      bg-red-600 text-white shadow-sm
+                      bg-red-900 text-white shadow-sm
                   {% else %}
-                      hover:text-gray-700
+                      hover:text-gray-300
                   {% endif %}">
             <span>Все программы</span>
             {% if selected_category == 'all' or not selected_category %}
@@ -37,9 +37,9 @@
         <a href="?category={{ cat.slug }}"
            class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
                   {% if selected_category == cat.slug %}
-                      bg-red-600 text-white shadow-sm
+                      bg-red-900 text-white shadow-sm
                   {% else %}
-                      hover:text-gray-700
+                      hover:text-gray-300
                   {% endif %}">
             <span>{{ cat.name }}</span>
             {% if selected_category == cat.slug %}
@@ -84,7 +84,7 @@
               </div>
 
               <!-- Подробнее -->
-              <div class="mt-auto text-white text-sm font-medium">
+              <div class="mt-auto text-white text-xl">
                 Подробнее
                 <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

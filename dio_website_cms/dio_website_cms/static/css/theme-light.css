@@ -2242,7 +2242,7 @@ textarea.w-input, textarea.w-select {
   --ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_interactions---ix--ix-card-spacing: 2rem;
   --ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776---card--card-accent-secondary-bg: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776---background-color--bg-accent-secondary);
   --ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776---card--card-accent-tertiary-bg: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776---background-color--bg-accent-tertiary);
-  --ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_sizes---spacing--8x: 8rem;
+  --ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_sizes---spacing--8x: 4rem;
   --ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_sizes---card--card-padding: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_sizes---spacing--3x);
   --ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_sizes---card--card-padding-tablet\<deleted\|variable-724f4731-2399-df89-3815-2275d6028123\>: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_sizes---spacing--2x);
   --ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_sizes---card--card-padding-mobile-l\<deleted\|variable-d1d656bf-e702-3435-d53d-ac8f8b866944\>: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_sizes---spacing--1-5x);
@@ -8987,8 +8987,8 @@ textarea.w-input, textarea.w-select {
 }
 
 .brand-logo {
-  width: 32px;
-  height: 32px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9762,4 +9762,203 @@ textarea.w-input, textarea.w-select {
 .case-bg:hover {
     border-color: #cf4444 !important ;
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15) !important ;
+}
+
+.animated-btn-tilda {
+  font-family: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_typography---button--button-font);
+  font-size: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1758515251776_typography---base-typography--base-font-size);
+  font-weight: 400;
+  line-height: 1.2;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  width: 160px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff !important;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.animated-btn-tilda:not(.is-secondary) {
+  background: #920707;
+}
+
+.animated-btn-tilda.is-secondary {
+  background: transparent;
+  box-shadow: 0 0 0 2px #ffffff inset;
+}
+
+.animated-btn-tilda:hover:not(.is-secondary) {
+  background: #d40b0b;
+}
+
+.animated-btn-tilda:hover.is-secondary {
+  background: rgba(228, 228, 228, 0.525);
+  box-shadow: 0 0 0 3px #000 inset;
+}
+
+.animated-btn-tilda svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.animated-btn-tilda rect {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-dasharray: 0 422;
+  stroke-dashoffset: 0;
+  transition: all 1.35s cubic-bezier(0.19, 1, 0.22, 1);
+  width: 160;
+  height: 45;
+  x: 0;
+  y: 0;
+  rx: 8;
+  ry: 8;
+}
+
+.animated-btn-tilda:hover rect,
+.animated-btn-tilda:active rect {
+  stroke-width: 4;
+  stroke-dasharray: 80 410;
+  stroke-dashoffset: -330;
+}
+    /* === RICHTEXT — ОПИСАНИЕ (ФОТО МЕЖДУ ТЕКСТОМ) === */
+    .rich-content {
+        font-size: 1.125rem;
+        line-height: 2;
+        color: inherit;
+    }
+    .rich-content > * + * { margin-top: 1.5rem; }
+    .rich-content p { margin-bottom: 1.5rem; }
+
+    /* ФОТО — ПОТОКОВО, МЕЖДУ АБЗАЦАМИ */
+    .rich-content img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        border: 1px solid rgba(239,68,68,0.2);
+    }
+
+    /* СПИСКИ (для Задачи/Решения) */
+    .rich-content ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 1.5rem 0;
+    }
+    .rich-content ul > li {
+        position: relative;
+        padding-left: 2.5rem;
+        margin-bottom: 1.2rem;
+        line-height: 1.8;
+    }
+    .rich-content ul > li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.75rem;
+        width: 12px;
+        height: 12px;
+        border: 2px solid #ef4444;
+        border-radius: 50%;
+        background: transparent;
+    }
+    .rich-content ul.filled > li::before {
+        background: #ef4444;
+        border-color: #ef4444;
+    }
+
+    /* НУМЕРОВКА */
+    .rich-content ol {
+        counter-reset: list-item;
+        list-style: none;
+        padding-left: 0;
+        margin: 1.5rem 0;
+    }
+    .rich-content ol > li {
+        counter-increment: list-item;
+        position: relative;
+        padding-left: 2.5rem;
+        margin-bottom: 1.2rem;
+        line-height: 1.8;
+    }
+    .rich-content ol > li::before {
+        content: counter(list-item) ".";
+        position: absolute;
+        left: 0;
+        color: #ef4444;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+/* === РЕЗУЛЬТАТЫ — КВАДРАТНАЯ ГАЛОЧКА + ТЕКСТ ПОД НЕЙ === */
+.results-blocks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+.result-block {
+    background: rgba(31, 41, 55, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+.result-block:hover {
+    border-color: #ef4444;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+.result-block .icon {
+    width: 48px;
+    height: 48px;
+    border: 2px solid #ef4444;
+    border-radius: 12px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    margin-bottom: 1rem;
+}
+.result-block .icon svg {
+    width: 28px;
+    height: 28px;
+    color: #ef4444;
+}
+.result-block .text {
+    flex: 1;
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+.result-block strong {
+    color: #fca5a5;
+    font-weight: 600;
+}
+
+.rich-content img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 2rem auto;
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    border: 1px solid rgba(239,68,68,0.2);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    transform: translateZ(0);
 }

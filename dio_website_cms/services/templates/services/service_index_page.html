@@ -18,9 +18,9 @@
         <a href="{{ request.path }}"
            class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
                   {% if not current_category %}
-                      bg-red-600 text-white shadow-sm
+                      bg-red-900 text-white shadow-sm
                   {% else %}
-                      hover:text-gray-700
+                      hover:text-gray-300
                   {% endif %}">
             <span>Все услуги</span>
             {% if not current_category %}
@@ -37,9 +37,9 @@
         <a href="?category={{ value }}"
            class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
                   {% if current_category == value %}
-                      bg-red-600 text-white shadow-sm
+                      bg-red-900 text-white shadow-sm
                   {% else %}
-                      hover:text-gray-700
+                      hover:text-gray-300
                   {% endif %}">
             <span>{{ label }}</span>
             {% if current_category == value %}

@@ -20,8 +20,8 @@
                 <div class="space-y-6">
                     <h1 class="heading_h3 text-white drop-shadow-md gs-reveal">{{ page.title }}</h1>
                     {% if page.description %}
-                        <div class="text-white drop-shadow-md gs-reveal rich-text w-richtext heading_h4">
-                            {{ page.description|richtext|striptags|striptags }}
+                        <div class="text-white rich-content drop-shadow-md gs-reveal rich-text w-richtext heading_h4">
+                            {{ page.description|richtext }}
                         </div>
                     {% endif %}
                     <div class="space-y-4 gs-reveal">
@@ -51,7 +51,7 @@
                 {% for block in section.value.content %}
 
                     {% if block.block_type == 'paragraph' %}
-                        <div class="heading_h5">{{ block.value|richtext|striptags }}</div>
+                        <div class="heading_h5 rich-content">{{ block.value|richtext }}</div>
 
                     {% elif block.block_type == 'image' %}
                         <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge items-center">
@@ -63,7 +63,7 @@
                                     <h2 class="heading_h2 gs-reveal">{{ block.value.text_content.heading }}</h2>
                                     {% if block.value.text_content.description %}
                                         <div class="heading_h4 rich-text w-richtext">
-                                            {{ block.value.text_content.description|richtext|striptags }}
+                                            {{ block.value.text_content.description|richtext }}
                                         </div>
                                     {% endif %} 
                                     {% if block.value.text_content.button_text and block.value.text_content.button_url %}
@@ -77,7 +77,7 @@
                                     <h2 class="heading_h2 gs-reveal">{{ block.value.text_content.heading }}</h2>
                                     {% if block.value.text_content.description %}
                                         <div class="heading_h4 rich-text w-richtext">
-                                            {{ block.value.text_content.description|richtext|striptags }}
+                                            {{ block.value.text_content.description|richtext }}
                                         </div>
                                     {% endif %}
                                     {% if block.value.text_content.button_text and block.value.text_content.button_url %}
@@ -163,20 +163,20 @@
                     {% elif block.block_type == 'numbered_list' %}
                         <ol class="rich-text w-richtext max-width_large gs-reveal">
                             {% for item in block.value.items %}
-                                <li class="padding-left_medium">{{ item|richtext|striptags }}</li>
+                                <li class="padding-left_medium">{{ item|richtext }}</li>
                             {% endfor %}
                         </ol>
 
                     {% elif block.block_type == 'bullet_list' %}
                         <ul class="rich-text w-richtext max-width_large gs-reveal">
                             {% for item in block.value.items %}
-                                <li class="padding-left_medium">{{ item|richtext|striptags }}</li>
+                                <li class="padding-left_medium">{{ item|richtext }}</li>
                             {% endfor %}
                         </ul>
 
                     {% elif block.block_type == 'quote' %}
                         <blockquote class="border-l-4 border-accent-primary padding-left_medium rich-text w-richtext max-width_large gs-reveal">
-                            {{ block.value.text|richtext|striptags }}
+                            {{ block.value.text|richtext }}
                             {% if block.value.author %}
                                 <footer class="text-color_secondary mt-2">— {{ block.value.author }}</footer>
                             {% endif %}
@@ -207,7 +207,7 @@
                                         <span class="accordion-icon text-xl">+</span>
                                     </button>
                                     <div id="accordion-{{ section.id }}-{{ forloop.counter }}" class="accordion-content hidden px-6 py-4 rounded-b-lg">
-                                        <div class="rich-text w-richtext">{{ item.content|richtext|striptags }}</div>
+                                        <div class="rich-text w-richtext">{{ item.content|richtext }}</div>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -216,7 +216,7 @@
                     {% elif block.block_type == 'call_to_action' %}
                         <div class="header is-align-center gs-reveal">
                             <h3 class="heading_h3">{{ block.value.title }}</h3>
-                            <div class="rich-text w-richtext max-width_large mb-4">{{ block.value.description|richtext|striptags }}</div>
+                            <div class="rich-text w-richtext max-width_large mb-4">{{ block.value.description|richtext }}</div>
                             <a href="{{ block.value.button_url }}" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg">
                                 {{ block.value.button_text }}
                             </a>
@@ -234,7 +234,7 @@
                                             {% image card.image fill-300x200 class="image_cover image-ratio_auto" %}
                                         {% endif %}
                                         <h3 class="heading_h4 mt-2">{{ card.title }}</h3>
-                                        <div class="rich-text w-richtext">{{ card.description|richtext|striptags }}</div>
+                                        <div class="rich-text w-richtext">{{ card.description|richtext }}</div>
                                         {% if card.button_text and card.button_url %}
                                             <a href="{{ card.button_url }}" class="button is-secondary w-button mt-4 inline-block px-4 py-2 rounded-lg">
                                                 {{ card.button_text }}
@@ -274,12 +274,15 @@
         <section class="section pt-10">
             <div class="container">
                 <!-- Заголовок -->
-                <div class="header mb-0 pt-0 text-center">
-                    <div class="eyebrow text-red-600 font-medium uppercase tracking-wider text-sm mb-2">
-                        Другие продукты
-                    </div>
-                    <h2 class="heading_h3 font-bold">Похожие сервисы 1С</h2>
-                </div>
+                <div class="flex items-center justify-between mb-12">
+                <h2 class=" heading_h2 text-3xl lg:text-4xl mb-0">Другие продукты</h2>
+                <a href="/programms" class="button is-secondary">
+                    Все продукты
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
 
                 <!-- Сетка карточек -->
                 <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
@@ -323,7 +326,7 @@
                                             </h3>
                                             {% if service.description %}
                                                 <div class=" heading_h5 text-gray-200 ">
-                                                    {{ service.description|striptags|truncatewords:14 }}
+                                                    {{ service.description|truncatewords:14|richtext }}
                                                 </div>
                                             {% endif %}
                                         </div>

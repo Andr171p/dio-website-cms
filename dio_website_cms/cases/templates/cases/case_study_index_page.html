@@ -14,11 +14,11 @@
     <div class="flex flex-wrap justify-center gap-3 sm:gap-5">
         <!-- Все проекты -->
         <a href="{% pageurl page %}"
-           class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
+           class="heading_h5  group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
                   {% if not current_industry %}
-                      bg-red-600 text-white shadow-sm
+                      bg-red-900 text-white shadow-sm
                   {% else %}
-                        hover:text-gray-700
+                        hover:text-gray-300 
                   {% endif %}">
             <span>Все проекты</span>
             {% if not current_industry %}
@@ -27,7 +27,7 @@
                 </svg>
             {% else %}
                 <!-- Полоска при ховере -->
-                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-red-500 rounded-full transition-all duration-300 group-hover:w-6"></span>
+                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-red-900 rounded-full transition-all duration-300 group-hover:w-6"></span>
             {% endif %}
         </a>
 
@@ -36,9 +36,9 @@
         <a href="?industry={{ industry_id }}"
            class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
                   {% if current_industry == industry_id %}
-                      bg-red-600 text-white shadow-sm
+                      bg-red-900 text-white shadow-sm
                   {% else %}
-                       hover:text-gray-700
+                       hover:text-gray-300
                   {% endif %}">
             <span>{{ industry_name }}</span>
             {% if current_industry == industry_id %}
@@ -47,7 +47,7 @@
                 </svg>
             {% else %}
                 <!-- Полоска при ховере -->
-                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-red-500 rounded-full transition-all duration-300 group-hover:w-6"></span>
+                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-red-900 rounded-full transition-all duration-300 group-hover:w-6"></span>
             {% endif %}
         </a>
         {% endfor %}

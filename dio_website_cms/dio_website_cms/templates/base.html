@@ -17,7 +17,7 @@
 
 
     <!-- CSS -->
-    <link id="theme-style" href="{% static 'css/theme-dark.css' %}"?v=1.0 rel="stylesheet">
+    <link id="theme-style" href="{% static 'css/theme-dark.css' %}"?v=1.4 rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
 
@@ -192,8 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Меняем CSS-файл
             style.href = t === 'dark' 
-                ? "{% static 'css/theme-light.css' %}?v=1.0 " 
-                : "{% static 'css/theme-dark.css' %}?v=1.0 ";
+                ? "{% static 'css/theme-light.css' %}?v=1.4 " 
+                : "{% static 'css/theme-dark.css' %}?v=1.4 ";
 
             // КЛЮЧЕВОЕ: добавляем/удаляем класс `dark`
             body.classList.toggle('dark', t === 'dark');
@@ -252,6 +252,8 @@ select:-webkit-autofill {
     -webkit-text-fill-color: inherit !important;
     font-family: inherit !important;
 }
+
+
     </style>
 </body>
 </html>

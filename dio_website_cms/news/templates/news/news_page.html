@@ -15,7 +15,7 @@
         <div class="container mx-auto px-4 lg:px-8  relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                 <div class="space-y-6">
-                    <span class="inline-block px-4 py-2 rounded-full bg-red-600/80 text-red-100 text-sm font-semibold">
+                    <span class="heading_h5 inline-block px-4 py-2 rounded-full bg-red-600/80 text-red-100 text-sm font-semibold">
                         {{ page.get_category_display }}
                     </span>
                     <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight text-white drop-shadow-md">
@@ -35,9 +35,9 @@
     </section>
 
     <!-- Main Content -->
-    <section class="section">
-        <div class="heading_h3 container mx-auto px-4 lg:px-8 ">
-            <div class="prose prose-lg max-w-none news-content">
+    <section class="section ">
+        <div class="heading_h3 container mx-auto max-w-4xl px-4 lg:px-8 ">
+            <div class=" prose-lg max-w-none news-content rich-content">
                 {{ page.content|richtext }}
             </div>
         </div>
@@ -46,7 +46,7 @@
     <!-- Modern Gallery Carousel -->
     {% if page.gallery %}
     <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8 ">
+        <div class="container mx-auto max-w-6xl px-4 lg:px-8 ">
             <div class="header is-align-center mb-12">
                 <h2 class="heading_h2">Галерея</h2>
             </div>
@@ -91,9 +91,15 @@
 <section class="section pt-16 ">
     <div class="container">
         <!-- Заголовок -->
-        <div class="text-center mb-12">
-            <h2 class="heading_h2">Другие новости</h2>
-        </div>
+        <div class="flex items-center justify-between mb-12">
+                <h2 class="heading_h2 text-3xl lg:text-4xl mb-0">Другие новости</h2>
+                <a href="/news" class="button is-secondary">
+                    Все новости
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
 
         <!-- Сетка новостей — ТОЧНО КАК ОСНОВНЫЕ -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -442,5 +448,7 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+
 </script>
 {% endblock %}

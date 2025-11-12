@@ -49,7 +49,7 @@
         <!-- СЕКЦИИ -->
         {% for block in page.content %}
            {% cycle 'bg-[#0b0b0b]' 'bg-[#131313] via-red-950/6' 'bg-[#0d0d0d]' 'bg-[#111111] via-red-950/5' as bg_color silent %}
-    {% cycle 'text-white heading_h5' 'text-gray-100 heading_h5' as text_color silent %}
+    {% cycle 'text-white heading_h5' 'text-white heading_h5' as text_color silent %}
 
             <section class="section py-16 lg:py-24 {{ bg_color }}">
                 <div class="container">
@@ -107,14 +107,14 @@
 
                             <!-- ОПИСАНИЕ — ТЕКСТ + ФОТО МЕЖДУ АБЗАЦАМИ -->
                             {% if block.block_type == "description" %}
-                                <div class="rich-content {{ text_color }}">
+                                <div class="rich-content  text-white">
                                     {{ block.value|richtext }}
                                 </div>
 
                            {% elif block.block_type == "results" %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {% for result in block.value %}
-            <div class="case-bg case-item group relative p-8 sm:p-10 rounded-3xl transition-colors duration-300 
+            <div class=" case-item group relative p-8 sm:p-10 rounded-3xl transition-colors duration-300 
                         bg-[#151515] hover:bg-[#1e1e1e] overflow-hidden cursor-default
                         ">
                 
@@ -201,7 +201,7 @@
     .rich-content {
         font-size: 1.125rem;
         line-height: 2;
-        color: inherit;
+        color: white;
     }
     .rich-content > * + * { margin-top: 1.5rem; }
     .rich-content p { margin-bottom: 1.5rem; }
@@ -330,8 +330,7 @@
 
     </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+<script>document.addEventListener('DOMContentLoaded', function() {
     // Функция для улучшения качества изображений
     function enhanceRichTextImages() {
         const images = document.querySelectorAll('.rich-content img');
@@ -339,34 +338,41 @@ document.addEventListener('DOMContentLoaded', function() {
         images.forEach(img => {
             const originalSrc = img.src;
             
-            // Заменяем width-500 на width-1200
-            if (originalSrc.includes('.width-500.')) {
-                const enhancedSrc = originalSrc.replace('.width-500.', '.width-1200.');
+            // Ищем любой размер width-XXX где XXX < 1200
+            const widthMatch = originalSrc.match(/\.width-(\d+)\./);
+            
+            if (widthMatch) {
+                const currentWidth = parseInt(widthMatch[1]);
                 
-                // Создаем новое изображение для предзагрузки
-                const newImage = new Image();
-                newImage.onload = function() {
-                    // Если изображение загрузилось успешно, заменяем src
-                    img.src = enhancedSrc;
-                    console.log('Улучшено качество изображения:', enhancedSrc);
-                };
-                newImage.onerror = function() {
-                    // Если width-1200 не существует, пробуем original
-                    const fallbackSrc = originalSrc.replace('.width-500.', '.original.');
-                    const fallbackImage = new Image();
+                // Если текущий размер меньше 1200, заменяем на 1200
+                if (currentWidth < 1200) {
+                    const enhancedSrc = originalSrc.replace(`.width-${currentWidth}.`, '.width-1200.');
                     
-                    fallbackImage.onload = function() {
-                        img.src = fallbackSrc;
-                        console.log('Использовано оригинальное изображение:', fallbackSrc);
+                    // Создаем новое изображение для предзагрузки
+                    const newImage = new Image();
+                    newImage.onload = function() {
+                        // Если изображение загрузилось успешно, заменяем src
+                        img.src = enhancedSrc;
+                        console.log(`Улучшено качество изображения: ${currentWidth} -> 1200`, enhancedSrc);
                     };
-                    fallbackImage.onerror = function() {
-                        console.log('Не удалось улучшить изображение:', originalSrc);
+                    newImage.onerror = function() {
+                        // Если width-1200 не существует, пробуем original
+                        const fallbackSrc = originalSrc.replace(`.width-${currentWidth}.`, '.original.');
+                        const fallbackImage = new Image();
+                        
+                        fallbackImage.onload = function() {
+                            img.src = fallbackSrc;
+                            console.log('Использовано оригинальное изображение:', fallbackSrc);
+                        };
+                        fallbackImage.onerror = function() {
+                            console.log('Не удалось улучшить изображение:', originalSrc);
+                        };
+                        
+                        fallbackImage.src = fallbackSrc;
                     };
                     
-                    fallbackImage.src = fallbackSrc;
-                };
-                
-                newImage.src = enhancedSrc;
+                    newImage.src = enhancedSrc;
+                }
             }
         });
     }

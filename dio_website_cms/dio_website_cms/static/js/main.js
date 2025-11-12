@@ -39,3 +39,185 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.animated-btn-tilda').forEach(btn => {
+    const rect = btn.querySelector('rect');
+
+    btn.addEventListener('mouseenter', () => {
+      rect.setAttribute('stroke-width', '4');
+      rect.setAttribute('stroke-dasharray', '80 410');
+      rect.setAttribute('stroke-dashoffset', '-330');
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      rect.setAttribute('stroke-width', '2');
+      rect.setAttribute('stroke-dasharray', '0 422');
+      rect.setAttribute('stroke-dashoffset', '0');
+    });
+
+    // Поддержка тач-устройств
+    btn.addEventListener('touchstart', () => {
+      rect.setAttribute('stroke-width', '4');
+      rect.setAttribute('stroke-dasharray', '80 410');
+      rect.setAttribute('stroke-dashoffset', '-330');
+    });
+  });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Минимальная ширина, при которой изображение считается маленьким
+    const MIN_DISPLAY_WIDTH = 800;
+    
+    // Функция для улучшения качества изображений
+    function enhanceRichTextImages() {
+        const images = document.querySelectorAll('.rich-content img');
+        
+        images.forEach(img => {
+            // Пропускаем изображения, которые уже обрабатываются
+            if (img.classList.contains('enhancement-processed')) {
+                return;
+            }
+            
+            const originalSrc = img.src;
+            img.classList.add('enhancement-processed');
+            
+            // Получаем текущие размеры изображения
+            const displayWidth = img.offsetWidth || img.naturalWidth;
+            const displayHeight = img.offsetHeight || img.naturalHeight;
+            
+            // Если изображение уже достаточно большое, пропускаем
+            if (displayWidth >= MIN_DISPLAY_WIDTH) {
+                return;
+            }
+            
+            // Ищем паттерн ширины в URL (width-XXX)
+            const widthMatch = originalSrc.match(/\.width-(\d+)\./);
+            
+            if (widthMatch) {
+                const currentWidth = parseInt(widthMatch[1]);
+                const enhancedSrc = originalSrc.replace(`.width-${currentWidth}.`, '.width-1200.');
+                
+                enhanceImageQuality(img, originalSrc, enhancedSrc);
+            } else {
+                // Если нет width-XXX паттерна, пробуем другие способы
+                tryEnhancementByUrlPatterns(img, originalSrc);
+            }
+        });
+    }
+    
+    function enhanceImageQuality(img, originalSrc, enhancedSrc) {
+        // Создаем новое изображение для предзагрузки
+        const newImage = new Image();
+        newImage.onload = function() {
+            // Если изображение загрузилось успешно, заменяем src
+            img.src = enhancedSrc;
+            img.setAttribute('data-enhanced', 'true');
+            console.log('Улучшено качество изображения:', enhancedSrc);
+        };
+        newImage.onerror = function() {
+            // Если width-1200 не существует, пробуем original
+            const fallbackSrc = originalSrc.replace(/\.width-\d+\./, '.original.');
+            const fallbackImage = new Image();
+            
+            fallbackImage.onload = function() {
+                img.src = fallbackSrc;
+                img.setAttribute('data-enhanced', 'true');
+                console.log('Использовано оригинальное изображение:', fallbackSrc);
+            };
+            fallbackImage.onerror = function() {
+                // Пробуем увеличить в 2 раза от текущего размера
+                tryDoubleSizeEnhancement(img, originalSrc);
+            };
+            
+            fallbackImage.src = fallbackSrc;
+        };
+        
+        newImage.src = enhancedSrc;
+    }
+    
+    function tryDoubleSizeEnhancement(img, originalSrc) {
+        // Ищем текущую ширину в URL
+        const widthMatch = originalSrc.match(/\.width-(\d+)\./);
+        if (widthMatch) {
+            const currentWidth = parseInt(widthMatch[1]);
+            const doubleWidth = currentWidth * 2;
+            
+            // Ограничиваем максимальную ширину
+            const maxWidth = Math.min(doubleWidth, 1200);
+            const enhancedSrc = originalSrc.replace(`.width-${currentWidth}.`, `.width-${maxWidth}.`);
+            
+            const testImage = new Image();
+            testImage.onload = function() {
+                img.src = enhancedSrc;
+                img.setAttribute('data-enhanced', 'true');
+                console.log('Увеличено в 2 раза:', enhancedSrc);
+            };
+            testImage.onerror = function() {
+                console.log('Не удалось улучшить изображение:', originalSrc);
+                img.classList.remove('enhancement-processed'); // Разрешаем повторную попытку
+            };
+            
+            testImage.src = enhancedSrc;
+        } else {
+            console.log('Не удалось улучшить изображение (не найден размер):', originalSrc);
+        }
+    }
+    
+    function tryEnhancementByUrlPatterns(img, originalSrc) {
+        // Пробуем различные паттерны для улучшения качества
+        const enhancementPatterns = [
+            { pattern: /(_small|_thumb|_mini)/i, replacement: '_large' },
+            { pattern: /(\d+x\d+)/, replacement: '1200x1200' },
+            { pattern: /(w=\d+)/, replacement: 'w=1200' },
+            { pattern: /(width=\d+)/, replacement: 'width=1200' }
+        ];
+        
+        for (const pattern of enhancementPatterns) {
+            if (pattern.pattern.test(originalSrc)) {
+                const enhancedSrc = originalSrc.replace(pattern.pattern, pattern.replacement);
+                enhanceImageQuality(img, originalSrc, enhancedSrc);
+                return;
+            }
+        }
+        
+        // Если не нашли подходящих паттернов, пробуем добавить параметр качества
+        if (originalSrc.includes('?')) {
+            const enhancedSrc = originalSrc + '&quality=100&width=1200';
+            enhanceImageQuality(img, originalSrc, enhancedSrc);
+        } else {
+            const enhancedSrc = originalSrc + '?quality=100&width=1200';
+            enhanceImageQuality(img, originalSrc, enhancedSrc);
+        }
+    }
+
+    // Вызываем сразу после загрузки DOM
+    enhanceRichTextImages();
+    
+    // Также вызываем при динамических изменениях
+    const observer = new MutationObserver(function(mutations) {
+        let shouldEnhance = false;
+        
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.nodeType === 1 && (node.classList.contains('rich-content') || 
+                                                node.querySelector('.rich-content'))) {
+                        shouldEnhance = true;
+                    }
+                });
+            }
+        });
+        
+        if (shouldEnhance) {
+            // Небольшая задержка для гарантии что DOM обновился
+            setTimeout(enhanceRichTextImages, 100);
+        }
+    });
+    
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+});
