@@ -2,147 +2,175 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
 {% block content %}
-<article class="font-sans">
+<article class="min-h-screen bg-gradient-to-b from-black to-[#0a0a0a] text-white">
 
-    {% for block in page.content %}
-        {% if block.block_type == "hero" %}
-            <section class="relative min-h-screen flex min-h-[700px] items-center overflow-hidden">
-                {% image block.value.background_image original as bg %}
-                <div class="absolute inset-0 z-0">
-                    <img src="{{ bg.url }}" alt="" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black/60"></div>
-                </div>
-                <div class="container mx-auto px-4 relative z-10 text-center">
-                    <h1 class="heading_h1 text-5xl sm:text-6xl lg:text-8xl font-bold text-white drop-shadow-2xl gs-reveal">
-                        {{ block.value.title }}
-                    </h1>
-                    {% if block.value.subtitle %}
-                        <div class="mt-8 text-xl lg:text-2xl text-white/90 max-w-4xl mx-auto gs-reveal">
-                            {{ block.value.subtitle|richtext }}
-                        </div>
-                    {% endif %}
-                    <a href="{{ block.value.cta_link.url|default:'/about/' }}" 
-                       class="mt-12 inline-block px-8 py-4 bg-red-800 hover:bg-red-700 text-white font-bold rounded-xl gs-reveal">
-                        {{ block.value.cta_text }}
-                    </a>
-                </div>
-            </section>
+  {% for block in page.content %}
 
-        {% elif block.block_type == "values" %}
-            <section class="py-24 bg-[#0b0b0b]">
-                <div class="container mx-auto px-4">
-                    <h2 class="heading_h2 text-center text-5xl font-bold text-white mb-16 gs-reveal">
-                        {{ block.value.title }}
-                    </h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {% for item in block.value.items %}
-                            <div class="case-bg case-item p-8 rounded-3xl bg-[#151515] border border-red-900/30 hover:border-red-800/60 gs-reveal">
-                                {% if item.icon %}
-                                    {% image item.icon width-80 as icon %}
-                                    <img src="{{ icon.url }}" alt="" class="w-16 h-16 mb-6">
-                                {% endif %}
-                                <h3 class="heading_h4 text-xl font-bold text-white">{{ item.title }}</h3>
-                                {% if item.description %}
-                                    <p class="mt-4 text-gray-300">{{ item.description|richtext }}</p>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </section>
-
-        {% elif block.block_type == "vacancies_list" %}
-<section class="py-24 bg-[#131313]">
-    <div class="container mx-auto px-4">
-        <h2 class="heading_h2 text-center text-5xl font-bold text-white mb-16 gs-reveal">
-            {{ block.value.title }}
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {% for vacancy in page.get_children.live.specific %}
-                <a href="{{ vacancy.url }}" class="case-bg case-item group rounded-3xl bg-[#151515] border border-red-900/30 hover:border-red-800/60 transition-all p-8 block gs-reveal">
-                    <h3 class="heading_h3 text-2xl font-bold text-white group-hover:text-red-400">
-                        {{ vacancy.title }}
-                    </h3>
-                    {% if vacancy.department %}
-                        <span class="inline-block mt-3 px-4 py-1.5 bg-red-800/20 text-red-400 text-sm rounded-full">
-                            {{ vacancy.department }}
-                        </span>
-                    {% endif %}
-                    <div class="mt-6 space-y-2 text-gray-300">
-                        {% if vacancy.salary %}
-                            <p>Зарплата: <strong class="text-red-400">{{ vacancy.salary }}</strong></p>
-                        {% endif %}
-                        <p>Локация: {{ vacancy.location }}</p>
-                        {% if vacancy.work_format %}
-                            <p>Формат: {{ vacancy.work_format }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="mt-8 inline-flex items-center gap-3 text-red-400 font-semibold">
-                        Подробнее
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-                </a>
-            {% empty %}
-                <p class="col-span-full text-center text-2xl text-gray-500">Вакансий пока нет</p>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-        {% elif block.block_type == "form" %}
-            <section id="vacancy-form" class="py-24 bg-[#0b0b0b]">
-                <div class="container mx-auto px-4">
-                    <div class="max-w-4xl mx-auto text-center">
-                        <h2 class="heading_h2 text-5xl font-bold text-white mb-8 gs-reveal">
-                            {{ block.value.title }}
-                        </h2>
-                        {% if block.value.description %}
-                            <div class="text-xl text-gray-400 mb-12 gs-reveal">
-                                {{ block.value.description|richtext }}
-                            </div>
-                        {% endif %}
-                        <div class="bg-[#1a1a1a] rounded-3xl p-8 lg:p-12 border border-red-900/30 gs-reveal">
-                            {% include "vacancy/includes/vacancy_form.html" %}
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        {% elif block.block_type == "office" %}
-            <section class="py-24 bg-[#131313]">
-                <div class="container mx-auto px-4">
-                    <h2 class="heading_h2 text-center text-5xl font-bold text-white mb-16 gs-reveal">
-                        {{ block.value.title }}
-                    </h2>
-                    <div class="rounded-3xl overflow-hidden shadow-2xl border border-red-900/20 gs-reveal">
-                        <iframe src="https://yandex.ru/map-widget/v1/org/dio_konsalt/41393573854/?ll=65.548711%2C57.139781&z=16" 
-                                width="100%" height="500" frameborder="0" allowfullscreen="true"></iframe>
-                    </div>
-                    {% if block.value.address %}
-                        <p class="text-center text-gray-400 mt-8 text-lg">{{ block.value.address }}</p>
-                    {% endif %}
-                </div>
-            </section>
+    {% if block.block_type == "hero" %}
+      <section class="section is-secondary relative min-h-[700px] flex items-center overflow-hidden">
+        {% if block.value.image %}
+          {% image block.value.image original as bg_image %}
+          <div class="absolute inset-0 z-0">
+            <img src="{{ bg_image.url }}" alt="{{ block.value.title }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/30"></div>
+          </div>
         {% endif %}
-    {% endfor %}
+
+        <div class="container mx-auto relative z-10">
+          <div class="grid grid-cols-1 lg:grid-cols-1 gap-8 lg:gap-12 items-center">
+            <div class="space-y-6">
+              <h1 class="heading_h3 pb-10 text-white drop-shadow-md gs-reveal">
+                {{ block.value.title }}
+              </h1>
+              {% if block.value.subtitle %}
+                <p class="heading_h2 py-10 text-white/90 gs-reveal">
+                  {{ block.value.subtitle|striptags }}
+                </p>
+              {% endif %}
+              {% if block.value.cta_text %}
+                <a href="{% if block.value.cta_scroll %}#vacancies{% else %}{{ page.url }}{% endif %}"
+                   {% if block.value.cta_scroll %}onclick="document.getElementById('vacancies')?.scrollIntoView({ behavior: 'smooth' });"{% endif %}
+                   class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg gs-reveal"
+                   style="color:white; box-shadow: 0 0 0 2px white inset;">
+                  {{ block.value.cta_text }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </section>
+
+    {% elif block.block_type == 'text_section' %}
+      <section class="py-24 bg-[#111]">
+        <div class="container mx-auto px-6 ">
+          <h2 class="heading_h3 md:text-5xl font-bold  mb-8">{{ block.value.title }}</h2>
+          {% if block.value.content %}
+            <div class="prose prose-invert max-w-none text-gray-300">
+              {{ block.value.content|richtext }}
+            </div>
+          {% endif %}
+          {% if block.value.image %}
+            {% image block.value.image original as img %}
+            <img src="{{ img.url }}" alt="" class="w-full rounded-2xl mt-12 shadow-2xl">
+          {% endif %}
+        </div>
+      </section>
+
+    {% elif block.block_type == 'values' %}
+      <section class="py-24 bg-[#111]">
+        <div class="container mx-auto px-6">
+          <h2 class="heading_h3 md:text-5xl font-bold  mb-16">{{ block.value.title }}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for item in block.value.items %}
+              <div class="bg-[#1a1a1a] p-8 rounded-2xl border border-red-900/20 hover:border-red-800/50 transition-all group">
+                {% if item.icon %}
+                  {% image item.icon width-64 as icon %}
+                  <img src="{{ icon.url }}" alt="" class="w-16 h-16 mb-6 opacity-80 group-hover:opacity-100 transition">
+                {% endif %}
+                <h3 class="text-2xl font-bold mb-3">{{ item.title }}</h3>
+                <p class="text-gray-400">{{ item.description }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+    {% elif block.block_type == 'vacancies_list' %}
+      <section id="vacancies" class="py-24">
+        <div class="container mx-auto px-6">
+          <h2 class="heading_h3 md:text-5xl font-bold  mb-16">{{ block.value.title }}</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for vacancy in page.get_children.live %}
+              <a href="{{ vacancy.url }}" class="block group">
+                <div class="bg-[#1a1a1a] p-8 rounded-2xl border border-red-900/20 hover:border-red-600 transition-all h-full flex flex-col">
+                  <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold group-hover:text-red-400 transition">{{ vacancy.title }}</h3>
+                    {% if vacancy.specific.badge %}
+                      <span class="px-3 py-1 bg-red-600/20 text-red-400 text-xs rounded-full">
+                        {% if vacancy.specific.badge == 'hot' %}Горячая{% endif %}
+                        {% if vacancy.specific.badge == 'new' %}Новая{% endif %}
+                        {% if vacancy.specific.badge == 'remote' %}Удалённо{% endif %}
+                      </span>
+                    {% endif %}
+                  </div>
+                  <div class="text-sm text-gray-400 space-y-1 mb-6">
+                    <p><strong class="text-red-400">{{ vacancy.specific.department }}</strong></p>
+                    {% if vacancy.specific.salary %}<p>Зарплата: <strong class="text-red-400">{{ vacancy.specific.salary }}</strong></p>{% endif %}
+                    <p>Локация: {{ vacancy.specific.location }}</p>
+                    <p>Формат: 
+                      {% if vacancy.specific.work_format == 'office' %}Офис
+                      {% elif vacancy.specific.work_format == 'remote' %}Удалённо
+                      {% else %}Гибрид{% endif %}
+                    </p>
+                  </div>
+                  <div class="mt-auto flex items-center text-red-400 font-semibold">
+                    Подробнее
+                    <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            {% empty %}
+              <p class="col-span-full  text-xl text-gray-500">Вакансий пока нет</p>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+    {% elif block.block_type == 'form' %}
+      <section id="apply" class="py-24 bg-[#111]">
+        <div class="container mx-auto px-6 ">
+          <div class=" mb-12">
+            <h2 class="heading_h3 md:text-5xl font-bold mb-4">{{ block.value.title }}</h2>
+            {% if block.value.description %}
+              <p class="text-xl text-gray-400">{{ block.value.description }}</p>
+            {% endif %}
+          </div>
+          <div class="bg-[#1a1a1a] rounded-3xl p-8 lg:p-12 border border-red-900/30">
+            {% include "vacancy/includes/vacancy_form.html" %}
+          </div>
+        </div>
+      </section>
+
+    {% elif block.block_type == 'office' %}
+      <section class="py-24">
+        <div class="container mx-auto px-6">
+          <h2 class="heading_h3 md:text-5xl font-bold  mb-16">{{ block.value.title }}</h2>
+          <div class="rounded-3xl overflow-hidden shadow-2xl border border-red-900/20">
+            <iframe 
+              src="https://yandex.ru/map-widget/v1/org/dio_konsalt/41393573854/?ll=65.548711%2C57.139781&z=16"
+              width="100%" height="500" frameborder="0" allowfullscreen="true">
+            </iframe>
+          </div>
+          {% if block.value.address %}
+            <p class=" text-gray-400 mt-8 text-lg">{{ block.value.address }}</p>
+          {% endif %}
+        </div>
+      </section>
+
+    {% endif %}
+
+  {% endfor %}
 
 </article>
 
 <style>
-    #vacancy-form { scroll-margin-top: 100px; }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-up {
+    animation: fade-up 0.8s ease-out forwards;
+  }
+  .animation-delay-200 { animation-delay: 0.2s; opacity: 0; }
+  .animation-delay-400 { animation-delay: 0.4s; opacity: 0; }
+  
+  /* Адаптивная сетка */
+  @media (min-width: 768px) {
+    .grid-cols-1 { grid-template-columns: 1fr; }
+    .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  }
 </style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        gsap.registerPlugin(ScrollTrigger);
-        gsap.utils.toArray('.gs-reveal').forEach((el, i) => {
-            gsap.fromTo(el, { opacity: 0, y: 40 }, {
-                opacity: 1, y: 0, duration: 0.8, ease: "power2.out", delay: i * 0.1,
-                scrollTrigger: { trigger: el, start: "top 95%" }
-            });
-        });
-    });
-</script>
 {% endblock %}

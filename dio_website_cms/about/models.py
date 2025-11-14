@@ -159,7 +159,6 @@ class AboutPage(Page):
         help_text="Значение метрики присутствия",
     )
 
-    # Approach/Value секция
     approach_title = models.CharField(
         max_length=255,
         blank=True,
@@ -207,7 +206,6 @@ class AboutPage(Page):
         default="Проектное управление\nФинансовый анализ\nУправление производством\nИнженерные решения\nРазработка интерфейсов\nСерверная разработка\nUI/UX-дизайн\nГрафический дизайн\nАнализ данных\nЦифровой маркетинг",
     )
 
-    # Contact секция
     contact_title = models.CharField(
         max_length=255,
         blank=True,
@@ -239,8 +237,7 @@ class AboutPage(Page):
 
     global_presence = StreamField(
         [
-            ("presence", GlobalPresenceBlock()),  # Это имя должно совпадать с block.block_type
-        ],
+            ("presence", GlobalPresenceBlock()),         ],
         blank=True,
         use_json_field=True,
         verbose_name="Глобальное присутствие",

@@ -62,7 +62,6 @@ class HeaderSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGener
         help_text="Выберите страницу для ссылки на консультацию",
     )
 
-    # Поле для элементов навигации (StreamField)
     nav_items = StreamField(
     [
         (

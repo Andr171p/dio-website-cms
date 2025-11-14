@@ -48,3 +48,6 @@ class CertificatesIndexPage(Page):
         context['certificates'] = paginator.get_page(page)
 
         return context
+    class Meta:
+        verbose_name = "Страница 'Сертификаты'"
+        verbose_name_plural = "Страница 'Сертификатов' "

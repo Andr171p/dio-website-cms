@@ -1,3 +1,17 @@
+[class*="wf-"], .wf-active {
+  font-family: 'Mulish', sans-serif !important;
+}
+
+*, *::before, *::after {
+  font-family: 'Mulish', sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+.heading_h1, .heading_h2, .heading_h3, .heading_h4, .heading_h5 {
+  font-family: 'Mulish', sans-serif !important;
+}
+
+
 html, body {
     background-color: #f0f0f0; /* Замените на любой нужный вам цвет */
     margin: 0;
