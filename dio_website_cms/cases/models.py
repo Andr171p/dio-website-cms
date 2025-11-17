@@ -89,7 +89,7 @@ class CaseStudyPage(Page):
                     features=['bold', 'italic']
                 )),
             ], icon='success', label="Результат"),
-            label="Результаты (добавляй сколько угодно)"
+            label="Результаты "
         )),
         ('technologies', blocks.ListBlock(
             blocks.CharBlock(label="Технология"),

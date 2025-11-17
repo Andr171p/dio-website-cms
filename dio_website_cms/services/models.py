@@ -12,7 +12,6 @@ from wagtail.embeds.blocks import EmbedBlock
 from wagtail import blocks
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-# Константы для категорий услуг
 SERVICE_CATEGORY_CHOICES = [
     ("consulting", "Консультации"),
     ("development", "Разработка"),
@@ -22,7 +21,8 @@ SERVICE_CATEGORY_CHOICES = [
     ("1_c", "1С"),
 ]
 
-# Блок для Hero
+
+
 class HeroBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок Hero")
     subtitle = CharBlock(required=True, label="Подзаголовок Hero")
@@ -34,7 +34,6 @@ class HeroBlock(StructBlock):
         icon = "image"
         label = "Hero"
 
-# Блок для текста
 class TextBlock(StructBlock):
     content = RichTextBlock(
         features=['h2', 'h3', 'bold', 'italic', 'link', 'ol', 'ul', 'blockquote'],
@@ -45,73 +44,66 @@ class TextBlock(StructBlock):
         icon = "doc-full"
         label = "Текстовая секция"
 
-# Блок для "Что мы делаем"
+class ResultItemBlock(StructBlock):
+    text = RichTextBlock(
+        label="Текст результата",
+        features=['bold', 'italic', 'link'],
+        required=True
+    )
+
+    class Meta:
+        icon = 'success'
+        label = "Элемент результата"
+
+class ResultsBlock(StructBlock):
+    title = CharBlock(
+        required=False, 
+        label="Заголовок блока",
+        default="Результаты"
+    )
+    items = ListBlock(
+        ResultItemBlock(),
+        label="Список результатов"
+    )
+
+    class Meta:
+        icon = 'tick'
+        label = "Блок результатов"
+
+class DescriptionBlock(StructBlock):
+    title = CharBlock(
+        required=False, 
+        label="Заголовок блока",
+        default="Описание проекта"
+    )
+    content = RichTextBlock(
+        label="Описание",
+        features=['bold', 'italic', 'link', 'h2', 'h3', 'h4', 'ol', 'ul', 'image', 'embed', 'code', 'blockquote', 'hr', 'document-link', 'superscript', 'strikethrough'],
+        required=True
+    )
+
+    class Meta:
+        icon = 'doc-full'
+        label = "Описание проекта"
+
 class WhatWeDoBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок")
     description = RichTextBlock(required=True, label="Описание")
-    image = ImageChooserBlock(required=True, label="Изображение слева")
+    image = ImageChooserBlock(required=True, label="Изображение")
+    image_position = ChoiceBlock(
+        choices=[
+            ('left', 'Слева'),
+            ('right', 'Справа'),
+        ],
+        default='left',
+        label="Позиция изображения"
+    )
 
     class Meta:
         icon = "edit"
         label = "Что мы делаем"
 
-# Блок для карточки с изображением
-class ImageCardBlock(StructBlock):
-    image = ImageChooserBlock(required=True, label="Изображение")
-    title = CharBlock(required=True, label="Заголовок")
-    description = RichTextBlock(required=False, label="Описание")
-    button_text = CharBlock(required=False, label="Текст кнопки")
-    button_link = PageChooserBlock(required=False, label="Ссылка кнопки")
 
-    class Meta:
-        icon = "image"
-        label = "Карточка с изображением"
-
-# Элемент для сетки карточек
-class CardItemBlock(StructBlock):
-    title = CharBlock(required=True, label="Название")
-    description = RichTextBlock(required=False, label="Описание")
-    icon = ImageChooserBlock(required=False, label="Иконка (SVG)")
-    image = ImageChooserBlock(required=False, label="Изображение")
-
-    class Meta:
-        icon = "pick"
-        label = "Элемент карточки"
-
-# Универсальный блок для сетки карточек (для экспертизы, преимуществ и т.д.)
-class CardGridBlock(StructBlock):
-    title = CharBlock(required=True, label="Заголовок сетки")
-    grid_type = ChoiceBlock(choices=[
-        ('numbered', 'Нумерованный'),
-        ('bulleted', 'Маркированный'),
-        ('icon_grid', 'Сетка с иконками'),
-        ('image_grid', 'Сетка с изображениями'),
-    ], default='icon_grid', label="Тип сетки")
-    items = ListBlock(CardItemBlock(), label="Элементы сетки")
-
-    class Meta:
-        icon = "folder-open"
-        label = "Универсальная сетка карточек"
-
-# Блок для метрик доверия
-class MetricItemBlock(StructBlock):
-    value = CharBlock(required=True, label="Значение (например, '10+', '100')")
-    label = CharBlock(required=True, label="Описание (например, 'Лет на рынке')")
-    icon = ImageChooserBlock(required=False, label="Иконка (SVG)")
-
-    class Meta:
-        icon = "pick"
-        label = "Метрика"
-
-class MetricsBlock(StructBlock):
-    title = CharBlock(required=True, label="Заголовок метрик")
-    items = ListBlock(MetricItemBlock(), label="Список метрик")
-
-    class Meta:
-        icon = "site"
-        label = "Метрики доверия"
-
-# Блок для галереи изображений
 class GalleryBlock(StructBlock):
     title = CharBlock(required=False, label="Заголовок галереи")
     images = ListBlock(ImageChooserBlock(), label="Изображения")
@@ -120,7 +112,6 @@ class GalleryBlock(StructBlock):
         icon = "image"
         label = "Галерея изображений"
 
-# Блок для видео
 class VideoBlock(StructBlock):
     title = CharBlock(required=False, label="Заголовок видео")
     video = EmbedBlock(required=True, label="Встраиваемое видео (YouTube, Vimeo и т.д.)")
@@ -129,7 +120,6 @@ class VideoBlock(StructBlock):
         icon = "media"
         label = "Видео"
 
-# Блок для аккордеона (FAQ или детальные секции)
 class AccordionItemBlock(StructBlock):
     question = CharBlock(required=True, label="Вопрос/Заголовок")
     answer = RichTextBlock(required=True, label="Ответ/Описание")
@@ -146,16 +136,59 @@ class AccordionBlock(StructBlock):
         icon = "list-ul"
         label = "Аккордеон (FAQ/Детали)"
 
-# Блок для CTA
-class CTABlock(StructBlock):
-    title = CharBlock(required=True, label="Заголовок CTA")
-    description = RichTextBlock(required=True, label="Описание CTA")
-    button_text = CharBlock(required=True, label="Текст кнопки")
-    button_link = PageChooserBlock(required=False, label="Ссылка")
+# Блок преимуществ
+class BenefitItemBlock(StructBlock):
+    title = CharBlock(required=True, label="Название преимущества")
+    description = RichTextBlock(required=True, label="Описание")
+    icon = ImageChooserBlock(required=False, label="Иконка")
 
     class Meta:
-        icon = "plus"
-        label = "CTA"
+        icon = 'tick'
+        label = "Преимущество"
+
+class BenefitsBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок блока", default="Ключевые преимущества")
+    items = ListBlock(BenefitItemBlock(), label="Список преимуществ")
+
+    class Meta:
+        icon = 'plus'
+        label = "Блок преимуществ"
+
+# Блок процесса работы
+class ProcessItemBlock(StructBlock):
+    title = CharBlock(required=True, label="Название этапа")
+    description = RichTextBlock(required=True, label="Описание этапа")
+
+    class Meta:
+        icon = 'list-ul'
+        label = "Этап процесса"
+
+class ProcessBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок блока", default="Как мы работаем")
+    items = ListBlock(ProcessItemBlock(), label="Этапы работы")
+
+    class Meta:
+        icon = 'cog'
+        label = "Процесс работы"
+
+# Блок технологий
+class TechnologyItemBlock(StructBlock):
+    name = CharBlock(required=True, label="Название технологии")
+    icon = ImageChooserBlock(required=True, label="Логотип/Иконка")
+
+    class Meta:
+        icon = 'code'
+        label = "Технология"
+
+class TechnologiesBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок блока", default="Технологии и инструменты")
+    items = ListBlock(TechnologyItemBlock(), label="Список технологий")
+
+    class Meta:
+        icon = 'site'
+        label = "Технологии"
+
+
 
 class SingleServicePage(Page):
     date = models.DateField("Дата публикации", default=timezone.now)
@@ -183,13 +216,14 @@ class SingleServicePage(Page):
         ('hero', HeroBlock()),
         ('text', TextBlock()),
         ('what_we_do', WhatWeDoBlock()),
-        ('image_card', ImageCardBlock()),
-        ('card_grid', CardGridBlock()),
-        ('metrics', MetricsBlock()),
+        ('description', DescriptionBlock()), 
+        ('results', ResultsBlock()), 
+        ('benefits', BenefitsBlock()),  # вместо card_grid
+        ('process', ProcessBlock()),    # вместо metrics
+        ('technologies', TechnologiesBlock()), 
         ('gallery', GalleryBlock()),
         ('video', VideoBlock()),
         ('accordion', AccordionBlock()),
-        ('cta', CTABlock()),
     ], blank=True, use_json_field=True, verbose_name="Блоки страницы")
 
     content_panels = Page.content_panels + [

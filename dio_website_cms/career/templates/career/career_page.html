@@ -42,8 +42,8 @@
 
     {% elif block.block_type == 'text_section' %}
       <section class="py-24 bg-[#111]">
-        <div class="container mx-auto px-6 ">
-          <h2 class="heading_h3 md:text-5xl font-bold  mb-8">{{ block.value.title }}</h2>
+        <div class="container mx-auto px-6">
+          <h2 class="heading_h3 md:text-5xl font-bold mb-8">{{ block.value.title }}</h2>
           {% if block.value.content %}
             <div class="prose prose-invert max-w-none text-gray-300">
               {{ block.value.content|richtext }}
@@ -56,87 +56,323 @@
         </div>
       </section>
 
-    {% elif block.block_type == 'values' %}
-      <section class="py-24 bg-[#111]">
-        <div class="container mx-auto px-6">
-          <h2 class="heading_h3 md:text-5xl font-bold  mb-16">{{ block.value.title }}</h2>
+    {% elif block.block_type == 'what_we_do' %}
+      <section class="section is-secondary">
+        <div class="container mx-auto px-4 lg:px-8">
+          <div class="flex flex-col lg:flex-row items-center gap-12 {% if block.value.image_position == 'right' %}lg:flex-row-reverse{% endif %}">
+            <div class="lg:w-1/2 gs-reveal">
+              <div class="image-ratio_auto">
+                {% image block.value.image fill-900x800 class="image_cover rounded-lg" alt=block.value.title %}
+              </div>
+            </div>
+            <div class="lg:w-1/2 space-y-6 gs-reveal">
+              <h2 class="heading_h2">{{ block.value.title }}</h2>
+              <div class="heading_h5 rich-text w-richtext prose rich-content">
+                {{ block.value.description|richtext }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+    {% elif block.block_type == 'benefits' %}
+      <section class="section">
+        <div class="container mx-auto px-4 lg:px-8">
+          <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
+            {{ block.value.title|default:"Ключевые преимущества" }}
+          </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {% for item in block.value.items %}
-              <div class="bg-[#1a1a1a] p-8 rounded-2xl border border-red-900/20 hover:border-red-800/50 transition-all group">
-                {% if item.icon %}
-                  {% image item.icon width-64 as icon %}
-                  <img src="{{ icon.url }}" alt="" class="w-16 h-16 mb-6 opacity-80 group-hover:opacity-100 transition">
-                {% endif %}
-                <h3 class="text-2xl font-bold mb-3">{{ item.title }}</h3>
-                <p class="text-gray-400">{{ item.description }}</p>
+            {% for benefit in block.value.items %}
+              <div class="group relative p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-red-800/30 transition-all duration-500 gs-reveal">
+                <div class="flex flex-col items-center text-center space-y-4">
+                  {% if benefit.icon %}
+                    <div class="w-16 h-16 rounded-2xl bg-red-800/20 flex items-center justify-center group-hover:bg-red-800 transition-colors duration-300">
+                      {% image benefit.icon width-52 height-52 class="text-red-600 group-hover:text-white transition-colors duration-300" %}
+                    </div>
+                  {% endif %}
+                  <h3 class="heading_h3 font-semibold">{{ benefit.title }}</h3>
+                  <div class="heading_h5 leading-relaxed">
+                    {{ benefit.description|richtext }}
+                  </div>
+                </div>
               </div>
             {% endfor %}
           </div>
         </div>
       </section>
 
+    {% elif block.block_type == 'process' %}
+      <section class="section is-secondary">
+        <div class="container mx-auto px-4 lg:px-8">
+          <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
+            {{ block.value.title|default:"Как мы работаем" }}
+          </h2>
+          <div class="relative">
+            <div class="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-red-800/30 hidden lg:block"></div>
+            
+            <div class="space-y-12 lg:space-y-0">
+              {% for step in block.value.items %}
+                <div class="relative flex flex-col lg:flex-row items-center {% cycle 'lg:flex-row' 'lg:flex-row-reverse' %} gap-8 gs-reveal">
+                  <div class="lg:w-1/2 {% cycle 'lg:text-right lg:pr-12' 'lg:text-left lg:pl-12' %}">
+                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-red-800/30 transition-all duration-500">
+                      <h3 class="heading_h3 font-semibold mb-3">{{ step.title }}</h3>
+                      <div class="heading_h5 leading-relaxed">
+                        {{ step.description|richtext }}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="flex-shrink-0 w-20 h-20 rounded-full bg-red-800 border-4 border-white/10 flex items-center justify-center text-white font-bold heading_h3 z-10">
+                    {{ forloop.counter }}
+                  </div>
+                  
+                  <div class="lg:w-1/2 {% cycle 'lg:pl-12' 'lg:pr-12' %}"></div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </section>
+
     {% elif block.block_type == 'vacancies_list' %}
-      <section id="vacancies" class="py-24">
-        <div class="container mx-auto px-6">
-          <h2 class="heading_h3 md:text-5xl font-bold  mb-16">{{ block.value.title }}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {% for vacancy in page.get_children.live %}
-              <a href="{{ vacancy.url }}" class="block group">
-                <div class="bg-[#1a1a1a] p-8 rounded-2xl border border-red-900/20 hover:border-red-600 transition-all h-full flex flex-col">
-                  <div class="flex justify-between items-start mb-4">
-                    <h3 class="text-2xl font-bold group-hover:text-red-400 transition">{{ vacancy.title }}</h3>
-                    {% if vacancy.specific.badge %}
-                      <span class="px-3 py-1 bg-red-600/20 text-red-400 text-xs rounded-full">
-                        {% if vacancy.specific.badge == 'hot' %}Горячая{% endif %}
-                        {% if vacancy.specific.badge == 'new' %}Новая{% endif %}
-                        {% if vacancy.specific.badge == 'remote' %}Удалённо{% endif %}
-                      </span>
-                    {% endif %}
+<!-- Modern Vacancies List -->
+<section id="vacancies" class="section">
+  <div class="container mx-auto px-4 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="heading_h2 text-4xl lg:text-5xl font-black mb-6 gs-reveal">
+        {{ block.value.title|default:"Открытые вакансии" }}
+      </h2>
+      <p class="text-xl text-gray-400 gs-reveal" style="animation-delay: 0.1s;">
+        Присоединяйтесь к нашей команде профессионалов
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+      {% for vacancy in page.get_children.live %}
+        <a href="{{ vacancy.url }}" class="group gs-reveal">
+          <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-red-800/30 transition-all duration-500 h-full flex flex-col group-hover:transform group-hover:scale-105">
+            
+            <!-- Заголовок и бейдж -->
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="heading_h3 font-semibold group-hover:text-red-400 transition-colors duration-300">
+                {{ vacancy.title }}
+              </h3>
+              <span class="px-3 py-1 bg-red-600/20 text-red-400 text-xs rounded-full font-medium">
+                {{ vacancy.specific.department }}
+              </span>
+            </div>
+
+            <!-- Информация о вакансии -->
+            <div class="space-y-3 mb-6 flex-grow">
+              {% if vacancy.specific.salary %}
+                <div class="flex items-center text-emerald-400 font-semibold">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                  </svg>
+                  {{ vacancy.specific.salary }}
+                </div>
+              {% endif %}
+              
+              <div class="flex items-center text-gray-400">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                </svg>
+                {{ vacancy.specific.location }}
+              </div>
+              
+              <div class="flex items-center text-gray-400">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                {% if vacancy.specific.work_format == 'office' %}Офис
+                {% elif vacancy.specific.work_format == 'remote' %}Удалённо
+                {% else %}Гибрид{% endif %}
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="flex items-center justify-between pt-4 border-t border-white/10">
+              <span class="text-red-400 font-semibold group-hover:text-red-300 transition-colors">
+                Подробнее
+              </span>
+              <svg class="w-5 h-5 text-red-400 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+      {% empty %}
+        <div class="col-span-full text-center py-16 gs-reveal">
+          <div class="w-24 h-24 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="heading_h3 text-gray-400 mb-4">Вакансий пока нет</h3>
+          <p class="text-gray-500">Но мы всегда рады талантливым людям! Отправьте нам своё резюме.</p>
+          <a href="#apply" class="button is-secondary mt-6 inline-block">
+            Отправить резюме
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- CTA внизу -->
+    <div class="text-center mt-16 gs-reveal">
+      <p class="text-gray-400 mb-6">Хотите к нам в команду?</p>
+      <a href="#apply" class="button is-secondary inline-flex items-center">
+        Отправить заявку
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+    {% elif block.block_type == 'gallery' %}
+      <section class="section py-20">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+          {% if block.value.title %}
+            <div class="text-center mb-16">
+              <h2 class="heading_h2 font-black gs-reveal">{{ block.value.title }}</h2>
+            </div>
+          {% endif %}
+
+          <div class="relative mt-12">
+            <div class="gallery-carousel overflow-hidden rounded-2xl">
+              <div class="flex gap-6 pb-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+                {% for image in block.value.images %}
+                  {% image image fill-600x450 as thumb %}
+                  {% image image original as original_img %}
+                  <div class="flex-shrink-0 w-80 snap-start">
+                    <div class="gallery-card group cursor-zoom-in" 
+                         data-original="{{ original_img.url }}"
+                         data-index="{{ forloop.counter0 }}">
+                      <div class="image-ratio_4x3 rounded-xl overflow-hidden shadow-lg">
+                        <img src="{{ thumb.url }}" alt=""
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="text-sm text-gray-400 space-y-1 mb-6">
-                    <p><strong class="text-red-400">{{ vacancy.specific.department }}</strong></p>
-                    {% if vacancy.specific.salary %}<p>Зарплата: <strong class="text-red-400">{{ vacancy.specific.salary }}</strong></p>{% endif %}
-                    <p>Локация: {{ vacancy.specific.location }}</p>
-                    <p>Формат: 
-                      {% if vacancy.specific.work_format == 'office' %}Офис
-                      {% elif vacancy.specific.work_format == 'remote' %}Удалённо
-                      {% else %}Гибрид{% endif %}
-                    </p>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="flex justify-center mt-6 space-x-2">
+              {% for image in block.value.images %}
+                <div class="w-2 h-2 bg-white/30 rounded-full transition-all duration-300 indicator-dot"></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </section>
+
+    {% elif block.block_type == 'video' %}
+      <section class="section is-secondary">
+        <div class="container mx-auto px-4 lg:px-8">
+          {% if block.value.title %}
+            <div class="header is-align-center">
+              <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+            </div>
+          {% endif %}
+          <div class="mt-12 gs-reveal">
+            {% if block.value.video %}
+              {% with embed=block.value.video %}
+                {% if embed %}
+                  <div class="relative" style="padding-bottom: 26.25%; height: 500px;">
+                    {{ embed.html|safe }}
                   </div>
-                  <div class="mt-auto flex items-center text-red-400 font-semibold">
-                    Подробнее
-                    <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
+                {% else %}
+                  <p class="text-center text-red-600">Ошибка: Невозможно загрузить видео.</p>
+                {% endif %}
+              {% endwith %}
+            {% else %}
+              <p class="text-center text-red-600">Ошибка: Видео не указано.</p>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+
+    {% elif block.block_type == 'accordion' %}
+      <section class="section py-24">
+        <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
+          {% if block.value.title %}
+            <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-20 tracking-tight gs-reveal">
+              {{ block.value.title }}
+            </h2>
+          {% endif %}
+
+          <div class="space-y-12 heading_h5">
+            {% for item in block.value.items %}
+            <div class="accordion-ultimate group">
+              <button class="w-full text-left focus:outline-none">
+                <div class="flex items-center justify-between py-4 border-b border-gray/5 
+                            group-hover:border-red-800 
+                            transition-colors duration-500">
+                  <h3 class="text-xl lg:text-2xl font-medium  
+                             group-hover:text-red-800 
+                             transition-colors duration-500 
+                             pr-12 leading-snug">
+                    {{ item.question }}
+                  </h3>
+                  <span class="text-2xl font-light 
+                               group-hover:text-red-800 
+                               transition-all duration-500 
+                               group-open:hidden">+</span>
+                  <span class="text-2xl font-light text-red-800 
+                               transition-all duration-500 
+                               hidden group-open:inline">−</span>
+                </div>
+              </button>
+
+              <div class="accordion-content max-h-0 overflow-hidden 
+                          transition-all duration-700 ease-out">
+                <div class="pt-6 pb-10">
+                  <div class="typing-container">
+                    <div class="typing-text text-base lg:text-lg leading-relaxed text-gray-400 
+                                 prose prose-invert max-w-none"
+                         data-full-text="{{ item.answer|striptags }}">
+                    </div>
+                    <span class="typing-cursor bg-red-800">|</span>
                   </div>
                 </div>
-              </a>
-            {% empty %}
-              <p class="col-span-full  text-xl text-gray-500">Вакансий пока нет</p>
+              </div>
+            </div>
             {% endfor %}
           </div>
         </div>
       </section>
 
     {% elif block.block_type == 'form' %}
-      <section id="apply" class="py-24 bg-[#111]">
-        <div class="container mx-auto px-6 ">
-          <div class=" mb-12">
-            <h2 class="heading_h3 md:text-5xl font-bold mb-4">{{ block.value.title }}</h2>
-            {% if block.value.description %}
-              <p class="text-xl text-gray-400">{{ block.value.description }}</p>
-            {% endif %}
-          </div>
-          <div class="bg-[#1a1a1a] rounded-3xl p-8 lg:p-12 border border-red-900/30">
-            {% include "vacancy/includes/vacancy_form.html" %}
-          </div>
-        </div>
-      </section>
+<!-- Modern Form Block -->
+<section id="apply-form" class="section">
+  <div class="container mx-auto px-4 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="heading_h2 text-4xl lg:text-5xl font-black mb-6 gs-reveal">
+          {{ block.value.title|default:"Хочешь к нам?" }}
+        </h2>
+        {% if block.value.description %}
+          <p class="text-xl text-gray-400 gs-reveal" style="animation-delay: 0.1s;">
+            {{ block.value.description }}
+          </p>
+        {% endif %}
+      </div>
+
+      <div class="gs-reveal bg-white/5 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-white/10 hover:border-red-800/30 transition-all duration-500">
+        {% include "vacancy/includes/vacancy_form.html" %}
+      </div>
+    </div>
+  </div>
+</section>
 
     {% elif block.block_type == 'office' %}
       <section class="py-24">
         <div class="container mx-auto px-6">
-          <h2 class="heading_h3 md:text-5xl font-bold  mb-16">{{ block.value.title }}</h2>
+          <h2 class="heading_h3 md:text-5xl font-bold mb-16">{{ block.value.title }}</h2>
           <div class="rounded-3xl overflow-hidden shadow-2xl border border-red-900/20">
             <iframe 
               src="https://yandex.ru/map-widget/v1/org/dio_konsalt/41393573854/?ll=65.548711%2C57.139781&z=16"
@@ -144,10 +380,11 @@
             </iframe>
           </div>
           {% if block.value.address %}
-            <p class=" text-gray-400 mt-8 text-lg">{{ block.value.address }}</p>
+            <p class="text-gray-400 mt-8 text-lg">{{ block.value.address }}</p>
           {% endif %}
         </div>
       </section>
+
 
     {% endif %}
 
@@ -155,22 +392,202 @@
 
 </article>
 
+<!-- Fullscreen Modal для галереи -->
+<div id="fullscreenModal" class="fixed inset-0 z-[9999] hidden bg-black">
+  <div class="relative w-full h-full flex items-center justify-center">
+    <button onclick="closeModal()" class="absolute top-6 right-6 z-50 text-white text-3xl hover:text-red-400 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 hover:bg-black/70">
+      X
+    </button>
+    <button onclick="prevImage()" class="absolute left-6 z-50 text-white text-3xl hover:text-red-400 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 hover:bg-black/70 lg:left-8">
+      ‹
+    </button>
+    <button onclick="nextImage()" class="absolute right-6 z-50 text-white text-3xl hover:text-red-400 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 hover:bg-black/70 lg:right-8">
+      ›
+    </button>
+    <div class="relative w-full h-full flex flex-col items-center justify-center p-4">
+      <div class="max-w-6xl max-h-[85vh] w-full h-full flex items-center justify-center">
+        <img id="fullscreenImage" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg">
+      </div>
+      <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center text-white">
+        <div class="text-sm opacity-80">
+          <span id="fullscreenCurrent">1</span> / <span id="fullscreenTotal">0</span>
+        </div>
+      </div>
+    </div>
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+      <div class="flex gap-2 overflow-x-auto px-4 py-2 scrollbar-hide" id="thumbnailsContainer"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // GSAP
+  document.addEventListener('DOMContentLoaded', () => {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray('.gs-reveal').forEach(el => {
+      gsap.fromTo(el, { opacity: 0, y: 20 }, {
+        opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 95%", toggleActions: "play none none reverse" }
+      });
+    });
+  });
+
+  // Галерея
+  let currentIndex = 0;
+  let galleryImages = [];
+
+  function initGallery() {
+    galleryImages = [];
+    document.querySelectorAll('.gallery-card').forEach(card => {
+      const original = card.dataset.original;
+      const index = parseInt(card.dataset.index);
+      galleryImages[index] = { url: original };
+      card.addEventListener('click', () => openModal(index));
+    });
+    updateIndicators();
+    setupCarouselScroll();
+  }
+
+  function setupCarouselScroll() {
+    const carousel = document.querySelector('.gallery-carousel .flex');
+    if (!carousel) return;
+    carousel.addEventListener('scroll', () => {
+      const itemWidth = carousel.querySelector('.w-80').offsetWidth + 24;
+      const scrollPos = carousel.scrollLeft;
+      const activeIndex = Math.round(scrollPos / itemWidth);
+      updateIndicators(activeIndex);
+    });
+  }
+
+  function updateIndicators(active = null) {
+    const dots = document.querySelectorAll('.indicator-dot');
+    dots.forEach((dot, i) => {
+      if (active !== null) dot.classList.toggle('active', i === active);
+      else dot.classList.remove('active');
+    });
+  }
+
+  function openModal(index) {
+    currentIndex = index;
+    const modal = document.getElementById('fullscreenModal');
+    const img = document.getElementById('fullscreenImage');
+    img.src = galleryImages[index].url;
+    document.getElementById('fullscreenCurrent').textContent = index + 1;
+    document.getElementById('fullscreenTotal').textContent = galleryImages.length;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    updateThumbnails();
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('fullscreenModal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+    document.getElementById('fullscreenImage').src = galleryImages[currentIndex].url;
+    document.getElementById('fullscreenCurrent').textContent = currentIndex + 1;
+    updateThumbnails();
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % galleryImages.length;
+    document.getElementById('fullscreenImage').src = galleryImages[currentIndex].url;
+    document.getElementById('fullscreenCurrent').textContent = currentIndex + 1;
+    updateThumbnails();
+  }
+
+  function updateThumbnails() {
+    const container = document.getElementById('thumbnailsContainer');
+    container.innerHTML = '';
+    galleryImages.forEach((item, i) => {
+      const thumb = document.createElement('img');
+      thumb.src = item.url.replace('/original/', '/width-120/');
+      thumb.className = `w-20 h-14 object-cover rounded cursor-pointer transition-all ${i === currentIndex ? 'ring-2 ring-rose-500 scale-110' : 'opacity-60 hover:opacity-100'}`;
+      thumb.onclick = () => { currentIndex = i; document.getElementById('fullscreenImage').src = item.url; document.getElementById('fullscreenCurrent').textContent = i + 1; updateThumbnails(); };
+      container.appendChild(thumb);
+    });
+  }
+
+  // Аккордеон
+  document.querySelectorAll('.accordion-ultimate').forEach(item => {
+    const button = item.querySelector('button');
+    const content = item.querySelector('.accordion-content');
+    const typingText = item.querySelector('.typing-text');
+    const cursor = item.querySelector('.typing-cursor');
+    let isTyped = false;
+
+    button.addEventListener('click', () => {
+      const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+      if (!isOpen) {
+        content.style.maxHeight = content.scrollHeight + 80 + 'px';
+        item.classList.add('group-open');
+
+        if (!isTyped && typingText) {
+          const fullText = typingText.dataset.fullText.trim();
+          typingText.textContent = '';
+          cursor.style.display = 'inline-block';
+
+          let i = 0;
+          const type = () => {
+            if (i < fullText.length) {
+              typingText.textContent += fullText[i++];
+              setTimeout(type, 10);
+            } else {
+              cursor.style.display = 'none';
+            }
+          };
+          setTimeout(type, 120);
+          isTyped = true;
+        }
+      } else {
+        content.style.maxHeight = '0px';
+        item.classList.remove('group-open');
+      }
+    });
+  });
+
+  // Инициализация
+  document.addEventListener('DOMContentLoaded', initGallery);
+
+  // Клавиатура + свайпы
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('fullscreenModal').classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowLeft') prevImage();
+    if (e.key === 'ArrowRight') nextImage();
+  });
+
+  let touchStart = 0;
+  document.getElementById('fullscreenModal').addEventListener('touchstart', e => touchStart = e.touches[0].clientX);
+  document.getElementById('fullscreenModal').addEventListener('touchend', e => {
+    const diff = touchStart - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) diff > 0 ? nextImage() : prevImage();
+  });
+</script>
+
 <style>
-  @keyframes fade-up {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .animate-fade-up {
-    animation: fade-up 0.8s ease-out forwards;
-  }
-  .animation-delay-200 { animation-delay: 0.2s; opacity: 0; }
-  .animation-delay-400 { animation-delay: 0.4s; opacity: 0; }
+  .indicator-dot.active { background: #ef4444; width: 20px; border-radius: 9999px; }
+  .cursor-zoom-in { cursor: zoom-in; }
   
-  /* Адаптивная сетка */
-  @media (min-width: 768px) {
-    .grid-cols-1 { grid-template-columns: 1fr; }
-    .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-    .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .typing-cursor {
+    display: none;
+    width: 2px;
+    background: #991b1b;
+    margin-left: 3px;
+    animation: blink 0.7s infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
   }
 </style>
 {% endblock %}

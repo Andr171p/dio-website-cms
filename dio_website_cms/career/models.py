@@ -6,82 +6,168 @@ from wagtail.fields import StreamField, RichTextField
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
+from wagtail.blocks import (
+    CharBlock, RichTextBlock, StructBlock, ListBlock, PageChooserBlock, 
+    ChoiceBlock, URLBlock, StreamBlock
+)
+from wagtail.embeds.blocks import EmbedBlock
+
+class HeroBlock(StructBlock):
+    title = CharBlock(default="Присоединяйся к DIO", label="Заголовок")
+    subtitle = CharBlock(required=False, label="Подзаголовок")
+    image = ImageChooserBlock(required=False, label="Изображение")
+    cta_text = CharBlock(default="Смотреть вакансии", label="Текст кнопки")
+    cta_scroll = blocks.BooleanBlock(default=True, help_text="Прокрутка к вакансиям")
+
+    class Meta:
+        icon = "image"
+        label = "Hero"
+
+class TextBlock(StructBlock):
+    title = CharBlock(default="О компании", label="Заголовок")
+    content = RichTextBlock(required=False, label="Контент")
+    image = ImageChooserBlock(required=False, label="Изображение")
+
+    class Meta:
+        icon = "doc-full"
+        label = "Текстовая секция"
 
 
+
+class VacanciesListBlock(StructBlock):
+    title = CharBlock(default="Открытые вакансии", label="Заголовок")
+
+    class Meta:
+        icon = "user"
+        label = "Список вакансий"
+
+class FormBlock(StructBlock):
+    title = CharBlock(default="Хочешь к нам?", label="Заголовок")
+    description = blocks.TextBlock(required=False, label="Описание")
+
+    class Meta:
+        icon = "mail"
+        label = "Форма"
+
+class OfficeBlock(StructBlock):
+    title = CharBlock(default="Наш офис", label="Заголовок")
+    address = CharBlock(required=False, label="Адрес")
+
+    class Meta:
+        icon = "home"
+        label = "Офис"
+
+# Блоки из услуг для единообразия
+class WhatWeDoBlock(StructBlock):
+    title = CharBlock(required=True, label="Заголовок")
+    description = RichTextBlock(required=True, label="Описание")
+    image = ImageChooserBlock(required=True, label="Изображение")
+    image_position = ChoiceBlock(
+        choices=[
+            ('left', 'Слева'),
+            ('right', 'Справа'),
+        ],
+        default='left',
+        label="Позиция изображения"
+    )
+
+    class Meta:
+        icon = "edit"
+        label = "Что мы делаем"
+
+class BenefitItemBlock(StructBlock):
+    title = CharBlock(required=True, label="Название преимущества")
+    description = RichTextBlock(required=True, label="Описание")
+    icon = ImageChooserBlock(required=False, label="Иконка")
+
+    class Meta:
+        icon = 'tick'
+        label = "Преимущество"
+
+class BenefitsBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок блока", default="Ключевые преимущества")
+    items = ListBlock(BenefitItemBlock(), label="Список преимуществ")
+
+    class Meta:
+        icon = 'plus'
+        label = "Блок преимуществ"
+
+class ProcessItemBlock(StructBlock):
+    title = CharBlock(required=True, label="Название этапа")
+    description = RichTextBlock(required=True, label="Описание этапа")
+
+    class Meta:
+        icon = 'list-ul'
+        label = "Этап процесса"
+
+class ProcessBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок блока", default="Как мы работаем")
+    items = ListBlock(ProcessItemBlock(), label="Этапы работы")
+
+    class Meta:
+        icon = 'cog'
+        label = "Процесс работы"
+
+class GalleryBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок галереи")
+    images = ListBlock(ImageChooserBlock(), label="Изображения")
+
+    class Meta:
+        icon = "image"
+        label = "Галерея изображений"
+
+class VideoBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок видео")
+    video = EmbedBlock(required=True, label="Встраиваемое видео")
+
+    class Meta:
+        icon = "media"
+        label = "Видео"
+
+class AccordionItemBlock(StructBlock):
+    question = CharBlock(required=True, label="Вопрос/Заголовок")
+    answer = RichTextBlock(required=True, label="Ответ/Описание")
+
+    class Meta:
+        icon = "help"
+        label = "Элемент аккордеона"
+
+class AccordionBlock(StructBlock):
+    title = CharBlock(required=True, label="Заголовок аккордеона")
+    items = ListBlock(AccordionItemBlock(), label="Элементы аккордеона")
+
+    class Meta:
+        icon = "list-ul"
+        label = "Аккордеон (FAQ/Детали)"
 
 
 class CareerPage(Page):
     template = "career/career_page.html"
 
     content = StreamField([
-        # Герой
-        ('hero', blocks.StructBlock([
-            ('title', blocks.CharBlock(default="Присоединяйся к DIO")),
-            ('subtitle', blocks.TextBlock(blank=True)),
-            ('image', ImageChooserBlock(blank=True)),
-            ('cta_text', blocks.CharBlock(default="Смотреть вакансии")),
-            ('cta_scroll', blocks.BooleanBlock(default=True, help_text="Прокрутка к вакансиям")),
-        ], icon="image")),
-
-        # Текстовый раздел (для "О компании" и т.д.)
-        ('text_section', blocks.StructBlock([
-            ('title', blocks.CharBlock(default="О компании")),
-            ('content', blocks.RichTextBlock(blank=True)),
-            ('image', ImageChooserBlock(blank=True)),
-        ], icon="doc-full")),
-
-        # Ценности (любое количество пунктов)
-        ('values', blocks.StructBlock([
-            ('title', blocks.CharBlock(default="Наши ценности")),
-            ('items', blocks.ListBlock(blocks.StructBlock([
-                ('title', blocks.CharBlock()),
-                ('description', blocks.TextBlock(blank=True)),
-                ('icon', ImageChooserBlock(blank=True)),
-            ]))),
-        ], icon="list-ul")),
-
-        # Вакансии
-        ('vacancies_list', blocks.StructBlock([
-            ('title', blocks.CharBlock(default="Открытые вакансии")),
-        ], icon="user")),
-
-        # Форма
-        ('form', blocks.StructBlock([
-            ('title', blocks.CharBlock(default="Хочешь к нам?")),
-            ('description', blocks.TextBlock(blank=True)),
-        ], icon="mail")),
-
-        # Офис
-        ('office', blocks.StructBlock([
-            ('title', blocks.CharBlock(default="Наш офис")),
-            ('address', blocks.CharBlock(blank=True)),
-        ], icon="home")),
+        ('hero', HeroBlock()),
+        ('text_section', TextBlock()),
+        ('what_we_do', WhatWeDoBlock()),
+        ('benefits', BenefitsBlock()),
+        ('process', ProcessBlock()),
+        ('vacancies_list', VacanciesListBlock()),
+        ('gallery', GalleryBlock()),
+        ('video', VideoBlock()),
+        ('accordion', AccordionBlock()),
+        ('form', FormBlock()),
+        ('office', OfficeBlock()),
     ], use_json_field=True, blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("content"),
     ]
 
-
     subpage_types = ['career.CareerVacancyPage']
     parent_page_types = ['home.HomePage']
-
-
     
     class Meta:
         verbose_name = "Страница 'Карьера'"
         verbose_name_plural = "Страницы 'Карьера'"
-
-from wagtail.models import Page
-from wagtail.fields import StreamField
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.blocks import (
-    CharBlock, RichTextBlock, StructBlock, ChoiceBlock,
-    ListBlock, URLBlock, StreamBlock  # ← StreamBlock, а не StreamField!
-)
-from wagtail.images.blocks import ImageChooserBlock
-from wagtail.images.models import Image
-
 
 class CareerVacancyPage(Page):
     template = "career/career_vacancy_page.html"
@@ -96,75 +182,20 @@ class CareerVacancyPage(Page):
         default="office"
     )
     
-
     # === HERO ===
     hero_image = models.ForeignKey(
-        Image, null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
+        "wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
     )
 
-    # === КОНТЕНТ: Вложенный StreamField через StreamBlock ===
+    # === КОНТЕНТ: Упрощенный StreamField ===
     content = StreamField([
-        ("section", StructBlock([
-            ("heading", CharBlock(default="Заголовок секции")),
-            ("content", StreamBlock([  # ← StreamBlock, а не StreamField!
-                ("paragraph", RichTextBlock(
-                    features=['bold', 'italic', 'link', 'ol', 'ul', 'h3', 'h4'],
-                    icon="pilcrow"
-                )),
-                ("image", StructBlock([
-                    ("image", ImageChooserBlock()),
-                    ("image_position", ChoiceBlock(
-                        choices=[("left", "Слева"), ("right", "Справа")],
-                        default="right"
-                    )),
-                    ("text_content", StructBlock([
-                        ("heading", CharBlock()),
-                        ("description", RichTextBlock()),
-                        ("button_text", CharBlock(blank=True)),
-                        ("button_url", URLBlock(blank=True)),
-                    ])),
-                ], icon="image")),
-                ("image_carousel", ListBlock(
-                    StructBlock([
-                        ("image", ImageChooserBlock()),
-                        ("caption", CharBlock(blank=True)),
-                    ]), icon="image"
-                )),
-                ("image_grid", ListBlock(
-                    StructBlock([
-                        ("image", ImageChooserBlock()),
-                        ("caption", CharBlock(blank=True)),
-                    ]), icon="image"
-                )),
-                ("numbered_list", ListBlock(RichTextBlock(), icon="list-ol")),
-                ("bullet_list", ListBlock(RichTextBlock(), icon="list-ul")),
-                ("quote", StructBlock([
-                    ("text", RichTextBlock()),
-                    ("author", CharBlock(blank=True)),
-                ], icon="openquote")),
-                ("accordion", ListBlock(
-                    StructBlock([
-                        ("title", CharBlock()),
-                        ("content", RichTextBlock()),
-                    ]), icon="pilcrow"
-                )),
-                ("call_to_action", StructBlock([
-                    ("title", CharBlock()),
-                    ("description", RichTextBlock()),
-                    ("button_text", CharBlock()),
-                    ("button_url", URLBlock()),
-                ], icon="mail")),
-                ("cards", ListBlock(
-                    StructBlock([
-                        ("image", ImageChooserBlock(required=False)),
-                        ("title", CharBlock()),
-                        ("description", RichTextBlock()),
-                        ("button_text", CharBlock(blank=True)),
-                        ("button_url", URLBlock(blank=True)),
-                    ]), icon="grip"
-                )),
-            ], use_json_field=True)),
-        ], icon="folder-open")),
+        ("text_section", TextBlock()),
+        ("what_we_do", WhatWeDoBlock()),
+        ("benefits", BenefitsBlock()),
+        ("process", ProcessBlock()),
+        ("gallery", GalleryBlock()),
+        ("video", VideoBlock()),
+        ("accordion", AccordionBlock()),
     ], use_json_field=True, blank=True)
 
     # === ПАНЕЛИ ===

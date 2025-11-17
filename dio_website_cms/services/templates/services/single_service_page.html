@@ -59,23 +59,64 @@
         </div>
       </section>
 
-    {% elif block.block_type == 'what_we_do' %}
-      <!-- What We Do Section -->
-      <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8">
-          <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
-            <div class="image-ratio_auto">
-              {% image block.value.image fill-900x800 class="image_cover rounded-lg gs-reveal" alt=block.value.title %}
+    {% elif block.block_type == 'description' %}
+<!-- Description Block -->
+<section class="section">
+  <div class="container mx-auto px-4 lg:px-8">
+    <h2 class="text-3xl lg:text-4xl font-bold mb-8 text-center lg:text-left section-title heading_h2 gs-reveal">
+      {{ block.value.title|default:"Описание проекта" }}
+    </h2>
+    <div class="prose gs-reveal rich-content">
+      {{ block.value.content|richtext }}
+    </div>
+  </div>
+</section>
+
+{% elif block.block_type == 'results' %}
+<!-- Results Block -->
+<section class="section is-secondary">
+  <div class="container mx-auto px-4 lg:px-8">
+    <h2 class="text-3xl lg:text-4xl font-bold mb-8 text-center lg:text-left section-title heading_h2 gs-reveal">
+      {{ block.value.title|default:"Результаты" }}
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for result in block.value.items %}
+        <div class="case-item group relative p-8 sm:p-10 rounded-3xl transition-colors duration-300 overflow-hidden cursor-default gs-reveal">
+          <div class="relative z-10 flex flex-col items-center text-center gap-4 h-full">
+            <div class="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-2xl bg-red-800 border-2 border-red-800">
+              <svg class="w-9 h-9 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M5 13l4 4L19 7"/>
+              </svg>
             </div>
-            <div class="header max-width_large space-y-6">
-              <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
-              <div class="heading_h5 rich-text w-richtext prose rich-content gs-reveal">
-                {{ block.value.description|richtext }}
-              </div>
+            <div class="heading_h5 leading-relaxed">
+              {{ result.text|richtext }}
             </div>
           </div>
         </div>
-      </section>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% elif block.block_type == 'what_we_do' %}
+<!-- What We Do Block with Image Position -->
+<section class="section is-secondary">
+  <div class="container mx-auto px-4 lg:px-8">
+    <div class="flex flex-col lg:flex-row items-center gap-12 {% if block.value.image_position == 'right' %}lg:flex-row-reverse{% endif %}">
+      <div class="lg:w-1/2 gs-reveal">
+        <div class="image-ratio_auto">
+          {% image block.value.image fill-900x800 class="image_cover rounded-lg" alt=block.value.title %}
+        </div>
+      </div>
+      <div class="lg:w-1/2 space-y-6 gs-reveal">
+        <h2 class="heading_h2">{{ block.value.title }}</h2>
+        <div class="heading_h5 rich-text w-richtext prose rich-content">
+          {{ block.value.description|richtext }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
     {% elif block.block_type == 'image_card' %}
       <!-- Image Card Section -->
@@ -104,65 +145,8 @@
         </div>
       </section>
 
-    {% elif block.block_type == 'card_grid' %}
-      <!-- Card Grid Section -->
-      <section class="section">
-        <div class="container mx-auto px-4 lg:px-8">
-          <div class="header is-align-center">
-            <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
-          </div>
-          <div class="w-layout-grid grid_3-col gap-xsmall mt-12">
-            {% for item in block.value.items %}
-              <div class="card on-secondary gs-reveal">
-                <div class="card_body p-6">
-                  {% if block.value.grid_type == 'icon_grid' and item.icon %}
-                    <div class="icon margin-bottom_xsmall">
-                      {% image item.icon fill-40x40 %}
-                    </div>
-                  {% elif block.value.grid_type == 'image_grid' and item.image %}
-                    <div class="image-ratio_1x1">
-                      {% image item.image fill-400x300 class="image_cover rounded-lg" %}
-                    </div>
-                  {% elif block.value.grid_type == 'numbered' %}
-                    <div class="text-xl font-bold text-blue-600 mb-4">{{ forloop.counter }}.</div>
-                  {% elif block.value.grid_type == 'bulleted' %}
-                    <div class="text-xl font-bold text-blue-600 mb-4">•</div>
-                  {% endif %}
-                  <h3 class="heading_h4">{{ item.title }}</h3>
-                  {% if item.description %}
-                    <div class="paragraph_small text-color_secondary prose">{{ item.description|richtext }}</div>
-                  {% endif %}
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
 
-    {% elif block.block_type == 'metrics' %}
-      <!-- Trust Metrics Section -->
-      <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8">
-          <div class="header is-align-center">
-            <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
-          </div>
-          <div class="w-layout-grid grid_3-col gap-xsmall mt-12">
-            {% for item in block.value.items %}
-              <div class="card on-secondary gs-reveal">
-                <div class="card_body p-6 text-center">
-                  {% if item.icon %}
-                    <div class="icon margin-bottom_xsmall mx-auto">
-                      {% image item.icon fill-40x40 %}
-                    </div>
-                  {% endif %}
-                  <h3 class="heading_h3">{{ item.value }}</h3>
-                  <p class="paragraph_large margin-bottom_none">{{ item.label }}</p>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </section>
+
 
     {% elif block.block_type == 'gallery' %}
       <!-- Gallery Section — FULLSCREEN + ORIGINAL IMAGES -->
@@ -170,7 +154,7 @@
         <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
           {% if block.value.title %}
             <div class="text-center mb-16">
-              <h2 class="heading_h2 font-black text-white gs-reveal">{{ block.value.title }}</h2>
+              <h2 class="heading_h2 font-black  gs-reveal">{{ block.value.title }}</h2>
             </div>
           {% endif %}
 
@@ -219,7 +203,7 @@
             {% if block.value.video %}
               {% with embed=block.value.video %}
                 {% if embed %}
-                  <div class="relative" style="padding-bottom: 56.25%;">
+                  <div class="relative" style="padding-bottom: 26.25%; height: 500px;">
                     {{ embed.html|safe }}
                   </div>
                 {% else %}
@@ -297,21 +281,96 @@
   </div>
 </section>
 
-    {% elif block.block_type == 'cta' %}
-      <!-- CTA Section -->
-      <section class="section is-accent-primary">
-        <div class="container mx-auto px-4 lg:px-8">
-          <div class="header is-align-center">
-            <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
-            <div class="paragraph_large text-color_secondary prose gs-reveal">{{ block.value.description|richtext }}</div>
-          </div>
-          <div class="button-group is-align-center mt-6">
-            <a href="{{ block.value.button_link.url }}" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg gs-reveal">
-              {{ block.value.button_text }}
-            </a>
+{% elif block.block_type == 'benefits' %}
+<!-- Benefits Block - Modern Alternative -->
+<section class="section">
+  <div class="container mx-auto px-4 lg:px-8">
+    <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
+      {{ block.value.title|default:"Ключевые преимущества" }}
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for benefit in block.value.items %}
+        <div class="group relative p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-red-800/30 transition-all duration-500 gs-reveal">
+          <div class="flex flex-col items-center text-center space-y-4">
+            {% if benefit.icon %}
+              <div class="w-16 h-16 rounded-2xl bg-red-800/20 flex items-center justify-center group-hover:bg-red-800 transition-colors duration-300">
+                {% image benefit.icon width-52 height-52 class="text-red-600 group-hover:text-white transition-colors duration-300" %}
+              </div>
+            {% endif %}
+            <h3 class="heading_h3 font-semibold">{{ benefit.title }}</h3>
+            <div class=" heading_h5  leading-relaxed">
+              {{ benefit.description|richtext }}
+            </div>
           </div>
         </div>
-      </section>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% elif block.block_type == 'technologies' %}
+<!-- Technologies Block - Modern Logos Grid -->
+<section class="section">
+  <div class="container mx-auto px-4 lg:px-8">
+    <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
+      {{ block.value.title|default:"Технологии и инструменты" }}
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      {% for tech in block.value.items %}
+        <div class="group relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-red-800/30 transition-all duration-400 gs-reveal">
+          <div class="flex flex-col items-center space-y-3">
+            {% if tech.icon %}
+              <div class="w-16 h-16 flex items-center justify-center">
+                {% image tech.icon width-64 height-64 class="grayscale group-hover:grayscale-0 transition-all duration-400" %}
+              </div>
+            {% endif %}
+            <span class="text-sm font-medium text-center">{{ tech.name }}</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% elif block.block_type == 'process' %}
+<!-- Process Block - Modern Timeline -->
+<section class="section is-secondary">
+  <div class="container mx-auto px-4 lg:px-8">
+    <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
+      {{ block.value.title|default:"Как мы работаем" }}
+    </h2>
+    <div class="relative">
+      <!-- Vertical Line -->
+      <div class="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-red-800/30 hidden lg:block"></div>
+      
+      <div class="space-y-12 lg:space-y-0">
+        {% for step in block.value.items %}
+          <div class="relative flex flex-col lg:flex-row items-center {% cycle 'lg:flex-row' 'lg:flex-row-reverse' %} gap-8 gs-reveal">
+            <!-- Content -->
+            <div class="lg:w-1/2 {% cycle 'lg:text-right lg:pr-12' 'lg:text-left lg:pl-12' %}">
+              <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-red-800/30 transition-all duration-500">
+                <h3 class="heading_h3  font-semibold mb-3">{{ step.title }}</h3>
+                <div class="heading_h5  leading-relaxed">
+                  {{ step.description|richtext }}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Step Number -->
+            <div class=" flex-shrink-0 w-20 h-20 rounded-full bg-red-800 border-4 border-white/10 flex items-center justify-center text-white font-bold heading_h3 z-10">
+              {{ forloop.counter }}
+            </div>
+            
+            <!-- Empty space for alignment -->
+            <div class="lg:w-1/2 {% cycle 'lg:pl-12' 'lg:pr-12' %}"></div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+    
     {% endif %}
   {% endfor %}
 
@@ -390,6 +449,7 @@
 </div>
 
 <script>
+  
   // === GSAP + SCROLL REVEAL ===
   document.addEventListener('DOMContentLoaded', function() {
     gsap.registerPlugin(ScrollTrigger);
@@ -545,6 +605,24 @@ document.querySelectorAll('.accordion-ultimate').forEach(item => {
 </script>
 
 <style>
+  .case-item svg {
+  color: #ffffff !important;
+}   
+  /* What We Do Grid Reverse */
+.grid-reverse {
+  direction: rtl;
+}
+.grid-reverse > * {
+  direction: ltr;
+}
+
+/* Альтернативный вариант через flex */
+@media (min-width: 1024px) {
+  .grid-reverse {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
   .relative iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
   .prose { color: var(--text-secondary) !important; max-width: none !important; }
   .prose h2, .prose h3, .prose p, .prose ul, .prose ol, .prose blockquote, .prose a { /* твои стили */ }

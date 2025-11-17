@@ -1,407 +1,534 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags static %}
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags static humanize %}
 
 {% block content %}
-  <article class="w-full">
-    
-
-    <!-- Hero Section -->
-    <section class="section is-secondary  relative min-h-[700px] flex items-center overflow-hidden">
-      {% if page.hero_image %}
-        {% image page.hero_image original as bg_image %}
-        <div class="absolute inset-0 z-0">
-          <img src="{{ bg_image.url }}" alt="{{ page.hero_title }}" class="w-full h-full object-cover top-0 left-0">
-          <div class="absolute inset-0 bg-black/30"></div>
-        </div>
-      {% endif %}
-      <div class="container mx-auto  relative z-10">
-        <div class="grid grid-cols-1 lg:grid-cols-1 gap-8 lg:gap-12 items-center">
-          <div class="space-y-6 ">
-            <h1 class="heading_h3 pb-10 text-white drop-shadow-md gs-reveal">
-              {{ page.hero_title }}
-            </h1>
-            {% if page.hero_description_1 %}
-              <p class="heading_h2 py-10 text-white/90 gs-reveal">
-                {{ page.hero_description_1|striptags }}
-              </p>
+<article class="w-full">
+    {% for block in page.content %}
+        {% if block.block_type == 'hero' %}
+        <!-- Hero Section -->
+        <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
+            {% if block.value.image %}
+                {% image block.value.image original as bg_image %}
+                <div class="absolute inset-0 z-0">
+                    <img src="{{ bg_image.url }}" alt="{{ block.value.title }}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/50"></div>
+                </div>
             {% endif %}
-            {% if page.hero_button_text and page.hero_button_link %}
-              <a onclick="document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' });" href="{{ page.hero_button_link }}" style=" color:white;    box-shadow: 0 0 0 2px white inset;" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg ">
-                {{ page.hero_button_text }}
-              </a>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </section>
+            <div class="container relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                    <div class="space-y-6">
+                        <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white drop-shadow-md animate-fadeIn" style="animation-delay: 0.1s;">
+                            {{ block.value.title }}
+                        </h1>
+                        {% if block.value.subtitle %}
+                            <p class="heading_h3 text-lg lg:text-xl mb-8 max-w-prose leading-relaxed text-white/90 animate-fadeIn" style="animation-delay: 0.2s;">
+                                {{ block.value.subtitle|striptags }}
+                            </p>
+                        {% endif %}
+                        {% if block.value.button_text and block.value.button_link %}
+                            <a href="{{ block.value.button_link.url }}" 
+                               class="inline-block button is-secondary w-button px-6 py-3 rounded-lg shadow-lg 
+                                      hover:bg-red-50 hover:shadow-xl transition-all duration-300 animate-fadeIn"
+                               style="color:white; box-shadow: 0 0 0 2px white inset; animation-delay: 0.3s;">
+                                {{ block.value.button_text }}
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div></div>
+                </div>
+            </div>
+        </section>
 
+        {% elif block.block_type == 'text' %}
+        <!-- Text Section -->
+        <section class="section">
+            <div class="container mx-auto px-4 lg:px-8">
+                <div class="prose gs-reveal rich-content">
+                    {{ block.value.content|richtext }}
+                </div>
+            </div>
+        </section>
 
-<section class="section ">
-  <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc34f-93acc34e" class="container w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac9316d-372e0d7f">
-    <div class="header is-align-center">
-      <div class="eyebrow">Преимущества для вашего бизнеса</div>
-      <h2 class="heading_h1">Автоматизация. Контроль. Рост. Результат.</h2>
-    </div>
-    <div class="w-layout-grid grid_1-col">
-      <div class="w-layout-grid grid_2-col gap-small">
-        <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc352-93acc34e" class="ix_card-rotate-left w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac92f15-372e0d7f" style="will-change: transform; transform: translate3d(-9.3534%, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(-4.0086deg) skew(0deg, 0deg); transform-style: preserve-3d;">
-          <div class="card card_body on-secondary">
-            <div class="w-layout-grid grid_1-col gap-medium ratio_16x9">
-              <div class="icon is-xlarge">
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-                  <path d="M9.24998 18.7103C6.60958 17.6271 4.75 15.0307 4.75 12C4.75 8.96938 6.60958 6.37304 9.24997 5.28979" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-                  <path d="M14.75 5.28979C17.3904 6.37303 19.25 8.96938 19.25 12.0001C19.25 15.0307 17.3904 17.6271 14.75 18.7103" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-                  <path d="M4 19.2501L8.99998 19.2501C9.13805 19.2501 9.24998 19.1381 9.24998 19.0001L9.24997 14" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-                  <path d="M20 4.75L15 4.75003C14.8619 4.75003 14.75 4.86196 14.75 5.00003L14.75 10.0001" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-                </svg>
-              </div>
-              <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc35b-93acc34e" class="max-width_xsmall w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac92f12-372e0d7f">
-                <div class="paragraph_large">Упорядочим учёт и отчётность</div>
-                <p class="paragraph_small text-color_secondary">Внедряем решения на базе 1С для точного учета и прозрачной отчетности, минимизируя ошибки и упрощая контроль.</p>
-              </div>
+        {% elif block.block_type == 'description' %}
+        <!-- Description Block -->
+        <section class="section">
+            <div class="container mx-auto px-4 lg:px-8">
+                <h2 class="text-3xl lg:text-4xl font-bold mb-8 text-center lg:text-left section-title heading_h2 gs-reveal">
+                    {{ block.value.title|default:"Описание проекта" }}
+                </h2>
+                <div class="prose gs-reveal rich-content">
+                    {{ block.value.content|richtext }}
+                </div>
             </div>
-          </div>
-        </div>
-        <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc360-93acc34e" data-w-id="14246b45-a6bc-5b7e-9d0e-37f10ac92f94" class="ix_card-rotate-right w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac92f94-372e0d7f" style="will-change: transform; transform: translate3d(28.2835%, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(12.1215deg) skew(0deg, 0deg); transform-style: preserve-3d;">
-          <div class="card card_body on-secondary">
-            <div class="w-layout-grid grid_1-col gap-medium ratio_16x9">
-              <div class="icon is-xlarge">
-                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-                  <path d="M12.5 18.25C16.2279 18.25 19.25 15.2279 19.25 11.5C19.25 7.77208 16.2279 4.75 12.5 4.75C8.77208 4.75 5.75 7.77208 5.75 11.5C5.75 12.6007 6.01345 13.6398 6.48072 14.5578L5 19L9.71819 17.6519C10.5664 18.0361 11.5082 18.25 12.5 18.25Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
-                </svg>
-              </div>
-              <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc366-93acc34e" class="max-width_xsmall w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac92f91-372e0d7f">
-                <div class="paragraph_large">Автоматизируем бизнес-процессы</div>
-                <p class="paragraph_small text-color_secondary">Сокращаем ручные операции с помощью 1С и ERP-систем, освобождая ресурсы для стратегического развития.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc36b-93acc34e" data-w-id="14246b45-a6bc-5b7e-9d0e-37f10ac93012" class="ix_card-rotate-left w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac93012-372e0d7f" style="will-change: transform; transform: translate3d(-46.6361%, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(-19.9869deg) skew(0deg, 0deg); transform-style: preserve-3d;">
-          <div class="card card_body on-secondary">
-            <div class="w-layout-grid grid_1-col gap-medium ratio_16x9">
-              <div class="icon is-xlarge">
-                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-                  <path d="M5.25 6.75H18.75V17.25H5.25V6.75Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
-                  <path d="M5.25 6.75L12 12L18.75 6.75" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
-                </svg>
-              </div>
-              <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc372-93acc34e" class="max-width_xsmall w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac9300f-372e0d7f">
-                <div class="paragraph_large">Единая экосистема управления</div>
-                <p class="paragraph_small text-color_secondary">Интегрируем все процессы в одну платформу на базе 1С для упрощения управления и исключения дублирования.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc377-93acc34e" data-w-id="14246b45-a6bc-5b7e-9d0e-37f10ac9308d" class="ix_card-rotate-right w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac9308d-372e0d7f" style="will-change: transform; transform: translate3d(65.9225%, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(28.2525deg) skew(0deg, 0deg); transform-style: preserve-3d;">
-          <div class="card card_body on-secondary">
-            <div class="w-layout-grid grid_1-col gap-medium ratio_16x9">
-              <div class="icon is-xlarge">
-                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-                  <path d="M19.25 12C19.25 16.0041 16.0041 19.25 12 19.25C7.99594 19.25 4.75 16.0041 4.75 12C4.75 7.99594 7.99594 4.75 12 4.75C16.0041 4.75 19.25 7.99594 19.25 12Z" stroke="currentColor" stroke-width="1.5"></path>
-                  <path d="M9 12L11 14L15.5 9.5" stroke="currentColor" stroke-width="1.5"></path>
-                </svg>
-              </div>
-              <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc37e-93acc34e" class="max-width_xsmall w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac9308a-372e0d7f">
-                <div class="paragraph_large">Аналитика для принятия решений</div>
-                <p class="paragraph_small text-color_secondary">Предоставляем настраиваемые дашборды и отчеты для анализа эффективности и стратегического планирования.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc383-93acc34e" class="ix_card-rotate-left w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac930fe-372e0d7f" style="will-change: transform; transform: translate3d(-70%, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(-30deg) skew(0deg, 0deg); transform-style: preserve-3d;">
-          <div class="card card_body on-secondary">
-            <div class="w-layout-grid grid_1-col gap-medium ratio_16x9">
-              <div class="icon is-xlarge">
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-                  <path d="M17.3654 5.32894C17.8831 5.54543 18.3534 5.86273 18.7495 6.26274C19.146 6.6625 19.4604 7.13723 19.675 7.65978C19.8895 8.18233 20 8.74246 20 9.30814C20 9.87384 19.8895 10.4339 19.675 10.9565C19.4604 11.4791 19.146 11.9538 18.7495 12.3535L12.0001 19L5.2496 12.3535C4.44951 11.5457 4 10.4501 4 9.3076C4 8.16516 4.44951 7.0695 5.2496 6.26166C6.04975 5.45384 7.13498 5 8.26647 5C9.39804 5 10.4833 5.45384 11.2833 6.26166L12.016 6.99843L12.7158 6.26274C13.112 5.86273 13.5823 5.54543 14.0999 5.32894C14.6176 5.11246 15.1724 5.00103 15.7327 5.00103C16.2929 5.00103 16.8478 5.11246 17.3654 5.32894Z" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-                </svg>
-              </div>
-              <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc389-93acc34e" class="max-width_xsmall w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac930fb-372e0d7f">
-                <div class="paragraph_large text_all-caps">Интеграция с вашими системами</div>
-                <p class="paragraph_small text-color_secondary">Объединяем 1С с вашими CRM, складскими и аналитическими системами для полной синхронизации.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc38e-93acc34e" data-w-id="14246b45-a6bc-5b7e-9d0e-37f10ac9316a" class="ix_card-rotate-right w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac9316a-372e0d7f" style="will-change: transform; transform: translate3d(70%, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(30deg) skew(0deg, 0deg); transform-style: preserve-3d;">
-          <div class="card card_body on-secondary">
-            <div class="w-layout-grid grid_1-col gap-medium ratio_16x9">
-              <div class="icon is-xlarge">
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-                  <path d="M4 12C8.41828 12 12 8.41828 12 4C12 8.41828 15.5817 12 20 12C15.5817 12 12 15.5817 12 20C12 15.5817 8.41828 12 4 12Z" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-                </svg>
-              </div>
-              <div id="w-node-_10b0e8b6-8a30-4d11-5b3b-3df793acc394-93acc34e" class="max-width_xsmall w-node-_14246b45-a6bc-5b7e-9d0e-37f10ac93167-372e0d7f">
-                <div class="paragraph_large text_all-caps">Круглосуточная поддержка</div>
-                <p class="paragraph_small text-color_secondary">Гарантируем оперативную помощь 24/7 и регулярные обновления для бесперебойной работы систем.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        </section>
 
-
-    <!-- What We Do Section -->
-    <section class="section is-secondary">
-      <div class="container mx-auto px-4 lg:px-8 ">
-        <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
-          <div class="image-ratio_auto">
-            {% if page.hero_image %}
-              {% image page.hero_image fill-400x300 class="image_cover" alt=page.hero_title %}
-            {% endif %}
-          </div>
-          <div class="header max-width_large space-y-6">
-            <h2 class="heading_h2 gs-reveal">{{ page.approach_title }}</h2>
-            <div class="heading_h5 rich-text w-richtext">
-              {% if page.approach_description_1 %}
-                {{ page.approach_description_1|richtext }}
-              {% endif %}
-              {% if page.approach_description_2 %}
-                {{ page.approach_description_2|richtext }}
-              {% endif %}
+        {% elif block.block_type == 'results' %}
+        <!-- Results Block -->
+        <section class="section is-secondary">
+            <div class="container mx-auto px-4 lg:px-8">
+                <h2 class="text-3xl lg:text-4xl font-bold mb-8 text-center lg:text-left section-title heading_h2 gs-reveal">
+                    {{ block.value.title|default:"Результаты" }}
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for result in block.value.items %}
+                        <div class="case-item group relative p-8 sm:p-10 rounded-3xl transition-colors duration-300 overflow-hidden cursor-default gs-reveal">
+                            <div class="relative z-10 flex flex-col items-center text-center gap-4 h-full">
+                                <div class="flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-2xl bg-red-800 border-2 border-red-800">
+                                    <svg class="w-9 h-9 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                                <div class="heading_h5 leading-relaxed">
+                                    {{ result.text|richtext }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- Expertise Grid -->
-    <section class="section ">
-      <div class="container mx-auto px-4 lg:px-8 ">
-        <div class="header is-align-center">
-          <h2 class="heading_h2 gs-reveal">{{ page.industries_title }}</h2>
-        </div>
-        <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12 text-center">
-          {% if page.industry_01 %}<div style="    border-left: 1px solid #7f0303;" class=" padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_01 }}</h3></div>{% endif %}
-          {% if page.industry_03 %}<div style="    border-left: 1px solid #7f0303;" class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_03 }}</h3></div>{% endif %}
-          {% if page.industry_04 %}<div style="    border-left: 1px solid #7f0303;" class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_04 }}</h3></div>{% endif %}
-          {% if page.industry_05 %}<div style="    border-left: 1px solid #7f0303;" class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_05 }}</h3></div>{% endif %}
-          {% if page.industry_06 %}<div style="    border-left: 1px solid #7f0303;" class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_06 }}</h3></div>{% endif %}
-          {% if page.industry_02 %}<div style="    border-left: 1px solid #7f0303;" class="padding-left_medium divider-vertical padding-top_xxsmall gs-reveal"><h3 class="heading_h4">{{ page.industry_02 }}</h3></div>{% endif %}
-        </div>
-      </div>
-    </section>
+        {% elif block.block_type == 'what_we_do' %}
+        <!-- What We Do Block with Image Position -->
+        <section class="section is-secondary">
+            <div class="container mx-auto px-4 lg:px-8">
+                <div class="flex flex-col lg:flex-row items-center gap-12 {% if block.value.image_position == 'right' %}lg:flex-row-reverse{% endif %}">
+                    <div class="lg:w-1/2 gs-reveal">
+                        <div class="image-ratio_auto">
+                            {% image block.value.image fill-900x800 class="image_cover rounded-lg" alt=block.value.title %}
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 space-y-6 gs-reveal">
+                        <h2 class="heading_h2">{{ block.value.title }}</h2>
+                        <div class="heading_h5 rich-text w-richtext prose rich-content">
+                            {{ block.value.description|richtext }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {% elif block.block_type == 'benefits' %}
+        <!-- Benefits Block -->
+        <section class="section">
+            <div class="container mx-auto px-4 lg:px-8">
+                <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
+                    {{ block.value.title|default:"Ключевые преимущества" }}
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for benefit in block.value.items %}
+                        <div class="group relative p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-red-800/30 transition-all duration-500 gs-reveal">
+                            <div class="flex flex-col items-center text-center space-y-4">
+                                {% if benefit.icon %}
+                                    <div class="w-16 h-16 rounded-2xl bg-red-800/20 flex items-center justify-center group-hover:bg-red-800 transition-colors duration-300">
+                                        {% image benefit.icon width-52 height-52 class="text-red-600 group-hover:text-white transition-colors duration-300" %}
+                                    </div>
+                                {% endif %}
+                                <h3 class="heading_h3 font-semibold">{{ benefit.title }}</h3>
+                                <div class="heading_h5 leading-relaxed">
+                                    {{ benefit.description|richtext }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        {% elif block.block_type == 'technologies' %}
+        <!-- Technologies Block -->
+        <section class="section">
+            <div class="container mx-auto px-4 lg:px-8">
+                <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
+                    {{ block.value.title|default:"Технологии и инструменты" }}
+                </h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                    {% for tech in block.value.items %}
+                        <div class="group relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-red-800/30 transition-all duration-400 gs-reveal">
+                            <div class="flex flex-col items-center space-y-3">
+                                {% if tech.icon %}
+                                    <div class="w-16 h-16 flex items-center justify-center">
+                                        {% image tech.icon width-64 height-64 class="grayscale group-hover:grayscale-0 transition-all duration-400" %}
+                                    </div>
+                                {% endif %}
+                                <span class="text-sm font-medium text-center">{{ tech.name }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        {% elif block.block_type == 'process' %}
+        <!-- Process Block -->
+        <section class="section is-secondary">
+            <div class="container mx-auto px-4 lg:px-8">
+                <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
+                    {{ block.value.title|default:"Как мы работаем" }}
+                </h2>
+                <div class="relative">
+                    <div class="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-red-800/30 hidden lg:block"></div>
+                    <div class="space-y-12 lg:space-y-0">
+                        {% for step in block.value.items %}
+                            <div class="relative flex flex-col lg:flex-row items-center {% cycle 'lg:flex-row' 'lg:flex-row-reverse' %} gap-8 gs-reveal">
+                                <div class="lg:w-1/2 {% cycle 'lg:text-right lg:pr-12' 'lg:text-left lg:pl-12' %}">
+                                    <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-red-800/30 transition-all duration-500">
+                                        <h3 class="heading_h3 font-semibold mb-3">{{ step.title }}</h3>
+                                        <div class="heading_h5 leading-relaxed">
+                                            {{ step.description|richtext }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-shrink-0 w-20 h-20 rounded-full bg-red-800 border-4 border-white/10 flex items-center justify-center text-white font-bold heading_h3 z-10">
+                                    {{ forloop.counter }}
+                                </div>
+                                <div class="lg:w-1/2 {% cycle 'lg:pl-12' 'lg:pr-12' %}"></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {% elif block.block_type == 'gallery' %}
+        <!-- Gallery Block -->
+        <section class="section py-20">
+            <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+                {% if block.value.title %}
+                    <div class="text-center mb-16">
+                        <h2 class="heading_h2 font-black gs-reveal">{{ block.value.title }}</h2>
+                    </div>
+                {% endif %}
+                <div class="relative mt-12">
+                    <div class="gallery-carousel overflow-hidden rounded-2xl">
+                        <div class="flex gap-6 pb-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+                            {% for image in block.value.images %}
+                                {% image image fill-600x450 as thumb %}
+                                {% image image original as original_img %}
+                                <div class="flex-shrink-0 w-80 snap-start">
+                                    <div class="gallery-card group cursor-zoom-in" 
+                                         data-original="{{ original_img.url }}"
+                                         data-index="{{ forloop.counter0 }}">
+                                        <div class="image-ratio_4x3 rounded-xl overflow-hidden shadow-lg">
+                                            <img src="{{ thumb.url }}" alt=""
+                                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="flex justify-center mt-6 space-x-2">
+                        {% for image in block.value.images %}
+                            <div class="w-2 h-2 bg-white/30 rounded-full transition-all duration-300 indicator-dot"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {% elif block.block_type == 'video' %}
+        <!-- Video Block -->
+        <section class="section is-secondary">
+            <div class="container mx-auto px-4 lg:px-8">
+                {% if block.value.title %}
+                    <div class="header is-align-center">
+                        <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+                    </div>
+                {% endif %}
+                <div class="mt-12 gs-reveal">
+                    {% if block.value.video %}
+                        {% with embed=block.value.video %}
+                            {% if embed %}
+                                <div class="relative" style="padding-bottom: 26.25%; height: 500px;">
+                                    {{ embed.html|safe }}
+                                </div>
+                            {% else %}
+                                <p class="text-center text-red-600">Ошибка: Невозможно загрузить видео.</p>
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <p class="text-center text-red-600">Ошибка: Видео не указано.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        {% elif block.block_type == 'accordion' %}
+        <!-- Accordion Block -->
+        <section class="section py-24">
+            <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
+                {% if block.value.title %}
+                    <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-20 tracking-tight gs-reveal">
+                        {{ block.value.title }}
+                    </h2>
+                {% endif %}
+                <div class="space-y-12 heading_h5">
+                    {% for item in block.value.items %}
+                    <div class="accordion-ultimate group">
+                        <button class="w-full text-left focus:outline-none">
+                            <div class="flex items-center justify-between py-4 border-b border-gray/5 group-hover:border-red-800 transition-colors duration-500">
+                                <h3 class="text-xl lg:text-2xl font-medium group-hover:text-red-800 transition-colors duration-500 pr-12 leading-snug">
+                                    {{ item.question }}
+                                </h3>
+                                <span class="text-2xl font-light group-hover:text-red-800 transition-all duration-500 group-open:hidden">+</span>
+                                <span class="text-2xl font-light text-red-800 transition-all duration-500 hidden group-open:inline">−</span>
+                            </div>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-700 ease-out">
+                            <div class="pt-6 pb-10">
+                                <div class="flex items-center gap-2 mb-5 opacity-0 transition-opacity duration-1000" id="ai-tag-{{ block.id }}-{{ forloop.counter }}">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-red-800"></div>
+                                    <span class="text-xs font-medium text-red-800">Ответ ИИ</span>
+                                </div>
+                                <div class="typing-container">
+                                    <div class="typing-text text-base lg:text-lg leading-relaxed  prose prose-invert max-w-none"
+                                         data-full-text="{{ item.answer|striptags }}">
+                                    </div>
+                                    <span class="typing-cursor bg-red-800">|</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        {% elif block.block_type == 'cta' %}
+        <!-- CTA Block -->
+        <section class="section is-accent-primary">
+            <div class="container mx-auto px-4 lg:px-8">
+                <div class="header is-align-center">
+                    <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
+                    <div class="paragraph_large text-color_secondary prose gs-reveal">{{ block.value.description|richtext }}</div>
+                </div>
+                <div class="button-group is-align-center mt-6">
+                    <a href="{{ block.value.button_link.url }}" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg gs-reveal">
+                        {{ block.value.button_text }}
+                    </a>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+    {% endfor %}
 {% include "home/statistics_section.html"  %}
 {% include "home/location.html"  %}
 
+</article>
 
-    <!-- Trust Metrics -->
-<section class="section is-secondary pt-2">
-  <div class="container mx-auto lg:px-8 ">
-    
-    <div class="w-layout-grid grid_3-col gap-xsmall mt-12">
-      <div class="card on-secondary gs-reveal">
-        <div class="card_body">
-          <div class="icon margin-bottom_xsmall">
-            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-              <path d="M9.24998 18.7103C6.60958 17.6271 4.75 15.0307 4.75 12C4.75 8.96938 6.60958 6.37304 9.24997 5.28979" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-              <path d="M14.75 5.28979C17.3904 6.37303 19.25 8.96938 19.25 12.0001C19.25 15.0307 17.3904 17.6271 14.75 18.7103" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-              <path d="M4 19.2501L8.99998 19.2501C9.13805 19.2501 9.24998 19.1381 9.24998 19.0001L9.24997 14" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-              <path d="M20 4.75L15 4.75003C14.8619 4.75003 14.75 4.86196 14.75 5.00003L14.75 10.0001" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-            </svg>
-          </div>
-          <h3 class="heading_h3 counter-element" data-value="{{ page.metric_year_value|default:'2017' }}">{{ page.metric_year_value|default:"2017" }}</h3>
-          <p class="paragraph_large margin-bottom_none">{{ page.metric_year_label|default:"Год основания компании" }}</p>
-        </div>
-      </div>
-      <div class="card on-secondary gs-reveal">
-        <div class="card_body">
-          <div class="icon margin-bottom_xsmall">
-            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-              <path d="M9.24998 18.7103C6.60958 17.6271 4.75 15.0307 4.75 12C4.75 8.96938 6.60958 6.37304 9.24997 5.28979" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-              <path d="M14.75 5.28979C17.3904 6.37303 19.25 8.96938 19.25 12.0001C19.25 15.0307 17.3904 17.6271 14.75 18.7103" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-              <path d="M4 19.2501L8.99998 19.2501C9.13805 19.2501 9.24998 19.1381 9.24998 19.0001L9.24997 14" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-              <path d="M20 4.75L15 4.75003C14.8619 4.75003 14.75 4.86196 14.75 5.00003L14.75 10.0001" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-            </svg>
-          </div>
-          <h3 class="heading_h3 counter-element" data-value="{{ page.metric_projects_value|default:'35' }}" data-suffix="+">{{ page.metric_projects_value|default:"35+" }}</h3>
-          <p class="paragraph_large margin-bottom_none">{{ page.metric_projects_label|default:"Реализованных проектов" }}</p>
-        </div>
-      </div>
-      <div class="card on-secondary gs-reveal">
-        <div class="card_body">
-          <div class="icon margin-bottom_xsmall">
-            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
-              <path d="M9.24998 18.7103C6.60958 17.6271 4.75 15.0307 4.75 12C4.75 8.96938 6.60958 6.37304 9.24997 5.28979" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-              <path d="M14.75 5.28979C17.3904 6.37303 19.25 8.96938 19.25 12.0001C19.25 15.0307 17.3904 17.6271 14.75 18.7103" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-              <path d="M4 19.2501L8.99998 19.2501C9.13805 19.2501 9.24998 19.1381 9.24998 19.0001L9.24997 14" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-              <path d="M20 4.75L15 4.75003C14.8619 4.75003 14.75 4.86196 14.75 5.00003L14.75 10.0001" stroke-width="1.5" stroke-linejoin="round" stroke="currentColor"></path>
-            </svg>
-          </div>
-          <h3 class="heading_h3 " data-value="{{ page.metric_presence_value }}">{{ page.metric_presence_value }}</h3>
-          <p class="paragraph_large margin-bottom_none">{{ page.metric_presence_label|default:"Стран присутствия" }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- Подключаем JavaScript для анимаций -->
 
-
-
-    <!-- Career Section -->
-    <section class="section ">
-      <div class="container mx-auto px-4 lg:px-8 ">
-        <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
-          <div class="header max-width_large space-y-6">
-            <h2 class="heading_h2 gs-reveal">{{ page.career_title }}</h2>
-            {% if page.career_description %}
-              <div class="heading_h4 rich-text w-richtext">
-                {{ page.career_description|richtext }}
-              </div>
-            {% endif %}
-            {% if page.career_button_text and page.career_button_link %}
-              <a href="{{ page.career_button_link }}" class="button is-secondary w-button gs-reveal">
-                {{ page.career_button_text }}
-              </a>
-            {% endif %}
-          </div>
-          <div class="image-ratio_auto">
-            {% if page.hero_image %}
-              {% image page.hero_image fill-400x300 class="image_cover" alt=page.career_title %}
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </section>
-
-    
-  </article>
-
-  <style>
-    .image-ratio_1x1 {
-      aspect-ratio: 1 / 1;
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--card-radius, 0.375rem);
-    }
-
-    .image-ratio_auto {
-      aspect-ratio: auto;
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--card-radius, 0.375rem);
-    }
-
-    .w-layout-grid.grid_3-col {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--gap-xs, 0.5rem);
-    }
-
-    @media (min-width: 1024px) {
-      .w-layout-grid.grid_3-col {
-        gap: var(--gap-sm, 0.75rem);
-      }
-    }
-
-    .mt-12 {
-      margin-top: var(--spacing-3x, 3rem);
-    }
-
-    .padding-left_medium {
-      padding-left: var(--spacing-3x, 1.5rem);
-    }
-
-    .divider-vertical {
-      border-left: 1px solid var(--border-secondary, #e5e7eb);
-      padding-left: var(--spacing-1-25x, 0.625rem);
-    }
-
-    .padding-top_xxsmall {
-      padding-top: var(--spacing-xxsmall, 0.25rem);
-    }
-
-    .prose {
-      color: #4b5563 !important;
-      max-width: none !important;
-    }
-    .prose h2 {
-      color: #1e293b !important;
-      font-weight: 700 !important;
-      font-size: 2rem !important;
-      margin-top: 2rem !important;
-      margin-bottom: 1rem !important;
-    }
-    .prose h3 {
-      color: #1e293b !important;
-      font-weight: 600 !important;
-      font-size: 1.5rem !important;
-      margin-top: 1.5rem !important;
-      margin-bottom: 0.75rem !important;
-    }
-    .prose p {
-      color: #64748b !important;
-      line-height: 1.75 !important;
-      margin-bottom: 1.25rem !important;
-    }
-    .prose ul, .prose ol {
-      color: #64748b !important;
-      padding-left: 2rem !important;
-      margin-bottom: 1.25rem !important;
-    }
-    .prose ul li, .prose ol li {
-      margin-bottom: 0.5rem !important;
-      padding-left: 0.5rem !important;
-    }
-    .prose blockquote {
-      color: #475569 !important;
-      font-style: italic !important;
-      border-left: 4px solid #3b82f6 !important;
-      padding-left: 1rem !important;
-      margin: 1.5rem 0 !important;
-    }
-    .prose a {
-      color: #3b82f6 !important;
-      text-decoration: underline !important;
-      transition: color 0.3s !important;
-    }
-    .prose a:hover {
-      color: #2563eb !important;
-    }
-
-    .gs-reveal {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-   
-   
-  </style>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      gsap.registerPlugin(ScrollTrigger);
-
-      // Анимация появления элементов при прокрутке
-      gsap.utils.toArray('.gs-reveal').forEach(element => {
-        gsap.fromTo(element, 
-          { opacity: 0, y: 20 }, 
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: element,
-              start: "top 95%", // Анимация начинается, когда верх элемента достигает 80% от верха экрана
-              end: "bottom 20%",
-              toggleActions: "play none none reverse" // Плавное появление и исчезновение при скроллинге
-            }
-          }
-        );
+<script>
+  
+  // === GSAP + SCROLL REVEAL ===
+  document.addEventListener('DOMContentLoaded', function() {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray('.gs-reveal').forEach(element => {
+      gsap.fromTo(element, { opacity: 0, y: 20 }, {
+        opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
+        scrollTrigger: { trigger: element, start: "top 95%", toggleActions: "play none none reverse" }
       });
     });
+  });
 
+  // === ГАЛЕРЕЯ 2025 ===
+  let currentIndex = 0;
+  let galleryImages = [];
+
+  function initGallery() {
+    galleryImages = [];
+    document.querySelectorAll('.gallery-card').forEach(card => {
+      const original = card.dataset.original;
+      const index = parseInt(card.dataset.index);
+      galleryImages[index] = { url: original };
+      card.addEventListener('click', () => openModal(index));
+    });
+    updateIndicators();
+    setupCarouselScroll();
+  }
+
+  function setupCarouselScroll() {
+    const carousel = document.querySelector('.gallery-carousel .flex');
+    if (!carousel) return;
+    carousel.addEventListener('scroll', () => {
+      const itemWidth = carousel.querySelector('.w-80').offsetWidth + 24;
+      const scrollPos = carousel.scrollLeft;
+      const activeIndex = Math.round(scrollPos / itemWidth);
+      updateIndicators(activeIndex);
+    });
+  }
+
+  function updateIndicators(active = null) {
+    const dots = document.querySelectorAll('.indicator-dot');
+    dots.forEach((dot, i) => {
+      if (active !== null) dot.classList.toggle('active', i === active);
+      else dot.classList.remove('active');
+    });
+  }
+
+  function openModal(index) {
+    currentIndex = index;
+    const modal = document.getElementById('fullscreenModal');
+    const img = document.getElementById('fullscreenImage');
+    img.src = galleryImages[index].url;
+    document.getElementById('fullscreenCurrent').textContent = index + 1;
+    document.getElementById('fullscreenTotal').textContent = galleryImages.length;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    updateThumbnails();
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('fullscreenModal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+    document.getElementById('fullscreenImage').src = galleryImages[currentIndex].url;
+    document.getElementById('fullscreenCurrent').textContent = currentIndex + 1;
+    updateThumbnails();
+  }
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % galleryImages.length;
+    document.getElementById('fullscreenImage').src = galleryImages[currentIndex].url;
+    document.getElementById('fullscreenCurrent').textContent = currentIndex + 1;
+    updateThumbnails();
+  }
+
+  function updateThumbnails() {
+    const container = document.getElementById('thumbnailsContainer');
+    container.innerHTML = '';
+    galleryImages.forEach((item, i) => {
+      const thumb = document.createElement('img');
+      thumb.src = item.url.replace('/original/', '/width-120/');
+      thumb.className = `w-20 h-14 object-cover rounded cursor-pointer transition-all ${i === currentIndex ? 'ring-2 ring-rose-500 scale-110' : 'opacity-60 hover:opacity-100'}`;
+      thumb.onclick = () => { currentIndex = i; document.getElementById('fullscreenImage').src = item.url; document.getElementById('fullscreenCurrent').textContent = i + 1; updateThumbnails(); };
+      container.appendChild(thumb);
+    });
+  }
+// === ULTIMATE MINIMAL ACCORDION 2025 — МНОЖЕСТВЕННОЕ ОТКРЫТИЕ ===
+document.querySelectorAll('.accordion-ultimate').forEach(item => {
+  const button = item.querySelector('button');
+  const content = item.querySelector('.accordion-content');
+  const typingText = item.querySelector('.typing-text');
+  const cursor = item.querySelector('.typing-cursor');
+  const aiTag = item.querySelector('[id^="ai-tag-"]');
+  const timeEl = item.querySelector('[id^="ai-time-"]');
+  let isTyped = false;
+
+  button.addEventListener('click', () => {
+    const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+    if (!isOpen) {
+      content.style.maxHeight = content.scrollHeight + 80 + 'px';
+      item.classList.add('group-open');
+
+      if (!isTyped && typingText) {
+        const fullText = typingText.dataset.fullText.trim();
+        typingText.textContent = '';
+        cursor.style.display = 'inline-block';
+
+        let i = 0;
+        const start = Date.now();
+        const type = () => {
+          if (i < fullText.length) {
+            typingText.textContent += fullText[i++];
+            setTimeout(type, 10);
+          } else {
+            cursor.style.display = 'none';
+            if (aiTag) {
+              aiTag.style.opacity = '1';
+              timeEl.textContent = ((Date.now() - start) / 1000).toFixed(1);
+            }
+          }
+        };
+        setTimeout(type, 120);
+        isTyped = true;
+      }
+    } else {
+      content.style.maxHeight = '0px';
+      item.classList.remove('group-open');
+    }
+  });
+});
+
+  // === ИНИЦИАЛИЗАЦИЯ ===
+  document.addEventListener('DOMContentLoaded', initGallery);
+
+  // Клавиатура + свайпы
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('fullscreenModal').classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowLeft') prevImage();
+    if (e.key === 'ArrowRight') nextImage();
+  });
+
+  let touchStart = 0;
+  document.getElementById('fullscreenModal').addEventListener('touchstart', e => touchStart = e.touches[0].clientX);
+  document.getElementById('fullscreenModal').addEventListener('touchend', e => {
+    const diff = touchStart - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) diff > 0 ? nextImage() : prevImage();
+  });
+</script>
+
+<style>
+    .case-item svg {
+        color: #ffffff !important;
+    }
     
+    .gs-reveal {
+        opacity: 0;
+        transform: translateY(20px);
+    }
 
-      
+    /* Стили для аккордеона */
+    .accordion-ultimate button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .typing-cursor {
+        display: none;
+        width: 2px;
+        background: #991b1b;
+        margin-left: 3px;
+        animation: blink 0.7s infinite;
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+    }
 
-  </script>
-
-
-
-
+    /* Стили для галереи */
+    .gallery-carousel .flex {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+    .gallery-card {
+        transition: transform 0.4s ease;
+    }
+    .gallery-card:hover {
+        transform: translateY(-8px);
+    }
+    .indicator-dot {
+        background: rgba(255,255,255,0.3);
+        transition: all 0.3s ease;
+    }
+    .indicator-dot.active {
+        background: #ef4444;
+        width: 20px;
+        border-radius: 9999px;
+    }
+</style>
 {% endblock %}

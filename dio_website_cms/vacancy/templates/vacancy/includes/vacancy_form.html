@@ -1,132 +1,180 @@
 {% load static %}
 
-<div class="margin-bottom_none w-form heading_h5 ">
-    <form id="vacancyForm" enctype="multipart/form-data">
+<div class="w-form heading_h5">
+    <form id="vacancyForm" enctype="multipart/form-data" class="space-y-6">
         {% csrf_token %}
         
         <input type="hidden" name="title" id="id_title" value="{{ page.title }}">
         
-        <div class="input margin-bottom_small">
-            <label for="id_name">Имя:</label>
-            <input type="text" name="name" id="id_name" class="input_field w-input" placeholder="Ваше имя" required>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="id_name" class="block text-sm font-medium text-gray-300 mb-2">Имя *</label>
+                <input type="text" name="name" id="id_name" 
+                       class="w-full px-4 py-3 bg-white/5 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300"
+                       placeholder="Ваше имя" required>
+            </div>
+            
+            <div>
+                <label for="id_phone" class="block text-sm font-medium text-gray-300 mb-2">Телефон *</label>
+                <input type="tel" name="phone" id="id_phone" 
+                       class="w-full px-4 py-3 bg-white/5 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300"
+                       placeholder="+7 (___) ___-__-__" required>
+            </div>
         </div>
-        
-        <div class="input margin-bottom_small">
-            <label for="id_phone">Телефон:</label>
-            <input type="tel" name="phone" id="id_phone" class="input_field w-input" placeholder="+7 (___) ___-__-__" required>
+
+        <div>
+            <label for="id_email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+            <input type="email" name="email" id="id_email" 
+                   class="w-full px-4 py-3 bg-white/5 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300"
+                   placeholder="your@email.com">
         </div>
-        
-        <div class="input margin-bottom_small">
-            <label for="id_resume">Резюме:</label>
-            <input type="file" name="resume" id="id_resume" class="input_field w-input" 
-                   accept=".pdf,.doc,.docx,.txt" required>
-            <small>Поддерживаемые форматы: PDF, DOC, DOCX, TXT (макс. 5MB)</small>
+
+        <div>
+            <label for="id_resume" class="block text-sm font-medium text-gray-300 mb-2">Резюме *</label>
+            <div class="flex items-center space-x-4">
+                <input type="file" name="resume" id="id_resume" 
+                       class="flex-1 px-4 py-3 bg-white/5 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-red-600 file:text-white hover:file:bg-red-700 transition-all duration-300"
+                       accept=".pdf,.doc,.docx,.txt" required>
+            </div>
+            <small class="text-gray-400 text-sm mt-2 block">Поддерживаемые форматы: PDF, DOC, DOCX, TXT (макс. 5MB)</small>
         </div>
-        
-        <div class="checkbox-field margin-bottom_medium">
-            <label class="w-checkbox checkbox-field">
-                <input type="checkbox" name="agreement" id="agreement" required>
-                <span class="checkbox-label w-form-label">Я согласен с политикой конфиденциальности</span>
+
+        <div>
+            <label for="id_message" class="block text-sm font-medium text-gray-300 mb-2">Сопроводительное письмо</label>
+            <textarea name="message" id="id_message" rows="4"
+                      class="w-full px-4 py-3 bg-white/5 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-300"
+                      placeholder="Расскажите о себе и почему вы хотите работать с нами..."></textarea>
+        </div>
+
+        <div class="flex items-start space-x-3">
+            <input type="checkbox" name="agreement" id="agreement" required
+                   class="w-4 h-4 mt-1 text-red-600 bg-white/5 border-gray-600 rounded focus:ring-red-500 focus:ring-2">
+            <label for="agreement" class="text-sm text-gray-300">
+                Я согласен с политикой конфиденциальности
             </label>
         </div>
         
         <input type="hidden" name="csrftoken" id="id_csrftoken" value="">
         
-        <button type="submit" class="button w-button">Отправить резюме</button>
+        <button type="submit" id="submitBtn"
+                class="w-full bg-red-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 shadow-lg cursor-pointer">
+            Отправить резюме
+            <svg class="w-5 h-5 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+        </button>
+    </form>
+</div>
+
+<!-- ПРОСТАЯ ТЕСТОВАЯ ФОРМА -->
+<div style="border: 3px solid blue; padding: 20px; margin: 20px 0; background: #1a1a1a;">
+    <h3 style="color: blue; text-align: center;">ТЕСТОВАЯ ФОРМА - ДОЛЖНА РАБОТАТЬ</h3>
+    <form id="testForm">
+        {% csrf_token %}
+        <input type="text" placeholder="Тестовое поле" style="width: 100%; padding: 10px; margin: 10px 0;">
+        <button type="submit" style="width: 100%; padding: 15px; background: blue; color: white; border: none; cursor: pointer;">
+            ТЕСТОВАЯ КНОПКА - НАЖМИ МЕНЯ
+        </button>
     </form>
 </div>
 
 <script>
+// ================= ПРОСТОЙ ТЕСТ =================
+console.log('=== СКРИПТ ФОРМЫ ЗАГРУЖЕН ===');
 
-    document.addEventListener('DOMContentLoaded', function() {
+// Тестовая форма
+document.getElementById('testForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('🎉 ТЕСТОВАЯ ФОРМА РАБОТАЕТ!');
+    console.log('✅ Тестовая форма сработала');
+});
+
+// Основная форма - УПРОЩЕННАЯ ВЕРСИЯ
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM загружен');
+    
     const form = document.getElementById('vacancyForm');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (!document.getElementById('agreement').checked) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Внимание',
-                    text: 'Пожалуйста, согласитесь с политикой конфиденциальности',
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'OK'
-                });
-                return;
+    const button = document.getElementById('submitBtn');
+    
+    if (!form) {
+        console.error('❌ Форма не найдена');
+        return;
+    }
+    
+    if (!button) {
+        console.error('❌ Кнопка не найдена');
+        return;
+    }
+    
+    console.log('✅ Форма и кнопка найдены');
+    
+    // Простой обработчик клика на кнопку
+    button.addEventListener('click', function(e) {
+        console.log('🎯 Кнопка нажата!');
+        e.preventDefault();
+        
+        // Простая валидация
+        if (!document.getElementById('agreement').checked) {
+            alert('Пожалуйста, согласитесь с политикой конфиденциальности');
+            return;
+        }
+        
+        // Простая отправка
+        alert('ФОРМА ОТПРАВЛЯЕТСЯ!');
+        console.log('Форма отправляется...');
+        
+        // Здесь будет код отправки
+        const formData = new FormData(form);
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        fetch('/vacancy/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Успешно отправлено!');
+            form.reset();
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Ошибка отправки');
+        });
+    });
+    
+    // Также обработчик на саму форму
+    form.addEventListener('submit', function(e) {
+        console.log('📝 Форма отправляется (submit event)');
+        e.preventDefault();
+    });
+
+    // Маска для телефона
+    const phoneInput = document.getElementById('id_phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.startsWith('7') || value.startsWith('8')) {
+                value = value.substring(1);
             }
             
-            const fileInput = document.getElementById('id_resume');
-            if (fileInput.files[0]) {
-                const fileSize = fileInput.files[0].size;
-                const maxSize = 5 * 1024 * 1024;
-                
-                if (fileSize > maxSize) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Файл слишком большой',
-                        text: 'Максимальный размер файла: 5MB',
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
-                    });
-                    return;
-                }
+            let formattedValue = '+7 (';
+            if (value.length > 0) {
+                formattedValue += value.substring(0, 3);
+            }
+            if (value.length > 3) {
+                formattedValue += ') ' + value.substring(3, 6);
+            }
+            if (value.length > 6) {
+                formattedValue += '-' + value.substring(6, 8);
+            }
+            if (value.length > 8) {
+                formattedValue += '-' + value.substring(8, 10);
             }
             
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            document.getElementById('id_csrftoken').value = csrfToken;
-            
-            const formData = new FormData(this);
-            
-            Swal.fire({
-                title: 'Отправка резюме...',
-                text: 'Пожалуйста, подождите',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-            
-            fetch('/vacancy/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrfToken
-                },
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    return response.json().then(err => { throw err; });
-                }
-            })
-            .then(data => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Успешно!',
-                    text: data.message || 'Резюме успешно отправлено',
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'OK'
-                });
-                this.reset();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                let errorMessage = 'Не удалось отправить резюме. Попробуйте еще раз.';
-                
-                if (error.errors) {
-                    const errorText = Object.values(error.errors).flat().join(', ');
-                    errorMessage = `Ошибки в форме: ${errorText}`;
-                }
-                
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Ошибка',
-                    text: errorMessage,
-                    confirmButtonColor: '#d33',
-                    confirmButtonText: 'OK'
-                });
-            });
+            e.target.value = formattedValue;
         });
     }
 });
