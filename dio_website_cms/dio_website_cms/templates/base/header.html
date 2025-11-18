@@ -488,11 +488,4 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Резервная инициализация если DOM уже загружен
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initMobileMenu);
-} else {
-  initMobileMenu();
-}
-
 </script>

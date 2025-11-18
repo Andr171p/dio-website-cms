@@ -1,52 +1,88 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags static %}
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags static humanize %}
 
 {% block content %}
 <article class="w-full">
+<section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
 
-  <!-- HERO -->
-  <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
-    {% if page.hero_image %}
-      {% image page.hero_image fill-1920x1080 as bg_image %}
-      <div class="absolute inset-0 z-0">
-        <img src="{{ bg_image.url }}" alt="{{ page.title }}" class="w-full h-full object-cover">
-        <div class="absolute inset-0 bg-black/50"></div>
-      </div>
-    {% endif %}
+  {% if page.hero_image %}
+    {% image page.hero_image fill-1920x1080 as bg_image %}
+    <div class="absolute inset-0 z-0">
+                    <img src="{{ bg_image.url }}" alt="{{ block.value.title }}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/15"></div>
+                </div>
+  {% endif %}
 
-    <div class="container mx-auto px-4 lg:px-8 relative z-10">
-      <div class="grid grid-cols-1 lg:grid-cols-1 gap-8 lg:gap-12 items-center">
-        <div class="space-y-6">
-          <h1 class="heading_h3 text-white drop-shadow-md gs-reveal">{{ page.title }}</h1>
+  <div class="container px-6 lg:px-8 relative z-10">
+    <div class=" ">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
-          <div class="flex flex-wrap gap-3 gs-reveal">
-            <span class="px-4 py-2 bg-red-600/80 text-white rounded-full text-sm font-medium">
-              {{ page.department }}
-            </span>
+        <!-- Левая колонка — занимает 7/12 на десктопе -->
+        <div class="lg:col-span-7 space-y-12">
+          
+          <h1 class="heading_h2 text-white leading-tight tracking-tight gs-reveal">
+            {{ page.title }}
+          </h1>
+
+          <!-- Метки — в том же стиле, что и карточки benefits -->
+          <div class="grid grid-cols-2 gap-6 gs-reveal" style="animation-delay: 0.15s;">
+            <div class="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 transition-all hover:border-red-800/30">
+              <div class="text-gray-400 text-xs uppercase tracking-wider mb-2 font-medium">Департамент</div>
+              <div class="text-white font-semibold text-lg">{{ page.department }}</div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 transition-all hover:border-red-800/30">
+              <div class="text-gray-400 text-xs uppercase tracking-wider mb-2 font-medium">Формат</div>
+              <div class="text-white font-semibold text-lg">{{ page.get_work_format_display }}</div>
+            </div>
+
             {% if page.salary %}
-              <span class="px-4 py-2 bg-emerald-600 text-white rounded-full font-bold">
-                {{ page.salary }}
-              </span>
+            <div class="p-6 rounded-2xl bg-emerald-600/10 backdrop-blur-sm border border-emerald-600/30 transition-all hover:border-emerald-600/50">
+              <div class="text-emerald-400 text-xs uppercase tracking-wider mb-2 font-medium">Зарплата</div>
+              <div class="text-emerald-400 font-black text-2xl tracking-tight">{{ page.salary|intcomma }} руб.</div>
+            </div>
             {% endif %}
-            <span class="px-4 py-2 bg-white/10 backdrop-blur text-white rounded-full text-sm">
-              {{ page.get_work_format_display }} • {{ page.location }}
-            </span>
+
+            <div class="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 transition-all hover:border-red-800/30">
+              <div class="text-gray-400 text-xs uppercase tracking-wider mb-2 font-medium">Локация</div>
+              <div class="text-white font-semibold text-lg flex items-center gap-2">
+                <svg class="w-5 h-5 opacity-70" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                </svg>
+                {{ page.location }}
+              </div>
+            </div>
           </div>
 
-          <a href="#apply" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg gs-reveal">
-            Откликнуться
-          </a>
-        </div>
+<!-- Кнопка — точная копия из хедера -->
+<div class="gs-reveal" style="animation-delay: 0.3s;">
+  <button onclick="document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' });" class="animated-btn-tilda">
+    <svg viewBox="0 0 160 45" preserveAspectRatio="none" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
+      <rect x="0" y="0" width="160" height="45" rx="8" ry="8"
+            fill="none"
+            stroke="#fff"
+            stroke-width="2"
+            stroke-dasharray="0 422"
+            stroke-dashoffset="0"
+            style="transition: all 1.35s cubic-bezier(0.19,1,0.22,1);"/>
+    </svg>
+    Связаться с нами
+  </button>
+</div>
+
+        <!-- Правая колонка — пустое пространство для воздуха (5/12) -->
+        <div class="lg:col-span-5"></div>
+
       </div>
     </div>
-  </section>
-
+  </div>
+</section>
   <!-- КОНТЕНТНЫЕ БЛОКИ -->
   {% for block in page.content %}
     
     {% if block.block_type == 'text_section' %}
       <section class="section">
-        <div class="container mx-auto px-4 lg:px-8">
+        <div class="container  px-4 lg:px-8">
           <h2 class="heading_h2 mb-8 gs-reveal">{{ block.value.title }}</h2>
           {% if block.value.content %}
             <div class="prose prose-invert max-w-none text-gray-300 gs-reveal">
@@ -62,14 +98,14 @@
 
     {% elif block.block_type == 'what_we_do' %}
       <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8">
-          <div class="flex flex-col lg:flex-row items-center gap-12 {% if block.value.image_position == 'right' %}lg:flex-row-reverse{% endif %}">
+        <div class="container  px-4 lg:px-8">
+          <div class=" flex flex-col lg:flex-row items-center gap-12 {% if block.value.image_position == 'right' %}lg:flex-row-reverse{% endif %}">
             <div class="lg:w-1/2 gs-reveal">
               <div class="image-ratio_auto">
                 {% image block.value.image fill-900x800 class="image_cover rounded-lg" alt=block.value.title %}
               </div>
             </div>
-            <div class="lg:w-1/2 space-y-6 gs-reveal">
+            <div class=" rounded-lg px-10 lg:w-1/2 space-y-6 gs-reveal">
               <h2 class="heading_h2">{{ block.value.title }}</h2>
               <div class="heading_h5 rich-text w-richtext prose rich-content">
                 {{ block.value.description|richtext }}
@@ -81,7 +117,7 @@
 
     {% elif block.block_type == 'benefits' %}
       <section class="section">
-        <div class="container mx-auto px-4 lg:px-8">
+        <div class="container  px-4 lg:px-8">
           <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
             {{ block.value.title|default:"Что мы предлагаем" }}
           </h2>
@@ -107,7 +143,7 @@
 
     {% elif block.block_type == 'process' %}
       <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8">
+        <div class="container  px-4 lg:px-8">
           <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
             {{ block.value.title|default:"Процесс отбора" }}
           </h2>
@@ -140,7 +176,7 @@
 
     {% elif block.block_type == 'gallery' %}
       <section class="section py-20">
-        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div class="container  px-4 lg:px-8 max-w-7xl">
           {% if block.value.title %}
             <div class="text-center mb-16">
               <h2 class="heading_h2 font-black gs-reveal">{{ block.value.title }}</h2>
@@ -179,7 +215,7 @@
 
     {% elif block.block_type == 'video' %}
       <section class="section is-secondary">
-        <div class="container mx-auto px-4 lg:px-8">
+        <div class="container  px-4 lg:px-8">
           {% if block.value.title %}
             <div class="header is-align-center">
               <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
@@ -205,7 +241,7 @@
 
     {% elif block.block_type == 'accordion' %}
       <section class="section py-24">
-        <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
+        <div class="container  px-4 lg:px-8 max-w-4xl">
           {% if block.value.title %}
             <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-20 tracking-tight gs-reveal">
               {{ block.value.title }}
@@ -255,7 +291,7 @@
 
     {% elif block.block_type == 'cta' %}
       <section id="apply" class="section is-accent-primary">
-        <div class="container mx-auto px-4 lg:px-8">
+        <div class="container  px-4 lg:px-8">
           <div class="header is-align-center">
             <h2 class="heading_h2 gs-reveal">{{ block.value.title }}</h2>
             <div class="paragraph_large text-color_secondary prose gs-reveal">{{ block.value.description|richtext }}</div>
@@ -272,8 +308,8 @@
   {% endfor %}
 
 <!-- ФОРМА ОТКЛИКА -->
-<section id="apply-form" class="section" style="position: relative; z-index: 1;">
-  <div class="container mx-auto px-4 lg:px-8">
+<section id="apply" class="section" style="position: relative; z-index: 1;">
+  <div class="container  px-4 lg:px-8">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-16">
         <h2 class="heading_h2 text-4xl lg:text-5xl font-black mb-6">
@@ -285,7 +321,7 @@
       </div>
 
       <!-- Упрощенный контейнер без GSAP -->
-      <div class="bg-white/5 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-white/10">
+      <div class="bg-gray-200/30 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-red-700/10">
         {% include "vacancy/includes/vacancy_form.html" %}
       </div>
     </div>
@@ -296,7 +332,7 @@
   {% with other_vacancies=page.get_siblings.live %}
     {% if other_vacancies %}
       <section class="section pt-10">
-        <div class="container mx-auto px-4 lg:px-8">
+        <div class="container  px-4 lg:px-8">
           <div class="flex items-center justify-between mb-12">
             <h2 class="heading_h2">Другие вакансии</h2>
             <a href="{{ page.get_parent.url }}" class="button is-secondary">
@@ -546,5 +582,26 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
   }
+</style>
+
+
+
+<style>
+.animated-btn-tilda {
+  position: relative;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.animated-btn-tilda .btn-border {
+  transition: all 1.35s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.animated-btn-tilda:hover .btn-border {
+  stroke-dasharray: 422;
+  stroke-dashoffset: 0;
+  stroke: #920707;
+}
 </style>
 {% endblock %}

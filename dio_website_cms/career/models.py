@@ -175,7 +175,7 @@ class CareerVacancyPage(Page):
     # === ОСНОВНЫЕ ПОЛЯ ===
     department = models.CharField(max_length=100, default="Разработка")
     salary = models.CharField(max_length=100, blank=True, help_text="Например: от 150 000 ₽")
-    location = models.CharField(max_length=100, default="Сыктывкар")
+    location = models.CharField(max_length=100, default="Тюмень")
     work_format = models.CharField(
         max_length=50,
         choices=[("office", "Офис"), ("remote", "Удалённо"), ("hybrid", "Гибрид")],
