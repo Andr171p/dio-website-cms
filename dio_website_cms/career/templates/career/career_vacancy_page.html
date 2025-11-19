@@ -321,10 +321,10 @@
   </div>
 </section>
 
-  {% with other_vacancies=page.get_siblings.live %}
+{% with other_vacancies=page.get_siblings.live %}
     {% if other_vacancies %}
       <section class="section pt-10">
-        <div class="container  px-4 lg:px-8">
+        <div class="container px-4 lg:px-8">
           <div class="flex items-center justify-between mb-12">
             <h2 class="heading_h2">Другие вакансии</h2>
             <a href="{{ page.get_parent.url }}" class="button is-secondary">
@@ -335,45 +335,92 @@
             </a>
           </div>
 
-          <div class="w-layout-grid grid_3-col gap-2 lg:gap-3">
+          <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {% for vacancy in other_vacancies %}
               {% if vacancy.id != page.id %}
-                <a href="{{ vacancy.url }}" class="card relative overflow-hidden rounded-xl group" style="height: 380px;">
-                  {% if vacancy.specific.hero_image %}
-                    {% image vacancy.specific.hero_image fill-600x400 as bg %}
-                    <img src="{{ bg.url }}" alt="" class="w-full h-full object-cover absolute inset-0 z-0 group-hover:scale-110 transition-transform duration-700">
-                  {% endif %}
-                  <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-gradient-to-t from-black/80 to-transparent">
-                    <div>
-                      <span class="px-3 py-1 bg-red-600/70 text-white text-xs rounded-full">
+                <a href="{{ vacancy.url }}" class="group gs-reveal">
+                  <div class="bg-gray-200/5 rounded-xl p-6 border border-gray-700/50 hover:border-red-700/30 transition-all duration-300 h-full flex flex-col shadow-md hover:shadow-lg">
+                    
+                    <div class="flex justify-between items-start mb-4">
+                      <h3 class="heading_h3 font-semibold heading-h5 group-hover:text-red-700 transition-colors pr-4">
+                        {{ vacancy.title }}
+                      </h3>
+                      <span class="px-3 py-1 bg-white/10 heading-h5 text-xs rounded font-medium">
                         {{ vacancy.specific.department }}
                       </span>
                     </div>
-                    <div>
-                      <h3 class="heading_h4 text-white group-hover:text-red-400 transition-colors">
-                        {{ vacancy.title }}
-                      </h3>
-                      <p class="text-gray-300 text-sm mt-1">
-                        {% if vacancy.specific.salary %}{{ vacancy.specific.salary }}{% endif %}
-                        {% if vacancy.specific.salary and vacancy.specific.location %} • {% endif %}
+
+                    <div class="space-y-3 mb-6 flex-grow">
+                      {% if vacancy.specific.salary %}
+                        <div class="flex items-center heading-h5">
+                          <svg class="w-4 h-4 mr-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9" stroke-width="1.5"/>
+                            <path stroke-linecap="round" stroke-width="1.5" d="M9 8h3a2 2 0 110 4H9v4"/>
+                            <path stroke-linecap="round" stroke-width="1.5" d="M9 12h2"/>
+                          </svg>
+                          {{ vacancy.specific.salary|intcomma }} руб.
+                        </div>
+                      {% endif %}
+
+                      {% if vacancy.specific.work_format %}
+                        <div class="flex items-center heading-h5">
+                          <svg class="w-4 h-4 mr-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                          </svg>
+                          {% if vacancy.specific.work_format == 'office' %}Офис
+                          {% elif vacancy.specific.work_format == 'remote' %}Удалённо
+                          {% elif vacancy.specific.work_format == 'hybrid' %}Гибрид
+                          {% else %}{{ vacancy.specific.work_format }}{% endif %}
+                        </div>
+                      {% endif %}
+                      
+                      <div class="flex items-center heading-h5">
+                        <svg class="w-4 h-4 mr-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        </svg>
                         {{ vacancy.specific.location }}
-                      </p>
+                      </div>
+
+                      {% if vacancy.specific.experience %}
+                        <div class="flex items-center heading-h5">
+                          <svg class="w-4 h-4 mr-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                          </svg>
+                          {{ vacancy.specific.experience }}
+                        </div>
+                      {% endif %}
                     </div>
-                    <div class="text-white opacity-80 group-hover:opacity-100 flex items-center text-sm">
-                      Подробнее
-                      <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-white/10">
+                      <span class="heading-h5 font-medium group-hover:text-red-700 transition-colors">
+                        Подробнее
+                      </span>
+                      <svg class="w-5 h-5 heading-h5 group-hover:text-red-700 group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                       </svg>
                     </div>
                   </div>
                 </a>
               {% endif %}
+            {% empty %}
+              <div class="col-span-full text-center py-16 gs-reveal">
+                <div class="w-20 h-20 bg-white/5 rounded-xl flex items-center justify-center mx-auto mb-6">
+                  <svg class="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <h3 class="heading_h3 text-gray-400 mb-4">Других вакансий пока нет</h3>
+                <p class="text-gray-500 mb-6">Но мы всегда рады талантливым людям!</p>
+                <a href="#apply-form" class="button is-secondary inline-block">
+                  Отправить резюме
+                </a>
+              </div>
             {% endfor %}
           </div>
         </div>
       </section>
     {% endif %}
-  {% endwith %}
+{% endwith %}
 
 </article>
 

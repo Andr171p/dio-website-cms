@@ -149,7 +149,6 @@
         <a href="{{ vacancy.url }}" class="group gs-reveal">
           <div class="bg-gray-200/5 rounded-xl p-6 border border-gray-700/50 hover:border-red-700/30 transition-all duration-300 h-full flex flex-col shadow-md hover:shadow-lg">
             
-            <!-- Заголовок и отдел -->
             <div class="flex justify-between items-start mb-4">
               <h3 class="heading_h3 font-semibold heading-h5 group-hover:text-red-700 transition-colors pr-4">
                 {{ vacancy.title }}
@@ -159,9 +158,7 @@
               </span>
             </div>
 
-            <!-- Информация о вакансии -->
             <div class="space-y-3 mb-6 flex-grow">
-              <!-- Зарплата -->
               {% if vacancy.specific.salary %}
                 <div class="flex items-center heading-h5">
                   <svg class="w-4 h-4 mr-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,7 +170,6 @@
                 </div>
               {% endif %}
 
-              <!-- Формат работы -->
               {% if vacancy.specific.work_format %}
                 <div class="flex items-center heading-h5">
                   <svg class="w-4 h-4 mr-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,7 +182,6 @@
                 </div>
               {% endif %}
               
-              <!-- Локация -->
               <div class="flex items-center heading-h5">
                 <svg class="w-4 h-4 mr-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -194,7 +189,6 @@
                 {{ vacancy.specific.location }}
               </div>
 
-              <!-- Опыт работы -->
               {% if vacancy.specific.experience %}
                 <div class="flex items-center heading-h5">
                   <svg class="w-4 h-4 mr-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,7 +199,6 @@
               {% endif %}
             </div>
 
-            <!-- CTA -->
             <div class="flex items-center justify-between pt-4 border-t border-white/10">
               <span class="heading-h5 font-medium group-hover:text-red-700 transition-colors">
                 Подробнее
@@ -351,11 +344,9 @@
       </section>
 
 {% elif block.block_type == 'form' %}
-<!-- Modern Form Block -->
 <section id="apply-form" class="section is-secondary">
   <div class="container mx-auto px-4 lg:px-8">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-      <!-- Текст слева -->
       <div class="gs-reveal">
         <h2 class="heading_h2 text-4xl lg:text-5xl font-black mb-6">
           {{ block.value.title|default:"Хочешь к нам?" }}
@@ -367,7 +358,6 @@
         {% endif %}
       </div>
 
-      <!-- Форма справа -->
       <div class="gs-reveal bg-white/5 backdrop-blur-sm rounded-3xl p-8 lg:p-10 border border-red-800/30 transition-all duration-500">
         {% include "vacancy/includes/vacancy_form.html" %}
       </div>
@@ -383,7 +373,6 @@
     </h2>
     
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Карта -->
       <div class="lg:col-span-2 gs-reveal">
         <div class="rounded-2xl overflow-hidden shadow-lg">
           <iframe 
@@ -396,19 +385,15 @@
         </div>
       </div>
       
-      <!-- Информация -->
       <div class="gs-reveal" style="animation-delay: 0.2s;">
         <div class="section is-secondary rounded-2xl p-8  h-full">
           <div class="space-y-8">
-            <!-- Название -->
             <div>
               <h3 class="heading_h3 font-bold  mb-3">ДИО-Консалт</h3>
               <p class="heading-h5 leading-relaxed">Автоматизация документооборота, автоматизация производств, бухгалтерские курсы</p>
             </div>
             
-            <!-- Контактная информация -->
             <div class="space-y-6">
-              <!-- Время работы -->
               <div class="flex items-start gap-4">
                 <div class="w-10 h-10 bg-red-800 rounded-lg flex items-center justify-center flex-shrink-0">
                   <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -421,7 +406,6 @@
                 </div>
               </div>
               
-              <!-- Адрес -->
               <div class="flex items-start gap-4">
                 <div class="w-10 h-10 bg-red-800 rounded-lg flex items-center justify-center flex-shrink-0">
                   <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -434,7 +418,6 @@
                 </div>
               </div>
               
-              <!-- Телефон -->
               <div class="flex items-start gap-4">
                 <div class="w-10 h-10 bg-red-800 rounded-lg flex items-center justify-center flex-shrink-0">
                   <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
