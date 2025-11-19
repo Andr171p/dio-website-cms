@@ -65,11 +65,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('vacancyForm');
     
-    // Обработчик отправки формы
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Проверка согласия
         if (!document.getElementById('agreement').checked) {
             Swal.fire({
                 icon: 'warning',
@@ -81,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Проверка размера файла
         const fileInput = document.getElementById('id_resume');
         if (fileInput.files[0]) {
             const fileSize = fileInput.files[0].size;
@@ -99,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Проверка обязательных полей на клиенте
         const nameInput = document.getElementById('id_name');
         const phoneInput = document.getElementById('id_phone');
         
@@ -127,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Проверка формата телефона
         const phoneDigits = phoneInput.value.replace(/\D/g, '');
         if (phoneDigits.length < 11) {
             Swal.fire({
@@ -141,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Показываем загрузку
         Swal.fire({
             title: 'Отправка резюме...',
             text: 'Пожалуйста, подождите',
@@ -151,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Отправка формы
         const formData = new FormData(form);
         
         fetch('/vacancy/', {
@@ -162,13 +155,10 @@ document.addEventListener('DOMContentLoaded', function() {
             body: formData
         })
         .then(response => {
-            // Сначала проверяем статус ответа
             if (!response.ok) {
-                // Если статус не ок, пробуем получить JSON с ошибкой
                 return response.json().then(errorData => {
                     throw errorData;
                 }).catch(() => {
-                    // Если не удалось распарсить JSON, создаем общую ошибку
                     throw new Error(`HTTP error! status: ${response.status}`);
                 });
             }
@@ -183,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonText: 'OK'
             });
             form.reset();
-            // Сбрасываем телефонное поле в начальное состояние
             const phoneInput = document.getElementById('id_phone');
             if (phoneInput) {
                 phoneInput.value = '+7 (';
@@ -194,9 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             let errorMessage = 'Не удалось отправить резюме. Попробуйте еще раз.';
             
-            // Обработка разных форматов ошибок
             if (error.errors) {
-                // Ошибки валидации Django REST framework
                 const errorMessages = [];
                 for (const [field, messages] of Object.entries(error.errors)) {
                     const fieldName = getFieldName(field);
@@ -204,12 +191,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 errorMessage = errorMessages.join('\n');
             } else if (error.message) {
-                // Простые сообщения об ошибках
                 errorMessage = error.message;
             } else if (typeof error === 'string') {
                 errorMessage = error;
             } else if (error.detail) {
-                // DRF error detail
                 errorMessage = error.detail;
             }
             
@@ -223,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Функция для получения читаемых названий полей
     function getFieldName(field) {
         const fieldNames = {
             'name': 'Имя',
@@ -235,10 +219,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return fieldNames[field] || field;
     }
 
-    // Маска для телефона (остается без изменений)
     const phoneInput = document.getElementById('id_phone');
     if (phoneInput) {
-        // Устанавливаем начальное значение
         phoneInput.value = '+7 (';
         
         phoneInput.addEventListener('input', function(e) {

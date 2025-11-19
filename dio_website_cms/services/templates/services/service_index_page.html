@@ -5,16 +5,12 @@
 <section class="section pt-10">
     <div class="container ">
 
-        <!-- Заголовок -->
         <div class="header mb-0 pt-0 ">
             <h2 class="heading_h2  font-bold"> Услуги</h2>
         </div>
 
-        <!-- ФИЛЬТРЫ — как у Сервисов 1С -->
-<!-- filter_services.html -->
 <div class="mb-16">
     <div class="flex flex-wrap justify-center gap-3 sm:gap-5">
-        <!-- Все услуги -->
         <a href="{{ request.path }}"
            class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
                   {% if not current_category %}
@@ -32,7 +28,6 @@
             {% endif %}
         </a>
 
-        <!-- Категории -->
         {% for value, label in SERVICE_CATEGORY_CHOICES %}
         <a href="?category={{ value }}"
            class="heading_h5 group px-7 py-3.5 rounded-2xl font-medium text-base transition-all duration-200 flex items-center gap-2.5 relative
@@ -54,14 +49,12 @@
     </div>
 </div>
 
-        <!-- Сетка услуг — 1-в-1 как у Сервисов 1С -->
         <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
             {% for service in services %}
             <a href="{{ service.url }}"
                class="card relative overflow-hidden rounded-xl shadow-lg group"
                style="height: 400px;">
 
-                <!-- Фоновое изображение с hover-увеличением -->
                 {% if service.image %}
                     {% image service.image fill-600x400 as img %}
                     <img src="{{ img.url }}"
@@ -69,9 +62,7 @@
                          class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125">
                 {% endif %}
 
-                <!-- Тёмный оверлей + контент -->
                 <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/15 text-white">
-                    <!-- Категория -->
                     <div class="flex items-center justify-between mb-4">
                         <div></div>
                         <span class="heading_h5 px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
@@ -79,7 +70,6 @@
                         </span>
                     </div>
 
-                    <!-- Заголовок и описание -->
                     <div class="space-y-3 flex-grow">
                         <h3 class="heading_h4 text-white">{{ service.headline }}</h3>
                         <p class="subheading text-gray-200 ">
@@ -87,7 +77,6 @@
                         </p>
                     </div>
 
-                    <!-- Подробнее -->
                     <div class="mt-auto text-white text-xl">
                         Подробнее
                         <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +110,6 @@
             {% endfor %}
         </div>
 
-        <!-- Пагинация — как у Сервисов 1С -->
         {% if services.has_other_pages %}
         <div class="mt-12 text-center">
             <ul class="inline-flex gap-2">
@@ -158,7 +146,6 @@
     </div>
 </section>
 
-<!-- Стили — минимальные, без анимаций появления -->
 <style>
     .grid_3-col {
         grid-template-columns: repeat(3, 1fr);
@@ -171,7 +158,6 @@
         -webkit-line-clamp: 2;
     }
 
-    /* Responsive */
     @media (max-width: 900px) {
         .grid_3-col { grid-template-columns: repeat(2, 1fr); }
     }
@@ -179,7 +165,6 @@
         .grid_3-col { grid-template-columns: 1fr; }
     }
 
-    /* Доступность */
     a:focus-visible {
         outline: 3px solid rgba(239, 68, 68, 0.4);
         outline-offset: 3px;

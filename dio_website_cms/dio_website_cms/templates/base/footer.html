@@ -10,10 +10,8 @@
                         <div class="nav_logo-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="33.000000pt" height="33.000000pt" viewBox="0 0 1080.000000 1080.000000" preserveAspectRatio="xMidYMid meet">
                                 <g transform="translate(0.000000,1080.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
-                                    <!-- SVG paths остаются без изменений -->
                                     <path d="M7405 10140 c-179 -20 -335 -83 -466 -188 -234 -188 -349 -427 -349 -722 0 -260 82 -461 260 -641 201 -203 417 -288 700 -276 69 3 137 10 151 15 l26 10 7 469 c6 397 5 483 -9 570 -14 98 -43 205 -67 247 -10 19 -68 158 -68 164 0 5 42 -8 72 -23 14 -7 30 -9 35 -4 4 4 104 10 220 11 211 3 212 3 224 -19 19 -35 32 -28 25 12 -8 38 -3 43 20 20 18 -18 34 -19 34 -3 0 12 -94 125 -122 146 -9 7 -24 19 -32 27 -27 27 -169 107 -233 131 -130 49 -289 69 -428 54z"/>
                                     <path d="M8235 9750 c3 -5 8 -10 11 -10 2 0 4 5 4 10 0 6 -5 10 -11 10 -5 0 -7 -4 -4 -10z"/>
-                                    <!-- ... остальные пути SVG ... -->
                                 </g>
                             </svg>
                         </div>
@@ -23,9 +21,7 @@
                 <p class="heading_h6 text-color">Подписка</p>
                 <p class="text-color paragraph_small">Получайте новости и обновления 1С.</p>
                 
-                <!-- 🔥 ИСПРАВЛЕНО: Умная форма подписки -->
                 {% if request.META.HTTP_HOST != 'localhost' and request.META.HTTP_HOST != '127.0.0.1' %}
-                    <!-- ПРОДАКШЕН: С Turnstile CAPTCHA -->
                     <div class="margin-bottom_none width_100percent w-form">
                         <form method="get" 
                               data-wf-element-id="44978c0a-d19b-8624-d756-e831dfb8bf16" 
@@ -54,7 +50,6 @@
                         </div>
                     </div>
                 {% else %}
-                    <!-- ЛОКАЛХОСТ: БЕЗ Turnstile (быстро грузится) -->
                     <div class="margin-bottom_none width_100percent w-form">
                         <form method="get" 
                               name="wf-form-Subscribe-local" 
@@ -80,7 +75,6 @@
                 {% endif %}
             </div>
 
-            <!-- Остальные колонки без изменений -->
             <ul role="list" class="w-list-unstyled">
                 <li><h2 class="heading_h6 text-color">Услуги</h2></li>
                 <li><a href="#" class="footer_link w-inline-block"><div>Внедрение</div></a></li>

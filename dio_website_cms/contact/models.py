@@ -12,7 +12,6 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 class ContactPage(Page):
     """Страница контактов"""
 
-    # Поля для контактов
     address = models.TextField(blank=True, verbose_name="Адрес")
     phone = models.CharField(max_length=20, blank=True, verbose_name="Телефон")
     email = models.EmailField(blank=True, verbose_name="Электронная почта")
@@ -22,7 +21,6 @@ class ContactPage(Page):
     inn = models.CharField(max_length=12, blank=True, verbose_name="ИНН")
     ogrn = models.CharField(max_length=13, blank=True, verbose_name="ОГРН")
 
-    # Панели для админки
     content_panels = Page.content_panels + [
         MultiFieldPanel([
             FieldPanel("address"),
@@ -38,7 +36,6 @@ class ContactPage(Page):
         ], heading="Юридические данные"),
     ]
 
-    # Указываем шаблон
     template = "contact/contact_page.html"
     class Meta:
         verbose_name = "Страница 'Контакты компании'"

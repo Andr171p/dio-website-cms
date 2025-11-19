@@ -488,7 +488,6 @@
 </div>
 
 <script>
-  // GSAP
   document.addEventListener('DOMContentLoaded', () => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.utils.toArray('.gs-reveal').forEach(el => {
@@ -578,7 +577,6 @@
     });
   }
 
-  // Аккордеон
   document.querySelectorAll('.accordion-ultimate').forEach(item => {
     const button = item.querySelector('button');
     const content = item.querySelector('.accordion-content');
@@ -617,10 +615,8 @@
     });
   });
 
-  // Инициализация
   document.addEventListener('DOMContentLoaded', initGallery);
 
-  // Клавиатура + свайпы
   document.addEventListener('keydown', e => {
     if (document.getElementById('fullscreenModal').classList.contains('hidden')) return;
     if (e.key === 'Escape') closeModal();

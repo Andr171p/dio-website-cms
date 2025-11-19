@@ -4,12 +4,9 @@
 {% block content %}
   <section class="section pt-10">
     <div class="container ">
-      <!-- Заголовок + кнопка -->
       <div class="header mb-0 pt-0">
         <h2 class="heading_h3  font-bold">Сервисы 1С</h2>
       </div>
-
-      <!-- ФИЛЬТРЫ -->
         <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-12">
             <a href="?category=all"
                class="group relative px-5 py-2 transition-all duration-300 heading_h5  z-20">
@@ -28,19 +25,15 @@
             {% endfor %}
         </div>
 
-      <!-- Сетка сервисов -->
       <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
         {% for service in 1c_services %}
           <a href="{{ service.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
-            <!-- Фоновое изображение с анимацией -->
             {% if service.image %}
               {% image service.image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
             {% endif %}
             <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/15 text-white">
-              <!-- Верхняя часть: Категория -->
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
-                  <!-- Технологии можно добавить позже -->
                 </div>
                 <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
                   {{ service.get_category_display }}
@@ -75,7 +68,6 @@
         {% endfor %}
       </div>
 
-      <!-- Пагинация -->
       {% if 1c_services.has_other_pages %}
         <div class="text-center mt-12">
           <ul class="inline-flex gap-2">
@@ -142,7 +134,6 @@
     .line-clamp-2 { -webkit-line-clamp: 2; }
     .line-clamp-3 { -webkit-line-clamp: 3; }
 
-    /* Responsive Grid */
     @media (max-width: 900px) {
       .grid_3-col {
         grid-template-columns: repeat(2, 1fr);
@@ -155,7 +146,6 @@
       }
     }
 
-    /* Centering */
   </style>
 
   <script>

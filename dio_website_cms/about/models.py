@@ -1,19 +1,14 @@
-from django.db import models
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import RichTextField, StreamField
+from wagtail.fields import  StreamField
 from wagtail.search import index
-from django.utils import timezone
 from wagtail.blocks import (
     CharBlock, RichTextBlock, StructBlock, ListBlock, PageChooserBlock, ChoiceBlock
 )
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.embeds.blocks import EmbedBlock
-from wagtail import blocks
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from home.models import MainAchievementBlock, AdditionalAchievementBlock, GlobalPresenceBlock
 
-# Импортируем современные блоки из services
 class HeroBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок Hero")
     subtitle = CharBlock(required=True, label="Подзаголовок Hero")
@@ -188,7 +183,6 @@ class CTABlock(StructBlock):
 class AboutPage(Page):
     """Страница 'О компании' с современными блоками"""
 
-    # Оставляем существующие блоки без изменений
     achievements = StreamField(
         [
             ("main_achievement", MainAchievementBlock()),
@@ -209,7 +203,6 @@ class AboutPage(Page):
         max_num=1,
     )
 
-    # Добавляем современные блоки
     content = StreamField([
         ('hero', HeroBlock()),
         ('text', TextBlock()),
@@ -244,7 +237,6 @@ class AboutPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
         
-        # Сохраняем существующую логику для достижений
         context["main_achievements"] = [
             block for block in self.achievements 
             if block.block_type == "main_achievement"
@@ -254,7 +246,6 @@ class AboutPage(Page):
             if block.block_type == "additional_achievement"
         ]
         
-        # Добавляем глобальное присутствие из home page если нужно
         from home.models import HomePage
         home_page = HomePage.objects.live().first()
         if home_page:

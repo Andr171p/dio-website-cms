@@ -4,13 +4,10 @@ from wagtail.models import Page
 from wagtail.fields import RichTextField, StreamField
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.blocks import (
-    CharBlock, RichTextBlock, StructBlock, ListBlock, StreamBlock,
-    RawHTMLBlock, ChoiceBlock, PageChooserBlock
+    CharBlock, RichTextBlock, StructBlock, ListBlock, ChoiceBlock, PageChooserBlock
 )
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.documents.blocks import DocumentChooserBlock
 from wagtail.embeds.blocks import EmbedBlock
-from wagtail.contrib.table_block.blocks import TableBlock
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from wagtail.snippets.models import register_snippet
 from modelcluster.models import ClusterableModel
@@ -18,7 +15,7 @@ from django.utils import timezone
 
 
 # ========================================
-# ДИНАМИЧЕСКИЕ КАТЕГОРИИ (через админку)
+# ДИНАМИЧЕСКИЕ КАТЕГОРИИ 
 # ========================================
 @register_snippet
 class ProductCategory(ClusterableModel):
@@ -38,9 +35,6 @@ class ProductCategory(ClusterableModel):
         verbose_name_plural = "Категории продуктов"
 
 
-# ========================================
-# БЛОКИ — как в services
-# ========================================
 
 class HeroBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок Hero")
@@ -222,7 +216,6 @@ class ProductPage(Page):
     buy_link = models.URLField(blank=True)
     hero_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     
-    # Новые поля как в SingleServicePage
     date = models.DateField("Дата публикации", default=timezone.now)
     headline = models.CharField("Заголовок", max_length=255, default="Заголовок продукта")
     intro = models.TextField("Краткое описание", blank=True, help_text="1-3 предложения для анонса")
@@ -297,7 +290,6 @@ class ProgramsPage(Page):
         products = ProductPage.objects.live().order_by('title')
         category_slug = request.GET.get('category')
 
-        # Фильтр по slug
         if category_slug and category_slug != 'all':
             products = products.filter(category__slug=category_slug)
 
@@ -311,7 +303,6 @@ class ProgramsPage(Page):
         except EmptyPage:
             products = paginator.page(paginator.num_pages)
 
-        # Все категории
         categories = ProductCategory.objects.all()
 
         context.update({

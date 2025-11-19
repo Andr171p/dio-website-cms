@@ -34,7 +34,6 @@ class FAQPage(Page):
         verbose_name="Подзаголовок"
     )
 
-    # StreamField для вопросов
     faq_items = StreamField(
         [
             ("faq", blocks.StructBlock([

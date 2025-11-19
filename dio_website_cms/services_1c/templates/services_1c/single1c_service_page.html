@@ -5,7 +5,6 @@
   <article class="w-full">
     {% for block in page.content %}
         {% if block.block_type == 'hero' %}
-            <!-- Hero Section -->
             <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
                 {% image block.value.image original as bg_image %}
                 <div class="absolute inset-0 z-0">
@@ -31,7 +30,6 @@
             </section>
 
         {% elif block.block_type == 'text' %}
-            <!-- Text Section -->
             <section class="section">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="prose gs-reveal">
@@ -41,7 +39,6 @@
             </section>
 
         {% elif block.block_type == 'what_we_do' %}
-            <!-- What We Do Section -->
             <section class="section is-secondary">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge">
@@ -59,7 +56,6 @@
             </section>
 
         {% elif block.block_type == 'image_card' %}
-            <!-- Image Card Section -->
             <section class="section">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="w-layout-grid grid_1-col gap-2 lg:gap-3 mt-12">
@@ -86,7 +82,6 @@
             </section>
 
         {% elif block.block_type == 'card_grid' %}
-            <!-- Card Grid Section -->
             <section class="section">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
@@ -123,7 +118,6 @@
             </section>
 
         {% elif block.block_type == 'metrics' %}
-            <!-- Trust Metrics Section -->
             <section class="section is-secondary">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
@@ -148,7 +142,6 @@
             </section>
 
         {% elif block.block_type == 'gallery' %}
-            <!-- Gallery Section -->
             <section class="section">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     {% if block.value.title %}
@@ -167,7 +160,6 @@
             </section>
 
         {% elif block.block_type == 'video' %}
-            <!-- Video Section -->
             <section class="section is-secondary">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     {% if block.value.title %}
@@ -194,7 +186,6 @@
             </section>
 
         {% elif block.block_type == 'accordion' %}
-            <!-- Accordion Section -->
             <section class="section">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
@@ -217,7 +208,6 @@
             </section>
 
         {% elif block.block_type == 'cta' %}
-            <!-- CTA Section -->
             <section class="section is-accent-primary">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
@@ -233,7 +223,6 @@
             </section>
 
         {% elif block.block_type == 'supported_configurations' %}
-            <!-- Supported Configurations Section -->
             <section class="section is-secondary">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
@@ -261,7 +250,6 @@
             </section>
 
         {% elif block.block_type == 'system_requirements' %}
-            <!-- System Requirements Section -->
             <section class="section">
                 <div class="container mx-auto px-4 lg:px-8 ">
                     <div class="header is-align-center">
@@ -286,10 +274,8 @@
     {% endfor %}
 
     {% if other_1c_services %}
-    <!-- Секция других сервисов 1С -->
     <section class="section is-secondary">
         <div class="container mx-auto px-4 lg:px-8 ">
-            <!-- Заголовок -->
             <div class="flex items-center justify-between mb-12">
                 <h2 class="heading_h2 max-width_large mb-0">Другие сервисы 1С</h2>
                 <a href="{% pageurl page.get_parent %}" class="button is-secondary text-white hover:text-red-300 font-medium text-sm inline-flex items-center transition-colors duration-200 shrink-0 ml-6">
@@ -300,26 +286,21 @@
                 </a>
             </div>
 
-            <!-- Сетка сервисов -->
             <div class="w-layout-grid grid_3-col gap-2 lg:gap-3 mt-12">
                 {% for service in other_1c_services %}
                     <a href="{{ service.url }}" class="card relative overflow-hidden rounded-xl shadow-lg group" style="height: 400px;">
-                        <!-- Фоновое изображение с анимацией -->
                         {% if service.image %}
                             {% image service.image fill-600x400 class="w-full h-full object-cover absolute top-0 left-0 z-0 transition-transform duration-1000 group-hover:scale-125" %}
                         {% endif %}
                         <div class="relative z-10 flex flex-col justify-between h-full p-6 bg-black/50 text-white">
-                            <!-- Верхняя часть: Категория -->
                             <div class="flex items-center justify-between mb-4">
                                 <div class="flex items-center gap-3">
-                                    <!-- Технологии можно добавить позже -->
                                 </div>
                                 <span class="px-2 py-1 rounded-full bg-red-600/50 text-white text-xs font-medium">
                                     {{ service.get_category_display }}
                                 </span>
                             </div>
 
-                            <!-- Текст -->
                             <div class="space-y-4 flex-grow">
                                 <h3 class="heading_h3 text-white">{{ service.headline }}</h3>
                                 <p class="subheading text-gray-200">
@@ -327,7 +308,6 @@
                                 </p>
                             </div>
 
-                            <!-- Текст вместо кнопки -->
                             <div class="mt-auto text-white text-sm font-medium">
                                 Подробнее
                                 <svg class="w-4 h-4 ml-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -345,7 +325,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // GSAP Scroll Animations
       gsap.registerPlugin(ScrollTrigger);
       gsap.utils.toArray('.gs-reveal').forEach(element => {
         gsap.fromTo(element, 
@@ -357,7 +336,7 @@
             ease: "power2.out",
             scrollTrigger: {
               trigger: element,
-              start: "top 90%", // Позднее появление, как указано
+              start: "top 90%", 
               end: "bottom 20%",
               toggleActions: "play none none reverse"
             }
@@ -365,7 +344,6 @@
         );
       });
 
-      // Accordion Toggle
       document.querySelectorAll('.accordion-toggle').forEach(button => {
         button.addEventListener('click', () => {
           const content = button.nextElementSibling;
@@ -386,7 +364,6 @@
       height: 100%;
     }
 
-    /* Prose Styling */
     .prose {
       color: var(--text-secondary) !important;
       max-width: none !important;
@@ -435,13 +412,11 @@
       color: #2563eb !important;
     }
 
-    /* Animation Styling */
     .gs-reveal {
       opacity: 0;
       transform: translateY(20px);
     }
 
-    /* Accordion Styling */
     .accordion-item {
       margin-bottom: var(--gap-xs);
     }
@@ -462,7 +437,6 @@
       background-color: #282828 !important;
     }
 
-    /* Responsive Grid */
     .grid_3-col {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -481,7 +455,6 @@
       }
     }
 
-    /* Centering and Spacing */
     .container {
       margin-left: auto;
       margin-right: auto;

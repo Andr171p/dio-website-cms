@@ -3,13 +3,10 @@
 {% block content %}
 <section id="cases-section" class="section pt-10">
     <div class="container ">
-        <!-- Заголовок -->
         <div class="mb-12">
             <h2 class="heading_h2 font-bold">Кейсы</h2>
         </div>
 
-        <!-- ФИЛЬТРЫ — красная полоска -->
-        <!-- ФИЛЬТРЫ: Фон при активе + полоска при ховере -->
 <div class="mb-16">
     <div class="flex flex-wrap justify-center gap-3 sm:gap-5">
         <!-- Все проекты -->
@@ -26,7 +23,6 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
                 </svg>
             {% else %}
-                <!-- Полоска при ховере -->
                 <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-red-900 rounded-full transition-all duration-300 group-hover:w-6"></span>
             {% endif %}
         </a>
@@ -46,7 +42,6 @@
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
                 </svg>
             {% else %}
-                <!-- Полоска при ховере -->
                 <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-red-900 rounded-full transition-all duration-300 group-hover:w-6"></span>
             {% endif %}
         </a>
@@ -54,7 +49,6 @@
     </div>
 </div>
 
-        <!-- КЕЙСЫ — только смена цвета -->
         <div class="space-y-10">
             {% for case in cases %}
             <a href="{% pageurl case %}"
@@ -90,7 +84,6 @@
                         </p>
                     </div>
 
-                    <!-- Стрелка — появляется плавно -->
                     <div class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <svg class="w-9 h-9 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
@@ -138,7 +131,6 @@
     </div>
 </section>
 
-<!-- Стили -->
 <style>
     .line-clamp-2 {
         display: -webkit-box;
@@ -153,7 +145,6 @@
         border-radius: 1.5rem;
     }
 
-    /* Убираем анимацию появления */
     .case-item {
         opacity: 1 !important;
         transform: none !important;
@@ -170,5 +161,4 @@
     }
 </style>
 
-<!-- Убираем JS-анимацию задержки -->
 {% endblock %}

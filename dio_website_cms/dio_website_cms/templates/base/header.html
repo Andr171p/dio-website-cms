@@ -1,6 +1,5 @@
 {% load wagtailcore_tags wagtailimages_tags wagtailsettings_tags static %}
 
-<!-- Основной хедер навигации -->
 <nav class="main-nav">
   <div class="main-nav__container">
     <!-- Логотип -->
@@ -28,7 +27,6 @@
       </a>
     </div>
 
-    <!-- Навигация -->
     <div class="main-nav__menu  ">
       <ul class="nav-list">
         {% for item in settings.base.HeaderSettings.nav_items %}
@@ -42,7 +40,6 @@
               </a>
             {% else %}
               <div class="dropdown">
-                <!-- Кликабельная ссылка для родительского пункта -->
                 <a 
                   href="{% if item.value.page %}{{ item.value.page.url }}{% else %}{{ item.value.external_url|default:'#' }}{% endif %}"
                   class="dropdown__toggle-link heading_h4"
@@ -112,7 +109,6 @@
       </ul>
     </div>
 
-    <!-- Кнопка CTA -->
     <div class="main-nav__actions">
       
       <button onclick="document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });" href="your-link-here" class="animated-btn-tilda">
@@ -242,7 +238,6 @@
 
 
 <style>
-/* From Uiverse.io by MuhammadHasann */ 
 
 /* Отступ для контента под фиксированным хедером */
 body {
@@ -258,7 +253,6 @@ body.no-scroll {
 
 
 <style>
-/* From Uiverse.io by MuhammadHasann */ 
 .button3 {
   position: relative;
   padding: 12px 35px;
@@ -414,7 +408,6 @@ body.no-scroll {
 
 
 <script>
-// Глобальные функции для работы мобильного меню
 function openMobileMenu() {
   const mobileNav = document.querySelector('.mobile-nav');
   const body = document.body;
@@ -431,7 +424,6 @@ function closeMobileMenu() {
     mobileNav.classList.remove('is-open');
     body.classList.remove('no-scroll');
     
-    // Закрываем все выпадающие меню
     const dropdownContents = document.querySelectorAll('.mobile-nav__dropdown-content');
     const dropdownToggles = document.querySelectorAll('.mobile-nav__dropdown-toggle');
     
@@ -441,43 +433,35 @@ function closeMobileMenu() {
 }
 
 function toggleMobileDropdown(button) {
-  // Предотвращаем всплытие события, чтобы не срабатывал клик по ссылке
   event.stopPropagation();
   
   const dropdownContent = button.parentElement.nextElementSibling;
   const isOpen = dropdownContent.classList.contains('is-open');
   
-  // Закрываем все другие открытые dropdown
   const allDropdowns = document.querySelectorAll('.mobile-nav__dropdown-content');
   const allToggles = document.querySelectorAll('.mobile-nav__dropdown-toggle');
   
   allDropdowns.forEach(dropdown => dropdown.classList.remove('is-open'));
   allToggles.forEach(toggle => toggle.classList.remove('is-open'));
   
-  // Открываем/закрываем текущий dropdown
   if (!isOpen) {
     dropdownContent.classList.add('is-open');
     button.classList.add('is-open');
   }
 }
 
-// Инициализация при загрузке DOM
 document.addEventListener('DOMContentLoaded', function() {
-  // Мобильное меню - открытие
   const mobileToggle = document.querySelector('.mobile-menu-toggle');
   if (mobileToggle) {
     mobileToggle.addEventListener('click', openMobileMenu);
   }
   
-  // Мобильное меню - закрытие
   const mobileClose = document.querySelector('.mobile-nav__close');
   if (mobileClose) {
     mobileClose.addEventListener('click', closeMobileMenu);
   }
   
-  // Закрытие мобильного меню при клике на ссылки (уже обрабатывается в onclick)
   
-  // Закрытие мобильного меню при клике вне контента
   const mobileNav = document.querySelector('.mobile-nav');
   if (mobileNav) {
     mobileNav.addEventListener('click', function(e) {

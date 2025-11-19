@@ -136,7 +136,6 @@ class AccordionBlock(StructBlock):
         icon = "list-ul"
         label = "Аккордеон (FAQ/Детали)"
 
-# Блок преимуществ
 class BenefitItemBlock(StructBlock):
     title = CharBlock(required=True, label="Название преимущества")
     description = RichTextBlock(required=True, label="Описание")
@@ -154,7 +153,6 @@ class BenefitsBlock(StructBlock):
         icon = 'plus'
         label = "Блок преимуществ"
 
-# Блок процесса работы
 class ProcessItemBlock(StructBlock):
     title = CharBlock(required=True, label="Название этапа")
     description = RichTextBlock(required=True, label="Описание этапа")
@@ -171,7 +169,6 @@ class ProcessBlock(StructBlock):
         icon = 'cog'
         label = "Процесс работы"
 
-# Блок технологий
 class TechnologyItemBlock(StructBlock):
     name = CharBlock(required=True, label="Название технологии")
     icon = ImageChooserBlock(required=True, label="Логотип/Иконка")
@@ -218,8 +215,8 @@ class SingleServicePage(Page):
         ('what_we_do', WhatWeDoBlock()),
         ('description', DescriptionBlock()), 
         ('results', ResultsBlock()), 
-        ('benefits', BenefitsBlock()),  # вместо card_grid
-        ('process', ProcessBlock()),    # вместо metrics
+        ('benefits', BenefitsBlock()),  
+        ('process', ProcessBlock()),    
         ('technologies', TechnologiesBlock()), 
         ('gallery', GalleryBlock()),
         ('video', VideoBlock()),
@@ -248,7 +245,7 @@ class SingleServicePage(Page):
         index.SearchField("content"),
     ]
 
-    parent_page_types = ["services.ServiceIndexPage"]   # только под каталогом
+    parent_page_types = ["services.ServiceIndexPage"]   
     subpage_types = []
 
     def get_context(self, request):

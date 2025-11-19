@@ -1,9 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-<!-- Секция новостей -->
 <section class="section overflow_hidden is-secondary">
     <div class="container">
-        <!-- Header -->
         <div id="w-node-{{ block.id }}-header" class="header w-node-news-header">
             <h2 class="heading_h2">Последние новости</h2>
             <div class="eyebrow">
@@ -15,7 +13,6 @@
     <article class="bg-dark rounded-xl shadow-md hover:shadow-lg overflow-hidden transition-all duration-500 h-full news-item">
         <a href="{{ news.url }}">
             {% if news.image %}
-                <!-- КАТЕГОРИЯ НА ФОТО -->
                 <div class="absolute top-4 left-4 z-10">
                     <span class="px-2 py-1 rounded-full bg-red-600/50 text-white heading_h5">
                         {{ news.get_category_display }}
@@ -30,7 +27,6 @@
         
         <div class="p-6 flex flex-col h-full">
             <div class="flex justify-between items-center text-gray-400 mb-3 text-sm">
-                <!-- Дата слева -->
                 <span class="flex items-center">
                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -38,7 +34,6 @@
                     {{ news.date|date:"d.m.Y" }}
                 </span>
 
-                <!-- Время чтения справа -->
                 <span class="flex items-center">
                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -47,12 +42,10 @@
                 </span>
             </div>
             
-            <!-- Заголовок -->
             <h3 class="heading_h5  text-white-900 mb-2 ">
                 <a href="{% pageurl news %}" class="hover:text-red-600 transition-colors duration-200">{{ news.headline|truncatewords:15 }}</a>
             </h3>
             
-            <!-- Блок регионов - НОВОЕ -->
             {% if news.regions %}
             <div class="mt-3 pt-3 border-t border-gray-600/30">
                 <div class="flex items-start gap-1.5 text-xs text-gray-400 mb-1">
@@ -70,11 +63,9 @@
         </div>
     </article>
     {% empty %}
-    <!-- пустой state без изменений -->
     {% endfor %}
 </div>
 
-        <!-- Кнопка "Все новости" -->
         {% with news_index=page.get_news_index %}
         {% if news_index %}
         <div class="text-center mt-12 news-item">
@@ -92,26 +83,22 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Register ScrollTrigger plugin
     gsap.registerPlugin(ScrollTrigger);
 
-    // Select all news items
     const newsItems = document.querySelectorAll('.news-item');
 
-    // Animate all news items simultaneously
     gsap.to(newsItems, {
         opacity: 1,
         y: 0,
         duration: 0.8,
         ease: 'power2.out',
         scrollTrigger: {
-            trigger: '.section.is-secondary', // Trigger when section enters viewport
-            start: 'top 80%', // Start animation when section is 80% in view
-            toggleActions: 'play none none none', // Play animation once
+            trigger: '.section.is-secondary', 
+            start: 'top 80%',
+            toggleActions: 'play none none none', 
         }
     });
 
-    // Lazy load images (retained from original code)
     const images = document.querySelectorAll('img[loading="lazy"]');
     const imageObserver = new IntersectionObserver((items, observer) => {
         items.forEach((item) => {

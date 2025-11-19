@@ -1,20 +1,16 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-<!-- Hero с чатом — СТЕКЛЯННЫЙ КАК В MAC -->
 <section id="hero-chat" class="hero-chat">
   <div class="container container_chat">
-    <!-- Фоновые фигуры для стеклянного эффекта -->
     <div class="bg-shape shape-1"></div>
     <div class="bg-shape shape-2"></div>
     <div class="bg-shape shape-3"></div>
 
-    <!-- Заголовок -->
     <div class="hero-text text-center">
       <h1 class="heading_h1">AI-Алёша</h1>
       <p class="hero-subtitle heading_h4">Ваш AI-помощник Алёша всегда на связи. Задайте вопрос и получите быстрый ответ прямо здесь.</p>
     </div>
 
-    <!-- Чат -->
     <div class="chat-widget" id="chatWidget">
       <div class="chat-header" id="chatHeader">
         <h2 class="heading_h2">Алёша</h2>
@@ -25,7 +21,6 @@
       <div class="chat-messages-container" id="chatMessagesContainer">
         <div class="chat-messages" id="chatMessages"></div>
 
-        <!-- Начальное поле ввода -->
         <div class="initial-input-container" id="initialInputContainer">
           <input class="heading_h5" type="text" id="initialChatInput" placeholder="Задайте свой вопрос..." aria-label="Введите первый вопрос">
           <button id="initialSendButton" aria-label="Отправить">
@@ -36,7 +31,6 @@
         </div>
       </div>
 
-      <!-- Нижнее поле ввода -->
       <div class="chat-input-container hidden" id="chatInputContainer">
         <input type="text" id="chatInput" placeholder="С чем вам помочь?" aria-label="Введите сообщение">
         <button id="sendButton" aria-label="Отправить">
@@ -50,7 +44,6 @@
 </section>
 
 <style>
-/* === КОНТЕЙНЕР === */
   .container_chat {
     max-width: 1700px;
     width: 100%;
@@ -63,23 +56,19 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-  // Страховка: сделать чат видимым и центрированным
   const chatWidget = document.getElementById('chatWidget');
   if (chatWidget) {
     chatWidget.style.opacity = '1';
     chatWidget.style.visibility = 'visible';
   }
 
-  // Проверка загрузки GSAP
   if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
     console.error('GSAP или ScrollTrigger не загружены');
     return;
   }
 
-  // Инициализация GSAP и ScrollTrigger
   gsap.registerPlugin(ScrollTrigger);
 
-  // Анимация чат-виджета
   gsap.fromTo(
     "#chatWidget",
     { opacity: 0, y: 80, scale: 0.9 },
@@ -102,7 +91,6 @@
     }
   );
 
-  // Анимация заголовка
   gsap.fromTo(
     "#chatHeader",
     { opacity: 0, y: -20 },
@@ -124,7 +112,6 @@
     }
   );
 
-  // Элементы чата
   const initialChatInput = document.getElementById('initialChatInput');
   const chatInput = document.getElementById('chatInput');
   const initialSendButton = document.getElementById('initialSendButton');
@@ -136,18 +123,15 @@
   const clearChatButton = document.getElementById('clearChatButton');
   const placeholders = ["Задайте свой вопрос...", "Опишите свою задачу...", "Расскажите, чем помочь...", "Введите ваш запрос..."];
 
-  // Генерация или получение уникального chatId
   let chatId = localStorage.getItem('chatId');
   if (!chatId) {
     chatId = 'chat_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('chatId', chatId);
   }
 
-  // Загрузка истории из localStorage
   let chatHistory = JSON.parse(localStorage.getItem(`chatHistory_${chatId}`)) || [];
   chatHistory.forEach(message => addMessage(message.role, message.text));
 
-  // Проверка наличия истории и скрытие начального окна
   let currentPlaceholderIndex = 0;
   if (chatHistory.length > 0) {
     initialInputContainer.classList.add('hidden');
@@ -168,7 +152,6 @@
     chatInput.placeholder = placeholders[currentPlaceholderIndex];
   }
 
-  // Показ подсказки через 2 секунды
   const chatHint = document.querySelector('.chat-hint');
   setTimeout(() => {
     if (chatHint) {
@@ -181,7 +164,6 @@
     }
   }, 2);
 
-  // Логика смены placeholder
   let isTyping = false;
 
   function typePlaceholder(text, inputElement, callback) {
@@ -214,7 +196,6 @@
   }
   updatePlaceholder();
 
-  // Логика чата
   function scrollToBottom() {
     requestAnimationFrame(() => {
       if (container) {
@@ -339,24 +320,20 @@
     sendMessageToAPI(chatId, text);
   }
 
-  // Обработчики для начального поля
   if (initialSendButton && initialChatInput) {
     initialSendButton.addEventListener('click', () => sendMessage(initialChatInput, true));
     initialChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(initialChatInput, true); });
   }
 
-  // Обработчики для стандартного поля
   if (sendButton && chatInput) {
     sendButton.addEventListener('click', () => sendMessage(chatInput));
     chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(chatInput); });
   }
 
-  // Обработчик для очистки чата
   if (clearChatButton) {
     clearChatButton.addEventListener('click', clearChat);
   }
 
-  // Адаптация высоты для мобильных устройств
   function adjustChatHeight() {
     if (window.innerWidth <= 767) {
       const chatWidget = document.getElementById('chatWidget');
@@ -366,18 +343,16 @@
     }
   }
 
-  // Вызов при загрузке и изменении размера окна
   adjustChatHeight();
   window.addEventListener('resize', adjustChatHeight);
 
-  // Функция очистки чата
   function clearChat() {
-    chatMessages.innerHTML = ''; // Очищаем сообщения на экране
-    chatHistory = []; // Очищаем историю
-    localStorage.removeItem(`chatHistory_${chatId}`); // Удаляем историю из localStorage
-    initialInputContainer.classList.remove('hidden'); // Показываем начальное поле
-    chatInputContainer.classList.add('hidden'); // Скрываем стандартное поле
-    chatInput.value = ''; // Очищаем поле ввода
+    chatMessages.innerHTML = ''; 
+    chatHistory = []; 
+    localStorage.removeItem(`chatHistory_${chatId}`); 
+    initialInputContainer.classList.remove('hidden'); 
+    chatInputContainer.classList.add('hidden'); 
+    chatInput.value = ''; 
     gsap.fromTo(
       initialInputContainer,
       { opacity: 0, y: 20 },

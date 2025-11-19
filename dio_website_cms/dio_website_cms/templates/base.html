@@ -169,19 +169,15 @@
             theme = t;
             localStorage.setItem('theme', t);
 
-            // Меняем CSS-файл
             style.href = t === 'dark' 
                 ? "{% static 'css/theme-light.css' %}?v=1.5 " 
                 : "{% static 'css/theme-dark.css' %}?v=1.5 ";
 
-            // КЛЮЧЕВОЕ: добавляем/удаляем класс `dark`
             body.classList.toggle('dark', t === 'dark');
 
-            // Иконки
             light.classList.toggle('hidden', t === 'dark');
             dark.classList.toggle('hidden', t === 'light');
 
-            // Кнопка
             toggle.classList.remove('bg-gray-200', 'bg-gray-800', 'text-black', 'text-white');
             if (t === 'dark') {
                 toggle.classList.add('bg-gray-200', 'text-black');
@@ -205,29 +201,26 @@
         .theme-light #theme-toggle { @apply bg-gray-800 text-white; }
         .theme-new-year { background: linear-gradient(to bottom, #e0f7fa, #b0e0e6); }
         .theme-autumn { background: linear-gradient(to bottom, #f5e8c7, #8b4513); }
-        /* Фикс для autofill в Chrome/Edge */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-text-fill-color: inherit !important; /* Твой цвет текста */
-    font-family: inherit !important; /* Твой шрифт (например, 'Roboto', sans-serif) */
-    font-size: inherit !important; /* Твой размер шрифта */
-    font-weight: inherit !important; /* Толщина шрифта */
-    line-height: inherit !important; /* Высота строки */
-    border: inherit !important; /* Если меняется граница */
-    background-color: transparent !important; /* Фон как у тебя */
-    transition: background-color 5000s ease-in-out 0s; /* Долгая анимация, чтобы не мигало */
+    -webkit-text-fill-color: inherit !important; 
+    font-family: inherit !important; 
+    font-size: inherit !important; 
+    font-weight: inherit !important; 
+    line-height: inherit !important; 
+    border: inherit !important; 
+    background-color: transparent !important; 
+    transition: background-color 5000s ease-in-out 0s; 
 }
 
-/* Анимация для "принудительного" восстановления стилей */
 input:-webkit-autofill::first-line {
     -webkit-text-fill-color: inherit;
     font-family: inherit;
     font-size: inherit;
 }
 
-/* Если нужно для textarea или select */
 textarea:-webkit-autofill,
 select:-webkit-autofill {
     -webkit-text-fill-color: inherit !important;

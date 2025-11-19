@@ -3,20 +3,16 @@
 
 {% block content %}
 <article class="w-full">
-    <!-- Hero Section - Более сдержанный -->
     <section class="section pb-2">
         <div class="container mx-auto max-w-5xl px-4 lg:px-8">
-            <!-- Хлебные крошки -->
             
 
-            <!-- Заголовок и мета-информация -->
             <div class="mb-6">
                 
                 <h1 class="text-5xl lg:text-5xl  mb-4 leading-tight">
                     {{ page.headline }}
                 </h1>
                 
-                <!-- Мета-информация -->
                 <div class="flex flex-wrap items-center gap-4 text-gray-600 text-sm">
                     <div class="flex items-center">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +37,6 @@
                 </div>
             </div>
 
-            <!-- Главное изображение -->
             {% if page.image %}
                 {% image page.image width-800 height-450 as article_image %}
                 <div class="mb-8 rounded-xl overflow-hidden shadow-lg">
@@ -50,7 +45,6 @@
                 </div>
             {% endif %}
 
-            <!-- Вступление -->
             {% if page.intro %}
                 <div class=" prose-lg max-w-none mb-8">
                     <p class="text-xl heading_h5 leading-relaxed font-medium">
@@ -61,7 +55,6 @@
         </div>
     </section>
 
-    <!-- Main Content -->
     <section class="section  pt-2">
         <div class="container mx-auto max-w-5xl px-4 lg:px-8">
             <div class=" rich-content prose news-content">
@@ -96,11 +89,9 @@
     </section>
     {% endif %}
 
-       <!-- Other News -->
     {% if other_news %}
 <section class="section pt-16 ">
     <div class="container">
-        <!-- Заголовок -->
         <div class="flex items-center justify-between mb-12">
                 <h2 class="heading_h2 text-3xl lg:text-4xl mb-0">Другие новости</h2>
                 <a href="/news" class="button is-secondary">
@@ -111,13 +102,11 @@
                 </a>
             </div>
 
-        <!-- Сетка новостей — ТОЧНО КАК ОСНОВНЫЕ -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for news_item in other_news %}
             <a href="{% pageurl news_item %}" class="group block rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 ">
                 <div class="relative h-48 overflow-hidden bg-gray-50">
                     {% if news_item.image %}
-                        <!-- Категория на фото -->
                         <div class="absolute top-3 left-3 z-10">
                             <span class="px-2 py-1 rounded-full bg-red-600/50 text-white heading_h5 backdrop-blur-sm">
                                 {{ news_item.get_category_display }}
@@ -135,7 +124,6 @@
                 </div>
                 <div class="heading_h5 p-4">
                     <div class="flex justify-between items-center  mb-3 text-sm">
-                        <!-- Дата слева -->
                         <span class="flex items-center">
                             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -143,7 +131,6 @@
                             {{ news_item.date|date:"d.m.Y" }}
                         </span>
 
-                        <!-- Время чтения справа -->
                         <span class="flex items-center">
                             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -217,7 +204,6 @@
 </div>
 
 <style>
-/* Улучшенные стили для новостного контента */
 .prose {
     line-height: 1.75;
 }
@@ -289,7 +275,7 @@
 
 .aspect-w-16.aspect-h-9 {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    padding-bottom: 56.25%; 
 }
 
 .aspect-w-16.aspect-h-9 > * {
@@ -309,7 +295,6 @@ let currentFullscreenIndex = 0;
 const galleryItems = [];
 let touchStartX = 0;
 
-// Инициализация галереи
 document.addEventListener('DOMContentLoaded', function() {
     {% if page.gallery %}
         {% for item in page.gallery %}
@@ -324,7 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initCarousel();
 });
 
-// Карусель с индикаторами
 function initCarousel() {
     const carousel = document.querySelector('.gallery-carousel .flex');
     const indicators = document.querySelectorAll('.indicator-dot');
@@ -332,7 +316,7 @@ function initCarousel() {
     if (carousel && indicators.length > 0) {
         carousel.addEventListener('scroll', () => {
             const scrollPos = carousel.scrollLeft;
-            const itemWidth = carousel.querySelector('div').offsetWidth + 24; // width + gap
+            const itemWidth = carousel.querySelector('div').offsetWidth + 24; 
             const activeIndex = Math.round(scrollPos / itemWidth);
             
             indicators.forEach((dot, index) => {
@@ -342,7 +326,6 @@ function initCarousel() {
     }
 }
 
-// Полноэкранный режим
 function openFullscreenModal(index) {
     currentFullscreenIndex = index;
     updateFullscreenModal();
@@ -393,7 +376,6 @@ function updateThumbnails() {
     });
 }
 
-// Свайпы для мобильных
 document.getElementById('fullscreenModal').addEventListener('touchstart', function(e) {
     touchStartX = e.changedTouches[0].screenX;
 });
@@ -412,7 +394,6 @@ document.getElementById('fullscreenModal').addEventListener('touchend', function
     }
 });
 
-// Управление клавиатурой
 document.addEventListener('keydown', (e) => {
     if (!document.getElementById('fullscreenModal').classList.contains('hidden')) {
         if (e.key === 'Escape') closeFullscreenModal();

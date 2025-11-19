@@ -4,9 +4,7 @@
 {% block content %}
 <article class="case-study font-sans">
 
-    <!-- HERO -->
     <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden hero-section">
-        <!-- Фоновое изображение -->
         {% if page.main_image %}
             {% image page.main_image original as bg_image %}
             <div class="absolute inset-0 z-0">
@@ -19,7 +17,6 @@
             </div>
         {% endif %}
         
-        <!-- Контент поверх фона -->
         <div class="container">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                 <div class="relative z-10 space-y-6">
@@ -43,12 +40,10 @@
         </div>
     </section>
 
-    <!-- СЕКЦИИ -->
     {% for block in page.content %}
         <section class="section py-16 lg:py-24 case-section">
             <div class="container">
 
-                <!-- МАКЕТ 1: СЛЕВА ЗАГОЛОВОК, СПРАВА КОНТЕНТ -->
                 {% if block.block_type in "challenge solution technologies metrics" %}
                     <div class="grid lg:grid-cols-3 gap-12 items-start">
                         <h2 class="text-3xl lg:text-4xl font-bold leading-tight section-title">
@@ -91,7 +86,6 @@
                         </div>
                     </div>
 
-                <!-- МАКЕТ 2: ОПИСАНИЕ И РЕЗУЛЬТАТЫ -->
                 {% else %}
                     <div>
                         <h2 class="text-3xl lg:text-4xl font-bold mb-8 text-center lg:text-left section-title">
@@ -191,7 +185,6 @@
   color: #ffffff !important;
 }
 
-/* Защита от .dark */
 body.dark .case-item svg {
   color: #ffffff !important;
 }
@@ -222,7 +215,6 @@ body.dark .other-cases-section .case-item h3 { color: #dc2626; }
 .section-title, .rich-content, .case-item, .case-item * { color: inherit; }
 </style>
 
-<!-- === RICHTEXT СТИЛИ === -->
 <style>
 .rich-content {
     font-size: 1.125rem;

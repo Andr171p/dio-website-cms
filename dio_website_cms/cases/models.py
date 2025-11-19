@@ -6,7 +6,6 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.search import index
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-# Константы для отраслей
 INDUSTRY_CHOICES = [
     ("oil-gas", "Нефтегаз"),
     ("manufacturing", "Производство"),
@@ -48,7 +47,6 @@ class CaseStudyPage(Page):
         verbose_name="Основное изображение",
     )
 
-    # УПРОЩЁННЫЙ StreamField — только RichText
     content = StreamField([
         ('description', blocks.RichTextBlock(
             label="Описание проекта",
@@ -80,7 +78,6 @@ class CaseStudyPage(Page):
         'hr', 'document-link',
         'superscript', 'strikethrough']
         )),
-        # В models.py — замени блок results на ЭТО:
 
         ('results', blocks.ListBlock(
             blocks.StructBlock([

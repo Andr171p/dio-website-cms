@@ -1,9 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-<!-- Секция кейсов -->
 <section id="cases-section" class="section pt-10">
     <div class="container">
-        <!-- Заголовок -->
         <div class="header is-align-right mb-12">
             <div class="eyebrow">Успешные проекты</div>
             <h2 class="heading_h2 max-width_large">Наши кейсы</h2>
@@ -18,7 +16,6 @@
                   bg-[#151515] overflow-hidden cursor-pointer
                   focus-visible:outline focus-visible:outline-4 focus-visible:outline-red-800/30 focus-visible:outline-offset-4">
             <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
-                <!-- Логотип клиента -->
                 <div class="flex-shrink-0 w-32 h-32 flex items-center justify-center rounded-2xl overflow-hidden">
                     {% if case.main_image %}
                         {% image case.customer_logo width-140 height-140 as case_img %}
@@ -31,25 +28,20 @@
                     {% endif %}
                 </div>
 
-                <!-- Контент -->
                 <div class="flex-1 min-w-0 text-left">
-                    <!-- Отрасль -->
                     <span class="text-white inline-block px-4 py-1.5 rounded-full mb-3 heading_h5 font-semibold bg-red-800">
                         {{ case.get_industry_display }}
                     </span>
 
-                    <!-- Заголовок -->
                     <h3 class="heading_h3 font-bold text-xl leading-tight group-hover:text-red-800 transition-colors duration-300">
                         {{ case.title }}
                     </h3>
 
-                    <!-- Описание -->
                     <p class="heading_h5 line-clamp-2 leading-relaxed mt-2 text-base">
                         {{ case.intro|striptags|truncatewords:28 }}
                     </p>
                 </div>
 
-                <!-- Стрелка при наведении -->
                 <div class="hidden md:flex opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <svg class="w-9 h-9 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
@@ -65,7 +57,6 @@
     {% endfor %}
 </div>
 
-        <!-- Кнопка "Все кейсы" -->
         <div class="text-center mt-12">
             <a href="/cases/" class="button is-secondary w-button px-6 py-3 rounded-xl border border-white/50 text-white font-medium hover:bg-white hover:text-red-900 inline-flex items-center">
                 Все кейсы
@@ -77,7 +68,6 @@
     </div>
 </section>
 
-<!-- Стили -->
 <style>
     .line-clamp-2 {
         display: -webkit-box;

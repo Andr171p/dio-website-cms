@@ -5,7 +5,6 @@
 
 
 {% block content %}
-<!-- Hero секция -->
 {% if page.header_section %}
     {% for block in page.header_section %}
         {% if block.block_type == 'header' %}
@@ -153,7 +152,6 @@
         rect.setAttribute('stroke-dashoffset', '0');
       });
 
-      // Поддержка тач-устройств
       btn.addEventListener('touchstart', () => {
         rect.setAttribute('stroke-width', '4');
         rect.setAttribute('stroke-dasharray', '80 410');
@@ -163,7 +161,6 @@
   });
 </script>
 
-<!-- Остальная часть контента -->
 {% include "home/chat.html" %}
 
 

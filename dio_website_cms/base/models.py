@@ -2,7 +2,7 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel, PublishingPanel
 from wagtail.contrib.settings.models import BaseGenericSetting, register_setting
 from wagtail import blocks
 from wagtail.fields import StreamField
-from wagtail.blocks import  PageChooserBlock, CharBlock, URLBlock, TextBlock, StructBlock, ListBlock, ChoiceBlock, BooleanBlock
+from wagtail.blocks import  PageChooserBlock, CharBlock, URLBlock, StructBlock, ListBlock, ChoiceBlock
 from wagtail.models import DraftStateMixin, RevisionMixin, PreviewableMixin,Page
 from django.contrib.auth.models import User
 from django import forms 
@@ -17,8 +17,6 @@ from wagtail.blocks import (
     ChoiceBlock,
     StructBlock,
     ListBlock,
-    TextBlock,
-    BooleanBlock,
     PageChooserBlock,
     URLBlock,
 )

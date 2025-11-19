@@ -2,13 +2,12 @@
 from django.db import models
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import StreamField, RichTextField
+from wagtail.fields import StreamField
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.search import index
 from wagtail.blocks import (
-    CharBlock, RichTextBlock, StructBlock, ListBlock, PageChooserBlock, 
-    ChoiceBlock, URLBlock, StreamBlock
+    CharBlock, RichTextBlock, StructBlock, ListBlock, 
+    ChoiceBlock
 )
 from wagtail.embeds.blocks import EmbedBlock
 
@@ -57,7 +56,6 @@ class OfficeBlock(StructBlock):
         icon = "home"
         label = "Офис"
 
-# Блоки из услуг для единообразия
 class WhatWeDoBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок")
     description = RichTextBlock(required=True, label="Описание")
@@ -172,7 +170,6 @@ class CareerPage(Page):
 class CareerVacancyPage(Page):
     template = "career/career_vacancy_page.html"
 
-    # === ОСНОВНЫЕ ПОЛЯ ===
     department = models.CharField(max_length=100, default="Разработка")
     salary = models.CharField(max_length=100, blank=True, help_text="Например: от 150 000 ₽")
     location = models.CharField(max_length=100, default="Тюмень")
@@ -182,12 +179,10 @@ class CareerVacancyPage(Page):
         default="office"
     )
     
-    # === HERO ===
     hero_image = models.ForeignKey(
         "wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name='+'
     )
 
-    # === КОНТЕНТ: Упрощенный StreamField ===
     content = StreamField([
         ("text_section", TextBlock()),
         ("what_we_do", WhatWeDoBlock()),
@@ -198,7 +193,6 @@ class CareerVacancyPage(Page):
         ("accordion", AccordionBlock()),
     ], use_json_field=True, blank=True)
 
-    # === ПАНЕЛИ ===
     content_panels = Page.content_panels + [
         MultiFieldPanel([
             FieldPanel("title"),

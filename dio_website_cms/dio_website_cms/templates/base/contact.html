@@ -5,13 +5,11 @@
 <section class="section is-secondary" id="contact-section">
     <div class="container">
         <div class="w-layout-grid grid_2-col tablet-1-col gap-large">
-            <!-- Левая колонка - Контактная информация -->
             <div class="card_body_small heading_h4">
                 <div class="eyebrow heading_h5">Контактная информация</div>
                 <h2 class="heading_h3 margin-bottom_medium">{{ contact_settings.base.ContactSettings.section_title }}</h2>
                 <div class="heading_h5">{{ contact_settings.base.ContactSettings.section_description }}</div>
 
-                <!-- Контактные данные в виде списка -->
                 <div class="contact-list heading_h3 ">
                     {% if contact_settings.base.ContactSettings.primary_phone or contact_settings.base.ContactSettings.secondary_phone %}
                     <div class="contact-item py-5 py-5" style="display: flex; align-items: center; gap: 10px;">
@@ -81,7 +79,6 @@
                 </div>
             </div>
 
-            <!-- Правая колонка - Форма -->
             <div class="card_body_small heading_h5">
                 <div class="header margin-bottom_medium">
                     <div class="heading_h5 eyebrow">Есть вопросы?</div>
@@ -96,10 +93,8 @@
     </div>
 </section>
 
-<!-- JavaScript для генерации капчи -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Генерация простой математической капчи
     const num1 = Math.floor(Math.random() * 10) + 1;
     const num2 = Math.floor(Math.random() * 10) + 1;
     const answer = num1 + num2;
@@ -107,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('captcha-question').textContent = `${num1} + ${num2}`;
     document.getElementById('captcha-answer').value = answer;
     
-    // Клиентская валидация (дополнительно к серверной)
     const form = document.getElementById('wf-form-contact-form');
     form.addEventListener('submit', function(e) {
         const userAnswer = parseInt(document.getElementById('captcha').value);
@@ -117,8 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (userAnswer !== correctAnswer) {
             e.preventDefault();
             alert('Неверный ответ на капчу. Попробуйте снова.');
-            // Перегенерация капчи
-            location.reload(); // Простой способ, или реализовать перегенерацию
+            location.reload(); 
         }
         if (!agreement) {
             e.preventDefault();
@@ -128,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- Дополнительные стили для новых элементов (добавьте в ваш CSS) -->
 <style>
 .checkbox-field {
     display: flex;

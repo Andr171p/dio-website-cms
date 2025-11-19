@@ -11,7 +11,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from wagtail.blocks import URLBlock
 from wagtail.embeds.blocks import EmbedBlock
 
-# Константы для категорий
 NEWS_CATEGORY_CHOICES = [
     ("company", "Новости компании"),
     ("tech", "Технологии"),
@@ -63,7 +62,7 @@ class NewsPage(Page):
             label="Видео (автовставка)"
         )),
     ], blank=True, use_json_field=True, verbose_name="Медиа контент")
-    
+
     content = RichTextField("Содержание", blank=True)
     gallery = StreamField([
         ('image', blocks.StructBlock([

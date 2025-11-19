@@ -3,7 +3,6 @@
 <section class="section is-secondary pt-1 pb-10  ">
     <div class="container">
         <div class="margin-top_large">
-            <!-- Header -->
             <div class="divider margin-bottom_medium text-center">
                 <h2 class="heading_h4">Наши достижения в цифрах</h2>
                 <p class="paragraph_large text-color_secondary ">
@@ -11,32 +10,26 @@
                 </p>
             </div>
 
-            <!-- Stats Grid (Основные достижения) -->
             <ul role="list" class="grid_4-col tablet-2-col mobile-1-col gap-medium w-list-unstyled">
                 {% for achievement in main_achievements %}
                 <li class="stat-item text-center">
                     
 
-                    <!-- Number -->
                     <div class="heading_h2 text-color_primary margin-bottom_xsmall counter-element" 
                          data-value="{{ achievement.value.value }}" data-suffix="{{ achievement.value.suffix }}">
                         0{{ achievement.value.suffix }}
                     </div>
 
-                    <!-- Label -->
                     <h3 class="heading_h5 margin-bottom_xsmall">
                         {{ achievement.value.label }}
                     </h3>
 
-                    <!-- Description -->
-                    <!-- <p class="paragraph_small text-color_secondary">{{ achievement.value.description|richtext }}</p> -->
 
                     
                 </li>
                 {% endfor %}
             </ul>
 
-            <!-- Additional Achievements -->
             {% if additional_achievements %}
             <div class="margin-top_xlarge padding-top_large border-top_light">
                 <ul role="list" class="grid_3-col tablet-1-col gap-medium w-list-unstyled">
@@ -76,7 +69,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Функция для анимации счетчиков
     function animateCounter(element, start, end, duration, suffix = '') {
         let startTime = null;
         
@@ -96,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(updateCounter);
     }
 
-    // Функция для проверки видимости элемента
     function isElementInViewport(el) {
         const rect = el.getBoundingClientRect();
         return (
@@ -105,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
         );
     }
 
-    // Запуск анимации при скролле
     function handleScroll() {
         const counters = document.querySelectorAll('.counter-element');
         counters.forEach(counter => {
@@ -118,9 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Проверяем при загрузке и при скролле
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Проверить сразу при загрузке
+    handleScroll(); 
 });
 </script>
 

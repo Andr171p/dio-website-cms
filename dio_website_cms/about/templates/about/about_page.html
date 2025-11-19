@@ -5,7 +5,7 @@
 <article class="w-full">
     {% for block in page.content %}
         {% if block.block_type == 'hero' %}
-        <!-- Hero Section -->
+
         <section class="section is-secondary pt-5 relative min-h-[700px] flex items-center overflow-hidden">
             {% if block.value.image %}
                 {% image block.value.image original as bg_image %}
@@ -40,7 +40,6 @@
         </section>
 
         {% elif block.block_type == 'text' %}
-        <!-- Text Section -->
         <section class="section">
             <div class="container mx-auto px-4 lg:px-8">
                 <div class="prose gs-reveal rich-content">
@@ -50,7 +49,6 @@
         </section>
 
         {% elif block.block_type == 'description' %}
-        <!-- Description Block -->
         <section class="section">
             <div class="container mx-auto px-4 lg:px-8">
                 <h2 class="text-3xl lg:text-4xl font-bold mb-8 text-center lg:text-left section-title heading_h2 gs-reveal">
@@ -63,7 +61,6 @@
         </section>
 
         {% elif block.block_type == 'results' %}
-        <!-- Results Block -->
         <section class="section is-secondary">
             <div class="container mx-auto px-4 lg:px-8">
                 <h2 class="text-3xl lg:text-4xl font-bold mb-8 text-center lg:text-left section-title heading_h2 gs-reveal">
@@ -89,7 +86,6 @@
         </section>
 
         {% elif block.block_type == 'what_we_do' %}
-        <!-- What We Do Block with Image Position -->
         <section class="section is-secondary">
             <div class="container mx-auto px-4 lg:px-8">
                 <div class="flex flex-col lg:flex-row items-center gap-12 {% if block.value.image_position == 'right' %}lg:flex-row-reverse{% endif %}">
@@ -109,7 +105,6 @@
         </section>
 
         {% elif block.block_type == 'benefits' %}
-        <!-- Benefits Block -->
         <section class="section">
             <div class="container mx-auto px-4 lg:px-8">
                 <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
@@ -136,7 +131,6 @@
         </section>
 
         {% elif block.block_type == 'technologies' %}
-        <!-- Technologies Block -->
         <section class="section">
             <div class="container mx-auto px-4 lg:px-8">
                 <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
@@ -160,7 +154,6 @@
         </section>
 
         {% elif block.block_type == 'process' %}
-        <!-- Process Block -->
         <section class="section is-secondary">
             <div class="container mx-auto px-4 lg:px-8">
                 <h2 class="heading_h2 text-4xl lg:text-5xl font-black text-center mb-16 gs-reveal">
@@ -191,7 +184,6 @@
         </section>
 
         {% elif block.block_type == 'gallery' %}
-        <!-- Gallery Block -->
         <section class="section py-20">
             <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
                 {% if block.value.title %}
@@ -229,7 +221,6 @@
         </section>
 
         {% elif block.block_type == 'video' %}
-        <!-- Video Block -->
         <section class="section is-secondary">
             <div class="container mx-auto px-4 lg:px-8">
                 {% if block.value.title %}
@@ -256,7 +247,6 @@
         </section>
 
         {% elif block.block_type == 'accordion' %}
-        <!-- Accordion Block -->
         <section class="section py-24">
             <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
                 {% if block.value.title %}
@@ -297,7 +287,6 @@
         </section>
 
         {% elif block.block_type == 'cta' %}
-        <!-- CTA Block -->
         <section class="section is-accent-primary">
             <div class="container mx-auto px-4 lg:px-8">
                 <div class="header is-align-center">
@@ -345,11 +334,9 @@
     </div>
   </div>
 </div>
-<!-- Подключаем JavaScript для анимаций -->
 
 <script>
   
-  // === GSAP + SCROLL REVEAL ===
   document.addEventListener('DOMContentLoaded', function() {
     gsap.registerPlugin(ScrollTrigger);
     gsap.utils.toArray('.gs-reveal').forEach(element => {
@@ -360,7 +347,6 @@
     });
   });
 
-  // === ГАЛЕРЕЯ 2025 ===
   let currentIndex = 0;
   let galleryImages = [];
 
@@ -438,7 +424,7 @@
       container.appendChild(thumb);
     });
   }
-// === ULTIMATE MINIMAL ACCORDION 2025 — МНОЖЕСТВЕННОЕ ОТКРЫТИЕ ===
+// ACCORDION 
 document.querySelectorAll('.accordion-ultimate').forEach(item => {
   const button = item.querySelector('button');
   const content = item.querySelector('.accordion-content');
@@ -484,10 +470,8 @@ document.querySelectorAll('.accordion-ultimate').forEach(item => {
   });
 });
 
-  // === ИНИЦИАЛИЗАЦИЯ ===
   document.addEventListener('DOMContentLoaded', initGallery);
 
-  // Клавиатура + свайпы
   document.addEventListener('keydown', e => {
     if (document.getElementById('fullscreenModal').classList.contains('hidden')) return;
     if (e.key === 'Escape') closeModal();

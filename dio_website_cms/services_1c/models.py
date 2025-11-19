@@ -12,17 +12,15 @@ from wagtail.embeds.blocks import EmbedBlock
 from wagtail import blocks
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-# Константы для категорий услуг
 SERVICE_CATEGORY_CHOICES = [
     ("consulting", "Консультации"),
     ("development", "Разработка"),
     ("design", "Дизайн"),
     ("support", "Поддержка"),
     ("training", "Обучение"),
-    ("1c_services", "1С-сервисы"),  # Добавлена категория для 1С-сервисов
+    ("1c_services", "1С-сервисы"),  
 ]
 
-# Блок для Hero (общий)
 class HeroBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок Hero")
     subtitle = CharBlock(required=True, label="Подзаголовок Hero")
@@ -34,7 +32,6 @@ class HeroBlock(StructBlock):
         icon = "image"
         label = "Hero"
 
-# Блок для текста (общий)
 class TextBlock(StructBlock):
     content = RichTextBlock(
         features=['h2', 'h3', 'bold', 'italic', 'link', 'ol', 'ul', 'blockquote'],
@@ -45,7 +42,6 @@ class TextBlock(StructBlock):
         icon = "doc-full"
         label = "Текстовая секция"
 
-# Блок для "Что мы делаем" (общий)
 class WhatWeDoBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок")
     description = RichTextBlock(required=True, label="Описание")
@@ -55,7 +51,6 @@ class WhatWeDoBlock(StructBlock):
         icon = "edit"
         label = "Что мы делаем"
 
-# Блок для карточки с изображением (общий)
 class ImageCardBlock(StructBlock):
     image = ImageChooserBlock(required=True, label="Изображение")
     title = CharBlock(required=True, label="Заголовок")
@@ -67,7 +62,6 @@ class ImageCardBlock(StructBlock):
         icon = "image"
         label = "Карточка с изображением"
 
-# Элемент для сетки карточек (общий)
 class CardItemBlock(StructBlock):
     title = CharBlock(required=True, label="Название")
     description = RichTextBlock(required=False, label="Описание")
@@ -78,7 +72,6 @@ class CardItemBlock(StructBlock):
         icon = "pick"
         label = "Элемент карточки"
 
-# Универсальный блок для сетки карточек (общий)
 class CardGridBlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок сетки")
     grid_type = ChoiceBlock(choices=[
@@ -93,7 +86,6 @@ class CardGridBlock(StructBlock):
         icon = "folder-open"
         label = "Универсальная сетка карточек"
 
-# Блок для метрик доверия (общий)
 class MetricItemBlock(StructBlock):
     value = CharBlock(required=True, label="Значение (например, '10+', '100')")
     label = CharBlock(required=True, label="Описание (например, 'Лет на рынке')")
@@ -111,7 +103,6 @@ class MetricsBlock(StructBlock):
         icon = "site"
         label = "Метрики доверия"
 
-# Блок для галереи изображений (общий)
 class GalleryBlock(StructBlock):
     title = CharBlock(required=False, label="Заголовок галереи")
     images = ListBlock(ImageChooserBlock(), label="Изображения")
@@ -120,7 +111,6 @@ class GalleryBlock(StructBlock):
         icon = "image"
         label = "Галерея изображений"
 
-# Блок для видео (общий)
 class VideoBlock(StructBlock):
     title = CharBlock(required=False, label="Заголовок видео")
     video = EmbedBlock(required=True, label="Встраиваемое видео (YouTube, Vimeo и т.д.)")
@@ -129,7 +119,6 @@ class VideoBlock(StructBlock):
         icon = "media"
         label = "Видео"
 
-# Блок для аккордеона (FAQ или детальные секции) (общий)
 class AccordionItemBlock(StructBlock):
     question = CharBlock(required=True, label="Вопрос/Заголовок")
     answer = RichTextBlock(required=True, label="Ответ/Описание")
@@ -146,7 +135,6 @@ class AccordionBlock(StructBlock):
         icon = "list-ul"
         label = "Аккордеон (FAQ/Детали)"
 
-# Блок для CTA (общий)
 class CTABlock(StructBlock):
     title = CharBlock(required=True, label="Заголовок CTA")
     description = RichTextBlock(required=True, label="Описание CTA")
@@ -157,7 +145,6 @@ class CTABlock(StructBlock):
         icon = "plus"
         label = "CTA"
 
-# Специфический блок для поддерживаемых конфигураций 1С
 class SupportedConfigurationItemBlock(StructBlock):
     name = CharBlock(required=True, label="Название конфигурации")
     version = CharBlock(required=False, label="Версия/Редакция")
@@ -179,7 +166,6 @@ class SupportedConfigurationsBlock(StructBlock):
         icon = "list-ul"
         label = "Поддерживаемые конфигурации 1С"
 
-# Специфический блок для системных требований 1С
 class SystemRequirementItemBlock(StructBlock):
     category = CharBlock(required=True, label="Категория (например, Платформа, ОС)")
     requirement = RichTextBlock(required=True, label="Требования")
@@ -196,7 +182,6 @@ class SystemRequirementsBlock(StructBlock):
         icon = "cogs"
         label = "Системные требования"
 
-# Модель для страницы 1С-сервиса
 class Single1CServicePage(Page):
 
 
@@ -204,7 +189,7 @@ class Single1CServicePage(Page):
     category = models.CharField(
         max_length=100,
         choices=SERVICE_CATEGORY_CHOICES,
-        default="1c_services",  # По умолчанию категория для 1С-сервисов
+        default="1c_services",  
         verbose_name="Категория",
     )
     headline = models.CharField(
@@ -232,8 +217,8 @@ class Single1CServicePage(Page):
         ('video', VideoBlock()),
         ('accordion', AccordionBlock()),
         ('cta', CTABlock()),
-        ('supported_configurations', SupportedConfigurationsBlock()),  # Специфический блок для 1С
-        ('system_requirements', SystemRequirementsBlock()),  # Специфический блок для 1С
+        ('supported_configurations', SupportedConfigurationsBlock()),  
+        ('system_requirements', SystemRequirementsBlock()),  
     ], blank=True, use_json_field=True, verbose_name="Блоки страницы")
 
     content_panels = Page.content_panels + [
@@ -258,12 +243,11 @@ class Single1CServicePage(Page):
         index.SearchField("content"),
     ]
 
-    parent_page_types = ["services_1c.Service1CIndexPage"]   # только под каталогом
+    parent_page_types = ["services_1c.Service1CIndexPage"]
     subpage_types = []
 
     def get_context(self, request):
         context = super().get_context(request)
-        # Отображаем другие 1С-сервисы
         context["other_1c_services"] = (
             Single1CServicePage.objects.live().exclude(id=self.id).order_by("-date")[:3]
         )
@@ -273,7 +257,6 @@ class Single1CServicePage(Page):
         verbose_name = "Сервис 1С"
         verbose_name_plural = "Сервисы 1С"
 
-# Модель для ленты 1С-сервисов (аналогично ServiceIndexPage)
 class Service1CIndexPage(Page):
 
 
@@ -313,7 +296,6 @@ class Service1CIndexPage(Page):
         verbose_name = "Лента сервисов 1С"
         verbose_name_plural = "Ленты сервисов 1С"
 
-# Блок для услуг 1С (для интеграции на другие страницы, если нужно)
 class Service1CBlock(blocks.StructBlock):
     title = blocks.CharBlock(
         max_length=100, required=True, label="Заголовок секции сервисов 1С"

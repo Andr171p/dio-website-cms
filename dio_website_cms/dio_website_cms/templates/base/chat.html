@@ -1,6 +1,5 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
-<!-- Ваш существующий код -->
 <div class="assistant-wrapper" id="assistantWrapper">
     <button class="assistant-toggle" id="assistantToggle" onclick="toggleAssistant()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#ffffff" fill="none">
@@ -27,7 +26,6 @@
     </div>
 </div>
 
-<!-- Ваш остальной код -->
 <style>
 .assistant-wrapper {
     position: fixed;
@@ -74,7 +72,7 @@
 
 .assistant-panel.active {
     transform: translateX(0);
-    display: block; /* Показывается при активации */
+    display: block;
 }
 
 .assistant-header {
@@ -175,7 +173,6 @@
     }
 }
 
-/* Стили для скроллбара */
 .assistant-messages::-webkit-scrollbar {
     width: 6px;
 }
@@ -195,7 +192,6 @@
 }
 </style>
 
-<!-- Подключение JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const assistantToggle = document.getElementById('assistantToggle');
@@ -294,17 +290,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Инициализация при загрузке
     scrollToBottom();
 
-    // Назначаем обработчики событий
     assistantToggle.addEventListener('click', toggleAssistant);
     assistantSend.addEventListener('click', sendAssistantMessage);
     assistantInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') sendAssistantMessage();
     });
 
-    // Наблюдатель за изменениями в сообщениях
     const observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             if (mutation.addedNodes.length) {
@@ -315,7 +308,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     observer.observe(assistantMessages, { childList: true, subtree: true });
 
-    // Закрытие чата при клике вне панели
     document.addEventListener('click', function(event) {
         const isClickInside = assistantPanel.contains(event.target);
         const isToggleClick = assistantToggle.contains(event.target);

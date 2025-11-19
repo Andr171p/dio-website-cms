@@ -2,7 +2,6 @@ from django.db import models
 from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.api import APIField
-from wagtail.fields import RichTextField
 from wagtail.blocks import (
     CharBlock,
     StructBlock,
@@ -10,8 +9,6 @@ from wagtail.blocks import (
 from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail import blocks
-from modelcluster.fields import ParentalKey
-from modelcluster.models import ClusterableModel
 from services.models import ServiceBlock
 
 from feedback.forms import FeedbackForm
@@ -21,7 +18,6 @@ MAX_HEADLINE_LENGTH = 500
 MAX_SUBHEADLINE_LENGTH = 250
 
 
-# Блок для отображения кейсов на главной
 class CaseStudyBlock(blocks.StructBlock):
     """Блок для отображения кейсов на главной странице"""
 
@@ -51,7 +47,6 @@ class CaseStudyBlock(blocks.StructBlock):
         label = "Секция кейсов"
 
 
-# Блок для основного достижения
 class MainAchievementBlock(blocks.StructBlock):
     """Блок для основного достижения"""
 
@@ -72,7 +67,6 @@ class MainAchievementBlock(blocks.StructBlock):
         label = "Основное достижение"
 
 
-# Блок для дополнительного достижения
 class AdditionalAchievementBlock(blocks.StructBlock):
     """Блок для дополнительного достижения"""
 
@@ -87,7 +81,6 @@ class AdditionalAchievementBlock(blocks.StructBlock):
         label = "Дополнительное достижение"
 
 
-# Новый блок для партнёров
 class PartnerBlock(blocks.StructBlock):
     """Блок для отображения партнёров"""
 
@@ -105,7 +98,6 @@ class PartnerBlock(blocks.StructBlock):
         label = "Партнёр"
 
 
-# Новый блок для сертификатов
 class CertificateBlock(blocks.StructBlock):
     """Блок для отображения сертификатов"""
 
@@ -118,7 +110,6 @@ class CertificateBlock(blocks.StructBlock):
         label = "Сертификат"
 
 
-# Новый блок для достижений
 class AchievementBlock(blocks.StructBlock):
     """Блок для отображения наград и достижений"""
 
@@ -130,7 +121,6 @@ class AchievementBlock(blocks.StructBlock):
         label = "Достижение"
 
 
-# Блок для слайдов hero-секции
 class HeroSlideBlock(blocks.StructBlock):
     """Блок для слайдов hero-секции с несколькими изображениями"""
 
@@ -159,7 +149,6 @@ class HeroSlideBlock(blocks.StructBlock):
         label = "Слайд героя"
 
 
-# Блок для кнопок
 class ButtonBlock(blocks.StructBlock):
     """Блок для кнопок в header"""
 
@@ -174,7 +163,6 @@ class ButtonBlock(blocks.StructBlock):
         label = "Кнопка"
 
 
-# Блок для header-секции
 class HeaderBlock(blocks.StructBlock):
     """Блок для hero-секции с каруселью"""
 
@@ -192,7 +180,6 @@ class HeaderBlock(blocks.StructBlock):
         label = "Header (Hero Section)"
 
 
-# Блок для логотипов партнёров
 class PartnerLogoBlock(blocks.StructBlock):
     """Блок для логотипа партнёра"""
 
@@ -252,7 +239,7 @@ class HomePage(Page):
         ],
         use_json_field=True,
         blank=True,
-        max_num=1,  # Только один блок
+        max_num=1,  
         verbose_name="Блок 'Глобальное присутствие'"
     )
 
