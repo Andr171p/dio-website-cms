@@ -63,6 +63,7 @@ class NewsPage(Page):
             label="Видео (автовставка)"
         )),
     ], blank=True, use_json_field=True, verbose_name="Медиа контент")
+    
     content = RichTextField("Содержание", blank=True)
     gallery = StreamField([
         ('image', blocks.StructBlock([
