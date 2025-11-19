@@ -318,6 +318,33 @@
 
 </article>
 
+<!-- Fullscreen Modal для галереи -->
+<div id="fullscreenModal" class="fixed inset-0 z-[9999] hidden bg-black">
+  <div class="relative w-full h-full flex items-center justify-center">
+    <button onclick="closeModal()" class="absolute top-6 right-6 z-50 text-white text-3xl hover:text-red-400 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 hover:bg-black/70">
+      X
+    </button>
+    <button onclick="prevImage()" class="absolute left-6 z-50 text-white text-3xl hover:text-red-400 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 hover:bg-black/70 lg:left-8">
+      ‹
+    </button>
+    <button onclick="nextImage()" class="absolute right-6 z-50 text-white text-3xl hover:text-red-400 bg-black/50 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-300 hover:bg-black/70 lg:right-8">
+      ›
+    </button>
+    <div class="relative w-full h-full flex flex-col items-center justify-center p-4">
+      <div class="max-w-6xl max-h-[85vh] w-full h-full flex items-center justify-center">
+        <img id="fullscreenImage" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg">
+      </div>
+      <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center text-white">
+        <div class="text-sm opacity-80">
+          <span id="fullscreenCurrent">1</span> / <span id="fullscreenTotal">0</span>
+        </div>
+      </div>
+    </div>
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+      <div class="flex gap-2 overflow-x-auto px-4 py-2 scrollbar-hide" id="thumbnailsContainer"></div>
+    </div>
+  </div>
+</div>
 <!-- Подключаем JavaScript для анимаций -->
 
 <script>

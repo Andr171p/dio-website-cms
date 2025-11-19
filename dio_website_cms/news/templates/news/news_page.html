@@ -3,90 +3,100 @@
 
 {% block content %}
 <article class="w-full">
-    <!-- Hero Section -->
-    <section class="section is-secondary relative min-h-[700px] lg:min-h-[700px] flex items-center overflow-hidden">
-        {% if page.image %}
-            {% image page.image original as bg_image %}
-            <div class="absolute inset-0 z-0">
-                <img src="{{ bg_image.url }}" alt="{{ page.headline }}" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-black/40"></div>
-            </div>
-        {% endif %}
-        <div class="container mx-auto px-4 lg:px-8  relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                <div class="space-y-6">
-                    <span class="heading_h5 inline-block px-4 py-2 rounded-full bg-red-600/80 text-red-100 text-sm font-semibold">
-                        {{ page.get_category_display }}
-                    </span>
-                    <h1 class="heading_h1 text-4xl lg:text-5xl font-bold leading-tight text-white drop-shadow-md">
-                        {{ page.headline }}
-                    </h1>
-                    <p class="heading_h3 text-lg lg:text-xl leading-relaxed text-white/90 max-w-prose">
-                        {{ page.intro|striptags }}
-                    </p>
-                    <div>
-                        <a href="/news" style="color:rgb(255, 255, 255); box-shadow: 0 0 0 2px #ffffff inset" class="button is-secondary w-button inline-block px-6 py-3 rounded-lg shadow-lg hover:bg-red-50 hover:shadow-xl">
-                            Все новости
-                        </a>
+    <!-- Hero Section - Более сдержанный -->
+    <section class="section pb-2">
+        <div class="container mx-auto max-w-5xl px-4 lg:px-8">
+            <!-- Хлебные крошки -->
+            
+
+            <!-- Заголовок и мета-информация -->
+            <div class="mb-6">
+                
+                <h1 class="text-5xl lg:text-5xl  mb-4 leading-tight">
+                    {{ page.headline }}
+                </h1>
+                
+                <!-- Мета-информация -->
+                <div class="flex flex-wrap items-center gap-4 text-gray-600 text-sm">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        {{ page.date|date:"d.m.Y" }}
                     </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        {{ page.read_time }} мин чтения
+                    </div>
+                    {% if page.author %}
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        {{ page.author }}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
+
+            <!-- Главное изображение -->
+            {% if page.image %}
+                {% image page.image width-800 height-450 as article_image %}
+                <div class="mb-8 rounded-xl overflow-hidden shadow-lg">
+                    <img src="{{ article_image.url }}" alt="{{ page.headline }}" 
+                         class="w-full h-auto object-cover">
+                </div>
+            {% endif %}
+
+            <!-- Вступление -->
+            {% if page.intro %}
+                <div class=" prose-lg max-w-none mb-8">
+                    <p class="text-xl heading_h5 leading-relaxed font-medium">
+                        {{ page.intro|striptags }}
+                    </p>
+                </div>
+            {% endif %}
         </div>
     </section>
 
     <!-- Main Content -->
-    <section class="section ">
-        <div class="heading_h3 container mx-auto max-w-4xl px-4 lg:px-8 ">
-            <div class=" prose-lg max-w-none news-content rich-content">
+    <section class="section  pt-2">
+        <div class="container mx-auto max-w-5xl px-4 lg:px-8">
+            <div class=" rich-content prose news-content">
                 {{ page.content|richtext }}
             </div>
+            
+            
         </div>
+        
     </section>
 
-    <!-- Modern Gallery Carousel -->
     {% if page.gallery %}
-    <section class="section is-secondary">
-        <div class="container mx-auto max-w-6xl px-4 lg:px-8 ">
-            <div class="header is-align-center mb-12">
-                <h2 class="heading_h2">Галерея</h2>
-            </div>
+    <section class="section py-16">
+        <div class="container mx-auto max-w-5xl px-4 lg:px-8">
+            <h2 class="text-2xl lg:text-3xl  mb-8">Фотогалерея</h2>
             
-            <!-- Карусель -->
-            <div class="relative">
-                <div class="gallery-carousel overflow-hidden">
-                    <div class="flex gap-6 pb-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
-                        {% for item in page.gallery %}
-                        {% image item.value.image fill-400x300 as gallery_image %}
-                        <div class="flex-shrink-0 w-80 snap-start">
-                            <div class="gallery-card cursor-pointer group" onclick="openFullscreenModal({{ forloop.counter0 }})">
-                                <div class="image-ratio_4x3 rounded-xl overflow-hidden mb-4">
-                                    <img src="{{ gallery_image.url }}" alt="" 
-                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-                                </div>
-                                {% if item.value.caption %}
-                                <div class="text-center">
-                                    <p class="text-gray-600 text-sm line-clamp-2">{{ item.value.caption|striptags }}</p>
-                                </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endfor %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for item in page.gallery %}
+                {% image item.value.image fill-400x300 as gallery_image %}
+                <div class="group cursor-pointer" onclick="openFullscreenModal({{ forloop.counter0 }})">
+                    <div class="aspect-w-4 aspect-h-3 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <img src="{{ gallery_image.url }}" alt="" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     </div>
+                    {% if item.value.caption %}
+                    <p class="mt-2 text-sm text-gray-600 line-clamp-2">{{ item.value.caption|striptags }}</p>
+                    {% endif %}
                 </div>
-                
-                <!-- Индикатор прокрутки -->
-                <div class="flex justify-center mt-6 space-x-2">
-                    {% for item in page.gallery %}
-                    <div class="w-2 h-2 bg-gray-300 rounded-full transition-all duration-300 indicator-dot"></div>
-                    {% endfor %}
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
     {% endif %}
 
-    <!-- Other News -->
+       <!-- Other News -->
     {% if other_news %}
 <section class="section pt-16 ">
     <div class="container">
@@ -150,7 +160,8 @@
         </div>
     </div>
 </section>
-{% endif %}
+
+    {% endif %}
 </article>
 
 <!-- Fullscreen Modal -->
@@ -206,109 +217,68 @@
 </div>
 
 <style>
-/* Стили для карусели */
-.gallery-carousel::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+/* Улучшенные стили для новостного контента */
+.prose {
+    line-height: 1.75;
 }
 
-.image-ratio_4x3 {
-    aspect-ratio: 4/3;
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.75rem;
+.prose h2 {
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+    margin: 2rem 0 1rem !important;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 0.5rem;
 }
 
-.image-ratio_16x9 {
-    aspect-ratio: 16/9;
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.75rem;
+.prose h3 {
+    font-weight: 600 !important;
+    font-size: 1.25rem !important;
+    margin: 1.5rem 0 0.75rem !important;
 }
 
-.image-ratio_4x3 img,
-.image-ratio_16x9 img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.prose p {
+    margin-bottom: 1.25rem !important;
+    text-align: justify;
 }
 
-/* Карточка галереи */
-.gallery-card {
-    transition: all 0.3s ease;
+.prose ul, .prose ol {
+    margin-bottom: 1.25rem !important;
+    padding-left: 1.5rem !important;
 }
 
-.gallery-card:hover {
-    transform: translateY(-8px);
+.prose ul li {
+    list-style-type: disc !important;
+    margin-bottom: 0.5rem !important;
 }
 
-/* Индикаторы карусели */
-.indicator-dot.active {
-    background: #ef4444;
-    width: 16px;
-    border-radius: 8px;
+.prose ol li {
+    list-style-type: decimal !important;
+    margin-bottom: 0.5rem !important;
 }
 
-/* Анимации */
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+.prose blockquote {
+    background: #fef2f2 !important;
+    border-left: 4px solid #ef4444 !important;
+    padding: 1rem 1.5rem !important;
+    margin: 1.5rem 0 !important;
+    border-radius: 0.5rem;
+    font-style: italic;
 }
 
-.fade-in {
-    animation: fadeIn 0.3s ease-out;
+.prose a {
+    color: #ef4444 !important;
+    text-decoration: underline !important;
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-    .gallery-carousel .flex > div {
-        width: 280px;
-    }
-    
-    #fullscreenModal button {
-        width: 44px;
-        height: 44px;
-        font-size: 24px;
-    }
-    
-    #fullscreenModal .absolute.left-6 {
-        left: 16px;
-    }
-    
-    #fullscreenModal .absolute.right-6 {
-        right: 16px;
-    }
-    
-    #fullscreenModal .absolute.top-6 {
-        top: 16px;
-    }
+.prose a:hover {
+    color: #dc2626 !important;
 }
 
-.w-layout-grid.grid_3-col { 
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 2rem; 
+.prose img {
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
-
-@media (max-width: 1024px) { 
-    .w-layout-grid.grid_3-col { 
-        grid-template-columns: repeat(2, 1fr); 
-    } 
-}
-
-@media (max-width: 640px) { 
-    .w-layout-grid.grid_3-col { 
-        grid-template-columns: 1fr; 
-    } 
-}
-
-
-
-
-
 
 .line-clamp-2 {
     display: -webkit-box;
@@ -317,16 +287,22 @@
     overflow: hidden;
 }
 
-/* Prose стили */
-.prose h2 { color: #111827 !important; font-weight: 700 !important; font-size: 2rem !important; margin: 2rem 0 1rem !important; }
-.prose h3 { color: #111827 !important; font-weight: 600 !important; font-size: 1.5rem !important; margin: 1.5rem 0 0.75rem !important; }
-.prose p { line-height: 1.75 !important; margin-bottom: 1.25rem !important; }
-.prose ul, .prose ol { margin-bottom: 1.25rem !important; padding-left: 2rem !important; }
-.prose ul li, .prose ol li { margin-bottom: 0.5rem !important; padding-left: 0.5rem !important; }
-.prose blockquote { color: #374151 !important; font-style: italic !important; border-left: 4px solid #ef4444 !important; padding-left: 1rem !important; margin: 1.5rem 0 !important; background: #fef2f2 !important; padding: 1rem !important; border-radius: 0.5rem !important; }
-.prose a { color: #ef4444 !important; text-decoration: underline !important; }
-.prose a:hover { color: #dc2626 !important; }
+.aspect-w-16.aspect-h-9 {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.aspect-w-16.aspect-h-9 > * {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
 </style>
+
 
 <script>
 let currentFullscreenIndex = 0;

@@ -8,6 +8,8 @@ from wagtail import blocks
 from wagtail.blocks import RichTextBlock
 from wagtail.images.blocks import ImageChooserBlock
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from wagtail.blocks import URLBlock
+from wagtail.embeds.blocks import EmbedBlock
 
 # Константы для категорий
 NEWS_CATEGORY_CHOICES = [
@@ -22,6 +24,11 @@ class NewsPage(Page):
     """Страница отдельной новости"""
 
     date = models.DateField("Дата публикации", default=timezone.now)
+    read_time = models.PositiveIntegerField(
+        "Время чтения (мин)",
+        default=1,
+        help_text="Примерное время чтения статьи в минутах"
+    )
     category = models.CharField(
         max_length=100,
         choices=NEWS_CATEGORY_CHOICES,
@@ -42,6 +49,20 @@ class NewsPage(Page):
         related_name="+",
         verbose_name="Изображение",
     )
+    media_content = StreamField([
+        ('image', blocks.StructBlock([
+            ('image', ImageChooserBlock(required=True)),
+            ('caption', RichTextBlock(required=False)),
+        ], label="Изображение")),
+        ('video', blocks.StructBlock([
+            ('video_url', URLBlock(required=True, help_text="Ссылка на YouTube, Vimeo и т.д.")),
+            ('caption', RichTextBlock(required=False)),
+        ], label="Видео")),
+        ('embed', EmbedBlock(
+            help_text="Вставьте ссылку на видео (YouTube, Vimeo и т.д.)",
+            label="Видео (автовставка)"
+        )),
+    ], blank=True, use_json_field=True, verbose_name="Медиа контент")
     content = RichTextField("Содержание", blank=True)
     gallery = StreamField([
         ('image', blocks.StructBlock([
@@ -54,6 +75,7 @@ class NewsPage(Page):
         MultiFieldPanel(
             [
                 FieldPanel("date"),
+                FieldPanel("read_time"),
                 FieldPanel("category"),
                 FieldPanel("headline"),
                 FieldPanel("intro"),
@@ -62,6 +84,7 @@ class NewsPage(Page):
             heading="Основная информация",
         ),
         FieldPanel("content"),
+        
         FieldPanel("gallery"),
     ]
 
