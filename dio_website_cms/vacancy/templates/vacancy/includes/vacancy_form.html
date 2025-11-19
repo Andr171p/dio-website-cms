@@ -61,7 +61,6 @@
         </div>
     </form>
 </div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('vacancyForm');
@@ -100,6 +99,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Проверка обязательных полей на клиенте
+        const nameInput = document.getElementById('id_name');
+        const phoneInput = document.getElementById('id_phone');
+        
+        if (!nameInput.value.trim()) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Заполните поле',
+                text: 'Пожалуйста, введите ваше имя',
+                confirmButtonColor: '#dc2626',
+                confirmButtonText: 'OK'
+            });
+            nameInput.focus();
+            return;
+        }
+        
+        if (!phoneInput.value.trim() || phoneInput.value === '+7 (') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Заполните поле',
+                text: 'Пожалуйста, введите номер телефона',
+                confirmButtonColor: '#dc2626',
+                confirmButtonText: 'OK'
+            });
+            phoneInput.focus();
+            return;
+        }
+        
+        // Проверка формата телефона
+        const phoneDigits = phoneInput.value.replace(/\D/g, '');
+        if (phoneDigits.length < 11) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Неверный формат',
+                text: 'Пожалуйста, введите полный номер телефона',
+                confirmButtonColor: '#dc2626',
+                confirmButtonText: 'OK'
+            });
+            phoneInput.focus();
+            return;
+        }
+        
         // Показываем загрузку
         Swal.fire({
             title: 'Отправка резюме...',
@@ -121,13 +162,17 @@ document.addEventListener('DOMContentLoaded', function() {
             body: formData
         })
         .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                return response.json().then(err => { 
-                    throw new Error(err.message || 'Ошибка сервера'); 
+            // Сначала проверяем статус ответа
+            if (!response.ok) {
+                // Если статус не ок, пробуем получить JSON с ошибкой
+                return response.json().then(errorData => {
+                    throw errorData;
+                }).catch(() => {
+                    // Если не удалось распарсить JSON, создаем общую ошибку
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 });
             }
+            return response.json();
         })
         .then(data => {
             Swal.fire({
@@ -138,19 +183,59 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonText: 'OK'
             });
             form.reset();
+            // Сбрасываем телефонное поле в начальное состояние
+            const phoneInput = document.getElementById('id_phone');
+            if (phoneInput) {
+                phoneInput.value = '+7 (';
+            }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error details:', error);
+            
+            let errorMessage = 'Не удалось отправить резюме. Попробуйте еще раз.';
+            
+            // Обработка разных форматов ошибок
+            if (error.errors) {
+                // Ошибки валидации Django REST framework
+                const errorMessages = [];
+                for (const [field, messages] of Object.entries(error.errors)) {
+                    const fieldName = getFieldName(field);
+                    errorMessages.push(`${fieldName}: ${messages.join(', ')}`);
+                }
+                errorMessage = errorMessages.join('\n');
+            } else if (error.message) {
+                // Простые сообщения об ошибках
+                errorMessage = error.message;
+            } else if (typeof error === 'string') {
+                errorMessage = error;
+            } else if (error.detail) {
+                // DRF error detail
+                errorMessage = error.detail;
+            }
+            
             Swal.fire({
                 icon: 'error',
-                title: 'Ошибка',
-                text: error.message || 'Не удалось отправить резюме. Попробуйте еще раз.',
+                title: 'Ошибка отправки',
+                html: errorMessage.replace(/\n/g, '<br>'),
                 confirmButtonColor: '#dc2626',
                 confirmButtonText: 'OK'
             });
         });
     });
 
+    // Функция для получения читаемых названий полей
+    function getFieldName(field) {
+        const fieldNames = {
+            'name': 'Имя',
+            'phone': 'Телефон',
+            'email': 'Email',
+            'resume': 'Резюме',
+            'agreement': 'Согласие'
+        };
+        return fieldNames[field] || field;
+    }
+
+    // Маска для телефона (остается без изменений)
     const phoneInput = document.getElementById('id_phone');
     if (phoneInput) {
         // Устанавливаем начальное значение
