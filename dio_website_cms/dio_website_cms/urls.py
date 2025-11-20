@@ -10,6 +10,10 @@ from vacancy.wagtail_hooks import download_resume
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
+from django.views.static import serve
+from django.urls import re_path
+from django.conf import settings
+
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
@@ -31,13 +35,9 @@ urlpatterns = [
     ),
     path("", include("wagtail.urls")),
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-# Добавляем маршруты для статических и медиафайлов в режиме DEBUG
-if settings.DEBUG:
-    from django.conf.urls.static import static
-    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
-    urlpatterns += staticfiles_urlpatterns()
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {
+        'document_root': settings.MEDIA_ROOT,
+        'show_indexes': False,
+    }),
+]

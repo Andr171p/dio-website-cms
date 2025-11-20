@@ -48,7 +48,7 @@
     {% elif block.block_type == 'text' %}
       <section class="section">
         <div class="container mx-auto px-4 lg:px-8">
-          <div class="prose gs-reveal rich-content">
+          <div class=" gs-reveal rich-content">
             {{ block.value.content|richtext }}
           </div>
         </div>
@@ -60,7 +60,7 @@
     <h2 class="text-3xl lg:text-4xl font-bold mb-8 text-center lg:text-left section-title heading_h2 gs-reveal">
       {{ block.value.title|default:"Описание проекта" }}
     </h2>
-    <div class="prose gs-reveal rich-content">
+    <div class=" gs-reveal rich-content">
       {{ block.value.content|richtext }}
     </div>
   </div>
@@ -102,7 +102,7 @@
       </div>
       <div class="lg:w-1/2 space-y-6 gs-reveal">
         <h2 class="heading_h2">{{ block.value.title }}</h2>
-        <div class="heading_h5 rich-text w-richtext prose rich-content">
+        <div class="heading_h5 rich-text w-richtext  rich-content">
           {{ block.value.description|richtext }}
         </div>
       </div>
@@ -122,7 +122,7 @@
                 <div class="p-6">
                   <h3 class="heading_h4">{{ block.value.title }}</h3>
                   {% if block.value.description %}
-                    <div class="paragraph_small text-color_secondary prose">{{ block.value.description|richtext }}</div>
+                    <div class="paragraph_small text-color_secondary ">{{ block.value.description|richtext }}</div>
                   {% endif %}
                   {% if block.value.button_text and block.value.button_link %}
                     <a href="{{ block.value.button_link.url }}" class="button is-secondary w-button mt-4 inline-block px-6 py-3 rounded-lg shadow-lg">
@@ -250,7 +250,7 @@
 
             <div class="typing-container">
               <div class="typing-text text-base lg:text-lg leading-relaxed text-gray-400 
-                           prose prose-invert max-w-none"
+                            prose-invert max-w-none"
                    data-full-text="{{ item.answer|striptags }}">
               </div>
               <span class="typing-cursor bg-red-800">|</span>
@@ -596,7 +596,6 @@ document.querySelectorAll('.accordion-ultimate').forEach(item => {
   }
 }
   .relative iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-  .prose { color: var(--text-secondary) !important; max-width: none !important; }
   .prose h2, .prose h3, .prose p, .prose ul, .prose ol, .prose blockquote, .prose a 
   .gs-reveal { opacity: 0; transform: translateY(20px); }
 
