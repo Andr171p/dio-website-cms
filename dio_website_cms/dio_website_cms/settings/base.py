@@ -42,7 +42,15 @@ INSTALLED_APPS = [
     "about",
     "contact",
     "faq",
+<<<<<<< Updated upstream
     # Установленные приложения
+=======
+    "services_1c",
+    "certificates",
+    "programms",
+    "admin_email",
+    "wagtail.contrib.table_block",
+>>>>>>> Stashed changes
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
@@ -65,13 +73,20 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+<<<<<<< Updated upstream
+=======
+    "django.contrib.humanize",
+>>>>>>> Stashed changes
     "django.contrib.staticfiles",
     "wagtail.api.v2",
     "rest_framework",
     "corsheaders",
     "django_htmx",
     "tailwind",
+<<<<<<< Updated upstream
     # "wagtailmenus",
+=======
+>>>>>>> Stashed changes
 ]
 
 # # Настройки меню
@@ -192,6 +207,11 @@ USE_TZ = True
 USE_L10N = True
 USE_I18N = True
 
+<<<<<<< Updated upstream
+=======
+THOUSAND_SEPARATOR = " "
+DECIMAL_SEPARATOR = ","
+>>>>>>> Stashed changes
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -234,6 +254,21 @@ CACHES = {
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
 
 
+<<<<<<< Updated upstream
+=======
+# Увеличьте максимальный размер рендеринга
+WAGTAILIMAGES_MAX_UPLOAD_SIZE = 20 * 1024 * 1024  # 20MB
+# settings.py
+WAGTAILIMAGES_JPEG_QUALITY = 95
+WAGTAILIMAGES_WEBP_QUALITY = 95
+WAGTAILIMAGES_PNG_QUALITY = 95
+
+# Отключите сжатие для PNG если нужно
+
+WAGTAILIMAGES_OPTIMIZE_IMAGES = False
+
+
+>>>>>>> Stashed changes
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "dio_website_cms"
@@ -257,6 +292,7 @@ WAGTAILADMIN_BASE_URL = "http://example.com"
 WAGTAILDOCS_EXTENSIONS = ["csv", "docx", "key", "odt", "pdf", "pptx", "rtf", "txt", "xlsx", "zip"]
 
 
+<<<<<<< Updated upstream
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.yandex.com"
 EMAIL_PORT = 465
@@ -264,3 +300,14 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "yfycyvhj195@gmail.com"
 EMAIL_HOST_PASSWORD = "8CMOSAKL1"
 DEFAULT_FROM_EMAIL = "yfycyvhj195@gmail.com"
+=======
+MAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.mail.ru"
+EMAIL_PORT = 587
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "andre.medvdv@mail.ru"  # Ваш полный email
+EMAIL_HOST_PASSWORD = "7pWeJm76F3FSuO8aiA6T"  # Пароль приложения из настроек Mail.ru
+DEFAULT_FROM_EMAIL = "andre.medvdv@mail.ru"
+SERVER_EMAIL = "andre.medvdv@mail.ru"
+>>>>>>> Stashed changes
