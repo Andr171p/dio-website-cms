@@ -30,8 +30,8 @@ RUN pip install -r /requirements.txt
 # Use /app folder as a directory where the source code is stored.
 WORKDIR /app
 
-# СОЗДАЙТЕ ПАПКУ STATIC И ДАЙТЕ ПРАВА ДО СМЕНЫ ПОЛЬЗОВАТЕЛЯ
-RUN mkdir -p /app/static && chown -R wagtail:wagtail /app/static
+# СОЗДАЙТЕ ПАПКИ И ДАЙТЕ ПРАВА
+RUN mkdir -p /app/static /app/media && chown -R wagtail:wagtail /app/static /app/media
 
 # Set this directory to be owned by the "wagtail" user.
 RUN chown wagtail:wagtail /app
@@ -42,5 +42,7 @@ COPY --chown=wagtail:wagtail . .
 # Use user "wagtail" to run the build commands below and the server itself.
 USER wagtail
 
-# Runtime command
-CMD set -xe; python manage.py migrate --noinput; python manage.py collectstatic --noinput; gunicorn dio_website_cms.wsgi:application
+CMD sh -c "cd /app/dio_website_cms && \
+    python manage.py migrate --noinput && \
+    python manage.py collectstatic --noinput --clear && \
+    exec gunicorn dio_website_cms.wsgi:application --bind 0.0.0.0:8000"

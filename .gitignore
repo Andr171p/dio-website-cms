@@ -184,3 +184,31 @@ scripts
 DIORag.iml
 assets
 dio_website_cms/db.sqlite3
+# Python bytecode — обязательно!
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# Другие кэши Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Production environment
+.env.prod
+.env.production
+.env.local
+
+# Secrets
+secrets.json
+config.json
+dio_website_cms/static/
