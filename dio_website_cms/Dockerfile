@@ -1,5 +1,4 @@
 FROM python:3.12-slim-bookworm
-
 # Add user that will be used in the container.
 RUN useradd wagtail
 
@@ -31,6 +30,9 @@ RUN pip install -r /requirements.txt
 # Use /app folder as a directory where the source code is stored.
 WORKDIR /app
 
+# СОЗДАЙТЕ ПАПКУ STATIC И ДАЙТЕ ПРАВА ДО СМЕНЫ ПОЛЬЗОВАТЕЛЯ
+RUN mkdir -p /app/static && chown -R wagtail:wagtail /app/static
+
 # Set this directory to be owned by the "wagtail" user.
 RUN chown wagtail:wagtail /app
 
@@ -40,8 +42,5 @@ COPY --chown=wagtail:wagtail . .
 # Use user "wagtail" to run the build commands below and the server itself.
 USER wagtail
 
-# Collect static files.
-RUN python manage.py collectstatic --noinput --clear
-
 # Runtime command
-CMD set -xe; python manage.py migrate --noinput; gunicorn dio_website_cms.wsgi:application
+CMD set -xe; python manage.py migrate --noinput; python manage.py collectstatic --noinput; gunicorn dio_website_cms.wsgi:application
