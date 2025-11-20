@@ -1,0 +1,13 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Production environment
+.env.prod
+.env.production
+.env.local
+
+# Secrets
+secrets.json
+config.json
