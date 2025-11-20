@@ -15,6 +15,7 @@ dependencies = [
     "wagtail>=7.1.1",
     "wagtail-modelchooser>=4.0.1",
     "wagtailmenus>=4.0.4",
+    "whitenoise>=6.11.0",
 ]
 
 [tool.ruff]

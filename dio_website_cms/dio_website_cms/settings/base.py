@@ -43,10 +43,10 @@ INSTALLED_APPS = [
     "contact",
     "faq",
     "services_1c",
-    'certificates',
-    "programms", 
-
-    'wagtail.contrib.table_block',
+    "certificates",
+    "programms",
+    "admin_email",
+    "wagtail.contrib.table_block",
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
@@ -69,15 +69,13 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    'django.contrib.humanize',
+    "django.contrib.humanize",
     "django.contrib.staticfiles",
     "wagtail.api.v2",
     "rest_framework",
     "corsheaders",
-    'django_htmx',
+    "django_htmx",
     "tailwind",
-    
-    
 ]
 
 # # Настройки меню
@@ -90,10 +88,10 @@ INSTALLED_APPS = [
 WAGTAILEMBEDS_RESPONSIVE_HTML = True
 WAGTAILEMBEDS_FINDERS = [
     {
-        'class': 'wagtail.embeds.finders.oembed',
-        'options': {
-            'timeout': 5,  # Add timeout
-        }
+        "class": "wagtail.embeds.finders.oembed",
+        "options": {
+            "timeout": 5,  # Add timeout
+        },
     }
 ]
 
@@ -105,7 +103,7 @@ WAGTAILIMAGES_IMAGE_MODEL = "wagtailimages.Image"
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -127,7 +125,7 @@ ROOT_URLCONF = "dio_website_cms.urls"
 
 
 # Настройки WhiteNoise
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 TEMPLATES = [
     {
@@ -206,8 +204,8 @@ USE_TZ = True
 USE_L10N = True
 USE_I18N = True
 
-THOUSAND_SEPARATOR = ' '
-DECIMAL_SEPARATOR = ','
+THOUSAND_SEPARATOR = " "
+DECIMAL_SEPARATOR = ","
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -215,7 +213,6 @@ DECIMAL_SEPARATOR = ','
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    
 ]
 
 STATICFILES_DIRS = [
@@ -259,11 +256,11 @@ WAGTAILIMAGES_JPEG_QUALITY = 95
 WAGTAILIMAGES_WEBP_QUALITY = 95
 WAGTAILIMAGES_PNG_QUALITY = 95
 
-# Отключите сжатие для PNG если нужно 
+# Отключите сжатие для PNG если нужно
 
 WAGTAILIMAGES_OPTIMIZE_IMAGES = False
 
- 
+
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "dio_website_cms"
@@ -287,14 +284,12 @@ WAGTAILADMIN_BASE_URL = "http://example.com"
 WAGTAILDOCS_EXTENSIONS = ["csv", "docx", "key", "odt", "pdf", "pptx", "rtf", "txt", "xlsx", "zip"]
 
 
-
-
-
-
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.yandex.com"
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_HOST_USER = "yfycyvhj195@gmail.com"
-EMAIL_HOST_PASSWORD = "8CMOSAKL1"
-DEFAULT_FROM_EMAIL = "yfycyvhj195@gmail.com"
+MAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
