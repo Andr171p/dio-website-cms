@@ -9,10 +9,9 @@ DEBUG = True
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "*"]
 
 # Секретный ключ можно захардкодить локально (или оставить через .env)
-SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-lokal-dev-key-for-runserver")
+SECRET_KEY = os.environ.get("SECRET_KEY", "")
 
 # Отправка писем в консоль
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # === УБИРАЕМ ТО, ЧТО МЕШАЕТ ЛОКАЛЬНО ===
 

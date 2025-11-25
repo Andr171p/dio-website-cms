@@ -60,7 +60,7 @@ class Vacancy(models.Model):
         super().save(*args, **kwargs)
 
         if self.resume:
-            self.resume_link = f"http://127.0.0.1:7000/vacancy/resume/download/{self.id}/"
+            self.resume_link = f"http://127.0.0.1:8000/vacancy/resume/download/{self.id}/"
         else:
             self.resume_link = None
 
@@ -70,7 +70,7 @@ class Vacancy(models.Model):
             create_admin_notification(
                 title="Новый отклик на вакансию",
                 message=f"Резюме от {self.name} на вакансию {self.title}",
-                url=f"http://127.0.0.1:7000/admin/snippets/vacancy/vacancy/edit/{self.id}/",
+                url=f"http://127.0.0.1:8000/admin/snippets/vacancy/vacancy/edit/{self.id}/",
             )
 
     class Meta:

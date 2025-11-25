@@ -1,6 +1,8 @@
 services:
   web:
-    build: .
+    build:
+      context: . 
+      dockerfile: dio_website_cms/Dockerfile  # путь к Dockerfile
     volumes:
       - static_volume:/app/static
       - ./dio_website_cms/media:/app/media
