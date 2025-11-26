@@ -1,17 +1,24 @@
 services:
   web:
     build:
-      context: . 
-      dockerfile: dio_website_cms/Dockerfile  # путь к Dockerfile
+      context: ./dio_website_cms
+      dockerfile: Dockerfile
     volumes:
-      - static_volume:/app/static
       - ./dio_website_cms/media:/app/media
-      - ./dio_website_cms/db.sqlite3:/app/db.sqlite3
+      - ./dio_website_cms/static:/app/static
+      # УБЕРИ volume для БД - пусть создается внутри контейнера
     env_file:
       - .env.prod
     ports:
       - "8000:8000"
     restart: unless-stopped
-
-volumes:
-  static_volume:
+    command: >
+      sh -c "
+        # Django САМ создаст БД при первом migrate
+        python manage.py migrate --noinput
+        python manage.py collectstatic --noinput
+        python create_superuser.py
+        python create_initial_data.py
+        echo '=== WAGTAIL ГОТОВ! ==='
+        gunicorn dio_website_cms.wsgi:application --bind 0.0.0.0:8000 --workers 2
+      "

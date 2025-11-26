@@ -1,9 +1,10 @@
 from .base import *
 import os
+from pathlib import Path
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
+BASE_DIR = Path(BASE_DIR) if isinstance(BASE_DIR, str) else BASE_DIR
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
@@ -21,20 +22,19 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-# Database
+# Database - ИСПРАВЛЕННЫЙ ПУТЬ
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "NAME": BASE_DIR / "db.sqlite3", # Используем pathlib
     }
 }
 
-
 # Static files
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = BASE_DIR / 'static'  # pathlib стиль
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'    # pathlib стиль
 MEDIA_URL = '/media/'
 
 # ManifestStaticFilesStorage is recommended in production, to prevent

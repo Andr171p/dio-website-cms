@@ -1,5 +1,7 @@
 from .base import *
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 # -------------------------------
 # РАЗРАБОТКА — локальный запуск
 # -------------------------------
@@ -9,7 +11,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "*"]
 
 # Секретный ключ можно захардкодить локально (или оставить через .env)
-SECRET_KEY = os.environ.get("SECRET_KEY", "")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # Отправка писем в консоль
 

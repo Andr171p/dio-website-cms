@@ -28,3 +28,5 @@ fuzzywuzzy==0.18.0
 python-levenshtein==0.27.1
 pytz==2025.2
 wagtail-modelchooser==4.0.1
+
+python-dotenv>=1.0.0

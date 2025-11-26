@@ -7,6 +7,28 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 import os
+from django.http import JsonResponse
+from django.contrib.admin.views.decorators import staff_member_required
+from .models import Vacancy
+# vacancy/views.py — добавь в конец
+from django.http import JsonResponse
+from django.contrib.admin.views.decorators import staff_member_required
+
+@staff_member_required
+def latest_unprocessed_vacancy(request):
+    vacancy = Vacancy.objects.filter(is_processed=False).order_by('-created_at').first()
+    if vacancy:
+        return JsonResponse({'id': vacancy.id})
+    return JsonResponse({'id': None})
+
+
+
+@staff_member_required
+def vacancy_unprocessed_count(request):
+    count = Vacancy.objects.filter(is_processed=False).count()
+    return JsonResponse({"count": count})
+
+
 
 @api_view(["POST"])
 @parser_classes([MultiPartParser, FormParser])

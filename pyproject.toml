@@ -10,6 +10,7 @@ dependencies = [
     "django-stubs[compatible-mypy]>=5.2.3",
     "django-tailwind>=4.2.0",
     "fuzzywuzzy>=0.18.0",
+    "python-dotenv>=1.2.1",
     "python-levenshtein>=0.27.1",
     "pytz>=2025.2",
     "wagtail>=7.1.1",

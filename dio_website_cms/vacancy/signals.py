@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from .models import Vacancy
 
 
+
 @receiver(post_delete, sender=Vacancy)
 def delete_file(sender, instance, **kwargs):  # noqa: ARG001
     if hasattr(instance, "resume"):
