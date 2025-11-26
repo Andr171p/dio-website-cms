@@ -123,11 +123,22 @@
   const clearChatButton = document.getElementById('clearChatButton');
   const placeholders = ["Задайте свой вопрос...", "Опишите свою задачу...", "Расскажите, чем помочь...", "Введите ваш запрос..."];
 
-  let chatId = localStorage.getItem('chatId');
-  if (!chatId) {
-    chatId = 'chat_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('chatId', chatId);
-  }
+  // Функция для генерации UUID v4
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+let chatId = localStorage.getItem('chatId');
+if (!chatId) {
+  chatId = generateUUID();
+  localStorage.setItem('chatId', chatId);
+}
+
+console.log('Chat ID:', chatId); // Для отладки
 
   let chatHistory = JSON.parse(localStorage.getItem(`chatHistory_${chatId}`)) || [];
   chatHistory.forEach(message => addMessage(message.role, message.text));
@@ -245,40 +256,58 @@
     return typingInterval;
   }
 
-  async function sendMessageToAPI(chatId, message) {
-    const typingMessage = document.createElement('div');
-    typingMessage.className = 'message bot-message1 typing-message';
-    chatMessages.appendChild(typingMessage);
+ async function sendMessageToAPI(chatId, message) {
+  const typingMessage = document.createElement('div');
+  typingMessage.className = 'message bot-message1 typing-message';
+  chatMessages.appendChild(typingMessage);
+  requestAnimationFrame(scrollToBottom);
+
+  const typingInterval = startTypingAnimation(typingMessage);
+
+  try {
+    const response = await fetch('http://localhost:8001/api/v1/chat/completions', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Accept': 'application/json' 
+      },
+      body: JSON.stringify({ 
+        chat_id: chatId, 
+        role: 'user', 
+        text: message 
+      })
+    });
+    
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    
+    const data = await response.json();
+    clearInterval(typingInterval);
+    chatMessages.removeChild(typingMessage);
+    
+    const botMessage = document.createElement('div');
+    botMessage.className = 'message bot-message1';
+    chatMessages.appendChild(botMessage);
+    
+    // Используем data.text из ответа API
+    typeEffect(botMessage, data.text);
+    
+    chatHistory.push({ role: 'user', text: message });
+    chatHistory.push({ role: 'ai', text: data.text });
+    localStorage.setItem(`chatHistory_${chatId}`, JSON.stringify(chatHistory));
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    clearInterval(typingInterval);
+    chatMessages.removeChild(typingMessage);
+    
+    const errorMessage = `Ошибка: ${error.message}. Убедитесь что FastAPI RAG сервис запущен на порту 8001.`;
+    addMessage('ai', errorMessage);
+    
+    chatHistory.push({ role: 'ai', text: errorMessage });
+    localStorage.setItem(`chatHistory_${chatId}`, JSON.stringify(chatHistory));
     requestAnimationFrame(scrollToBottom);
-
-    const typingInterval = startTypingAnimation(typingMessage);
-
-    try {
-      const response = await fetch('http://localhost:8001/api/v1/rag', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ chat_id: chatId, role: 'user', text: message })
-      });
-      if (!response.ok) throw new Error('Ошибка сети');
-      const data = await response.json();
-      clearInterval(typingInterval);
-      chatMessages.removeChild(typingMessage);
-      const botMessage = document.createElement('div');
-      botMessage.className = 'message bot-message1';
-      chatMessages.appendChild(botMessage);
-      typeEffect(botMessage, data.text);
-      chatHistory.push({ role: 'user', text: message });
-      chatHistory.push({ role: 'ai', text: data.text });
-      localStorage.setItem(`chatHistory_${chatId}`, JSON.stringify(chatHistory));
-    } catch (error) {
-      clearInterval(typingInterval);
-      chatMessages.removeChild(typingMessage);
-      addMessage('ai', 'Ошибка при получении ответа.');
-      chatHistory.push({ role: 'ai', text: 'Ошибка при получении ответа.' });
-      localStorage.setItem(`chatHistory_${chatId}`, JSON.stringify(chatHistory));
-      requestAnimationFrame(scrollToBottom);
-    }
   }
+}
 
   function sendMessage(inputElement, isInitial = false) {
     const text = inputElement.value.trim();
