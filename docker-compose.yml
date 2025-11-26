@@ -1,4 +1,41 @@
 services:
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6378:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  fastapi-rag:
+    build: 
+      context: .
+      dockerfile: ./fastapi-rag/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env.prod
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import sys,requests; r=requests.get('http://127.0.0.1:8001/health', timeout=5); sys.exit(0 if r.status_code==200 else 1) if 'requests' in sys.modules else sys.exit(1)
+      interval: 30s
+      timeout: 5m
+      retries: 60
+      start_period: 1m
+  
   web:
     build:
       context: ./dio_website_cms
@@ -6,9 +43,11 @@ services:
     volumes:
       - ./dio_website_cms/media:/app/media
       - ./dio_website_cms/static:/app/static
-      # УБЕРИ volume для БД - пусть создается внутри контейнера
     env_file:
       - .env.prod
+    depends_on:
+      fastapi-rag:
+        condition: service_healthy
     ports:
       - "8000:8000"
     restart: unless-stopped
@@ -22,3 +61,16 @@ services:
         echo '=== WAGTAIL ГОТОВ! ==='
         gunicorn dio_website_cms.wsgi:application --bind 0.0.0.0:8000 --workers 2
       "
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import sys,requests; r=requests.get('http://127.0.0.1:8000', timeout=5); sys.exit(0 if r.status_code==200 else 1) if 'requests' in sys.modules else sys.exit(1)
+      interval: 30s
+      timeout: 60s
+      retries: 2
+      start_period: 10s
+
+volumes:
+  redis_data:
