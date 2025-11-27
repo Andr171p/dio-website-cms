@@ -265,7 +265,7 @@ console.log('Chat ID:', chatId); // Для отладки
   const typingInterval = startTypingAnimation(typingMessage);
 
   try {
-    const response = await fetch('http://localhost:8001/api/v1/chat/completions', {
+    const response = await fetch('http://80.93.62.177:8001/api/v1/chat/completions', {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json', 
