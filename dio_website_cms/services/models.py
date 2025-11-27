@@ -311,15 +311,3 @@ class ServiceBlock(blocks.StructBlock):
     class Meta:
         icon = "doc-full"
         label = "Блок услуг"
-
-class ServicePage(Page):
-    """Временная модель для обратной совместимости"""
-    body = RichTextField(blank=True)
-    
-    content_panels = Page.content_panels + [
-        FieldPanel('body'),
-    ]
-    
-    class Meta:
-        verbose_name = "Страница услугиbb"
-        verbose_name_plural = "Страницы услугbb"
