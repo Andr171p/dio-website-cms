@@ -1,7 +1,7 @@
 import logging
 
 from admin_email.models import AdminEmail
-from dio_website_cms.settings.base import EMAIL_HOST_USER
+from dio_website_cms.settings.dev import EMAIL_HOST_USER
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags

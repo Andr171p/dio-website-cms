@@ -30,7 +30,7 @@ text_splitter: Final[TextSplitter] = RecursiveCharacterTextSplitter(
 )
 
 embeddings = HuggingFaceEmbeddings(
-    model_name="sdeepvk/USER-bge-m3",
+    model_name="deepvk/USER-bge-m3",
 )
 
 vectorstore: Final[PineconeVectorStore] = PineconeVectorStore(

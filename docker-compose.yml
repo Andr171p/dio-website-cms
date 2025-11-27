@@ -21,7 +21,7 @@ services:
     ports:
       - "8001:8001"
     env_file:
-      - .env.prod
+      - .env
     depends_on:
       redis:
         condition: service_healthy
@@ -44,7 +44,7 @@ services:
       - ./dio_website_cms/media:/app/media
       - ./dio_website_cms/static:/app/static
     env_file:
-      - .env.prod
+      - .env
     depends_on:
       fastapi-rag:
         condition: service_healthy

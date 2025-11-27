@@ -1,19 +1,14 @@
 from chat import views as chat_views
 from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+from django.views.static import serve
 from feedback import views as feedback_views
 from search import views as search_views
 from vacancy import views as vacancies_views
 from vacancy.wagtail_hooks import download_resume
-from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
-from django.views.static import serve
-from django.urls import re_path
-from django.conf import settings
-
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
@@ -21,8 +16,7 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
     path("settings/", include("wagtail.contrib.settings.urls")),
-    path('api/', include('vacancy.urls')),
-    
+    path("api/", include("vacancy.urls")),
     path("chat/", chat_views.chat, name="chat"),
     path("documents/add/", chat_views.add_document_, name="add document"),
     path("documents/upload/", chat_views.upload_document_, name="upload document"),
@@ -37,8 +31,12 @@ urlpatterns = [
     path("", include("wagtail.urls")),
 ]
 urlpatterns += [
-    re_path(r'^media/(?P<path>.*)$', serve, {
-        'document_root': settings.MEDIA_ROOT,
-        'show_indexes': False,
-    }),
+    re_path(
+        r"^media/(?P<path>.*)$",
+        serve,
+        {
+            "document_root": settings.MEDIA_ROOT,
+            "show_indexes": False,
+        },
+    ),
 ]

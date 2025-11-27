@@ -1,6 +1,9 @@
-from .base import *
-from dotenv import load_dotenv
 import os
+
+from dotenv import load_dotenv
+
+from .base import *
+
 load_dotenv()
 # -------------------------------
 # РАЗРАБОТКА — локальный запуск
@@ -13,15 +16,22 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "*"]
 # Секретный ключ можно захардкодить локально (или оставить через .env)
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
+MAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True").strip().lower() == "true"
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "False").strip().lower() == "true"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
+FASTAPI_RAG = os.environ.get("FASTAPI_RAG")
 # Отправка писем в консоль
 
 # === УБИРАЕМ ТО, ЧТО МЕШАЕТ ЛОКАЛЬНО ===
 
 # 1. Убираем WhiteNoise из middleware (он нужен только в проде)
-MIDDLEWARE = [
-    m for m in MIDDLEWARE 
-    if m != "whitenoise.middleware.WhiteNoiseMiddleware"
-]
+MIDDLEWARE = [m for m in MIDDLEWARE if m != "whitenoise.middleware.WhiteNoiseMiddleware"]
 
 # 2. Отключаем ManifestStaticFilesStorage (он ломается без collectstatic)
 if "ManifestStaticFilesStorage" in str(STORAGES["staticfiles"]):
