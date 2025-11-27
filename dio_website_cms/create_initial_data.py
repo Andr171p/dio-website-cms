@@ -31,10 +31,10 @@ try:
             print("HomePage создана")
 
         site_domain = os.environ.get('SITE_DOMAIN')
-        
+
         Site.objects.create(
             hostname=site_domain,
-            port=int(os.environ.get('SITE_PORT'), 80), 
+            port=int(os.environ.get('SITE_PORT', 80)), 
             site_name=os.environ.get('SITE_NAME'),
             root_page=HomePage.objects.first(),
             is_default_site=True,
