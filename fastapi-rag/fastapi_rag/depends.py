@@ -30,7 +30,7 @@ text_splitter: Final[TextSplitter] = RecursiveCharacterTextSplitter(
 )
 
 embeddings = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    model_name="sdeepvk/USER-bge-m3",
 )
 
 vectorstore: Final[PineconeVectorStore] = PineconeVectorStore(
