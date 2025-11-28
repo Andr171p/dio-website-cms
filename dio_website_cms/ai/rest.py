@@ -4,16 +4,6 @@ from dio_website_cms.settings.dev import FASTAPI_RAG
 from .constants import STATUS_CREATED
 
 
-def add_document(data: dict) -> list:
-    response = requests.post(  # noqa: S113
-        url=f"{FASTAPI_RAG}/api/v1/documents",
-        json=data,
-    )
-    if response.status_code != STATUS_CREATED:
-        raise Exception(f"API returned status {response.status_code}: {response.text}")  # noqa: TRY002
-    return response.json()
-
-
 def upload_document(file: bytes) -> list:
     response = requests.post(  # noqa: S113
         url=f"{FASTAPI_RAG}/api/v1/documents/upload",

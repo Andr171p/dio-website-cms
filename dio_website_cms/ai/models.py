@@ -1,57 +1,10 @@
 from typing import ClassVar
 
-import uuid
-
 from django.core.exceptions import ValidationError
 from django.core.files.storage import default_storage
 from django.db import models
-from wagtail.fields import StreamField
 
-from .blocks import MetadataBlock
-from .rest import add_document, upload_document
-
-
-class AddDocument(models.Model):
-    page_content = models.TextField(
-        verbose_name="Содержимое документа", help_text="Основной текстовый контент документа"
-    )
-    metadata = StreamField(
-        [("metadata", MetadataBlock())],
-        use_json_field=True,
-        blank=True,
-        verbose_name="Метаданные документа",
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name = "Добавленные документы"
-        ordering: ClassVar[list] = ["-created_at"]
-
-    def __str__(self) -> str:
-        return f"Добавленный документ номер {self.id}"  # pyright: ignore[reportAttributeAccessIssue]
-
-    def save(self, *args, **kwargs) -> None:
-        if not self.pk and not self.page_content and not self.metadata:
-            super().save(*args, **kwargs)
-            return
-        temp_id = str(uuid.uuid4()) if not self.pk else str(self.id)  # type: ignore  # noqa: E261, PGH003, RUF100
-        metadata_data = {}
-
-        if self.metadata:
-            for item in self.metadata:
-                if item.block_type == "metadata":
-                    for key_value in item.value:
-                        metadata_data[key_value["key"]] = key_value["value"]
-
-        payload = {
-            "id": str(temp_id),
-            "page_content": self.page_content,
-            "metadata": metadata_data,
-            "type": "Document",
-        }
-        add_document(payload)
-        super().save(*args, **kwargs)
+from .rest import upload_document
 
 
 class UploadDocument(models.Model):
