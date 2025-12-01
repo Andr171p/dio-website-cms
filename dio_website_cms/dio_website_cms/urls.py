@@ -15,7 +15,6 @@ urlpatterns = [
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
-    path("settings/", include("wagtail.contrib.settings.urls")),
     path("api/", include("vacancy.urls")),
     path("chat/", chat_views.chat, name="chat"),
     path("documents/add/", chat_views.add_document_, name="add document"),

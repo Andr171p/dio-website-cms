@@ -1,5 +1,6 @@
 from typing import ClassVar
 
+from dio_website_cms.settings.dev import SITE_DOMAIN
 from django.db import models
 from notification.utils import create_admin_notification
 from utils import get_tumen_time
@@ -27,5 +28,5 @@ class FeedbackMessage(models.Model):
             create_admin_notification(
                 title="Новое сообщение обратной связи",
                 message=f"Сообщение обратной связи от {self.email}",
-                url=f"http://127.0.0.1:7000/admin/snippets/feedback/feedbackmessage/edit/{self.id}/",  # type: ignore  # noqa: PGH003
+                url=f"{SITE_DOMAIN}/admin/snippets/feedback/feedbackmessage/edit/{self.id}/",  # type: ignore  # noqa: PGH003
             )

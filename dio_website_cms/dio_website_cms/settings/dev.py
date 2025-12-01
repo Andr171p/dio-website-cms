@@ -26,6 +26,7 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 FASTAPI_RAG = os.environ.get("FASTAPI_RAG")
+SITE_DOMAIN = os.environ.get("SITE_DOMAIN")
 # Отправка писем в консоль
 
 # === УБИРАЕМ ТО, ЧТО МЕШАЕТ ЛОКАЛЬНО ===

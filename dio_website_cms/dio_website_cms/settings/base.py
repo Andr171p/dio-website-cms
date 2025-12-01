@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "services_1c",
     "certificates",
     "programms",
-    "admin_email",
     "wagtail.contrib.table_block",
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
@@ -329,3 +328,5 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
+FASTAPI_RAG = os.environ.get("FASTAPI_RAG")
+SITE_DOMAIN = os.environ.get("SITE_DOMAIN")

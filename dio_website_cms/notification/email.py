@@ -1,7 +1,8 @@
 import logging
 
-from admin_email.models import AdminEmail
 from dio_website_cms.settings.dev import EMAIL_HOST_USER
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -9,8 +10,17 @@ from django.utils.html import strip_tags
 logger = logging.getLogger(__name__)
 
 
+# Получить email пользователей в определенных группах
+def get_emails_by_group_names(group_names, user) -> list:
+    users = user.objects.filter(groups__name__in=group_names).distinct()
+    return [user_.email for user_ in users if user_.email]
+
+
 def send_admin_notification(notification_instance) -> None:
     try:
+        user = get_user_model()
+        admins = user.objects.filter(is_superuser=True)
+        group_names = list(Group.objects.values_list("name", flat=True))
         context = {
             "title": notification_instance.title,
             "message": notification_instance.message,
@@ -18,11 +28,12 @@ def send_admin_notification(notification_instance) -> None:
             "created_at": notification_instance.created_at,
             "notification": notification_instance,
         }
+        admin_emails = [user_.email for user_ in admins if user_.email] # type: ignore  # noqa: E261, PGH003
+        editor_moderator_emails = get_emails_by_group_names(group_names, user)
 
-        # Получаем email администратора из настроек
-        admin_emails = list(AdminEmail.objects.values_list("email", flat=True))
+        all_emails = admin_emails + editor_moderator_emails
 
-        if not admin_emails:
+        if not all_emails:
             logger.warning("Нет ни одного email администратора для отправки уведомлений")
             return
 
@@ -35,7 +46,7 @@ def send_admin_notification(notification_instance) -> None:
             subject=subject,
             body=text_message,
             from_email=EMAIL_HOST_USER,
-            to=admin_emails,
+            to=all_emails,
         )
         email.attach_alternative(html_message, "text/html")
 
