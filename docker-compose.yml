@@ -33,7 +33,7 @@ services:
         - import sys,requests; r=requests.get('http://127.0.0.1:8001/health', timeout=5); sys.exit(0 if r.status_code==200 else 1) if 'requests' in sys.modules else sys.exit(1)
       interval: 30s
       timeout: 5m
-      retries: 60
+      retries: 40
       start_period: 1m
   
   web:
@@ -41,8 +41,9 @@ services:
       context: ./dio_website_cms
       dockerfile: Dockerfile
     volumes:
-      - ./dio_website_cms/media:/app/media
-      - ./dio_website_cms/static:/app/static
+      - wagtail_db:/app/db               # здесь лежит db.sqlite3
+      - wagtail_static:/app/static       # собранная статика
+      - wagtail_media:/app/media         # загруженные пользователями файлы
     env_file:
       - .env
     depends_on:
@@ -64,7 +65,7 @@ services:
         gunicorn dio_website_cms.wsgi:application --bind 0.0.0.0:8000 --workers 2 --access-logfile - --error-logfile - --log-level debug
       "
     healthcheck:
-      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.settimeout(2); result=s.connect_ex(('127.0.0.1',8001)); exit(0 if result==0 else 1)"]
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.settimeout(2); result=s.connect_ex(('localhost',8000)); exit(0 if result==0 else 1)"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -73,3 +74,6 @@ services:
 
 volumes:
   redis_data:
+  wagtail_db:         # ← сюда сохраняется db.sqlite3 и всё, что в /app/db
+  wagtail_static:     # ← собранная статика (collectstatic)
+  wagtail_media:      # ← медиа-файлы пользователей
