@@ -1,40 +1,40 @@
 services:
-  redis:
-    image: redis:alpine
-    restart: unless-stopped
-    volumes:
-      - redis_data:/data
-    ports:
-      - "6378:6379"
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-      start_period: 5s
+  # redis:
+  #   image: redis:alpine
+  #   restart: unless-stopped
+  #   volumes:
+  #     - redis_data:/data
+  #   ports:
+  #     - "6378:6379"
+  #   healthcheck:
+  #     test: [ "CMD", "redis-cli", "ping" ]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 5
+  #     start_period: 5s
 
-  fastapi-rag:
-    build: 
-      context: .
-      dockerfile: ./fastapi-rag/Dockerfile
-    restart: unless-stopped
-    ports:
-      - "8001:8001"
-    env_file:
-      - .env
-    depends_on:
-      redis:
-        condition: service_healthy
-    healthcheck:
-      test:
-        - CMD
-        - python
-        - -c
-        - import sys,requests; r=requests.get('http://127.0.0.1:8001/health', timeout=5); sys.exit(0 if r.status_code==200 else 1) if 'requests' in sys.modules else sys.exit(1)
-      interval: 30s
-      timeout: 5m
-      retries: 40
-      start_period: 1m
+  # fastapi-rag:
+  #   build: 
+  #     context: .
+  #     dockerfile: ./fastapi-rag/Dockerfile
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8001:8001"
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test:
+  #       - CMD
+  #       - python
+  #       - -c
+  #       - import sys,requests; r=requests.get('http://127.0.0.1:8001/health', timeout=5); sys.exit(0 if r.status_code==200 else 1) if 'requests' in sys.modules else sys.exit(1)
+  #     interval: 30s
+  #     timeout: 5m
+  #     retries: 40
+  #     start_period: 1m
   
   web:
     build:
@@ -46,23 +46,28 @@ services:
       - wagtail_media:/app/media         # загруженные пользователями файлы
     env_file:
       - .env
-    depends_on:
-      fastapi-rag:
-        condition: service_healthy
+    # depends_on:
+    #   fastapi-rag:
+    #     condition: service_healthy
     ports:
       - "8000:8000"
     restart: unless-stopped
     command: >
       sh -c "
-        python manage.py migrate --noinput
+        echo '1. Применяем миграции...' &&
+        python manage.py migrate --noinput &&
         
-        python create_initial_data.py
-        python create_superuser.py
+        echo '2. Создаем главную страницу...' &&
+        python init_wagtail_final.py &&
         
-        python manage.py collectstatic --noinput
+        echo '3. Создаем суперюзера...' &&
+        python create_superuser.py 2>/dev/null || echo 'Суперюзер уже существует' &&
         
-        echo '=== WAGTAIL ГОТОВ! ==='
-        gunicorn dio_website_cms.wsgi:application --bind 0.0.0.0:8000 --workers 2 --access-logfile - --error-logfile - --log-level debug
+        echo '4. Собираем статику...' &&
+        python manage.py collectstatic --noinput --clear &&
+        
+        echo '=== WAGTAIL ГОТОВ ===' &&
+        exec gunicorn dio_website_cms.wsgi:application --bind 0.0.0.0:8000 --workers 2
       "
     healthcheck:
       test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.settimeout(2); result=s.connect_ex(('localhost',8000)); exit(0 if result==0 else 1)"]

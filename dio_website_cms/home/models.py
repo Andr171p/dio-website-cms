@@ -233,13 +233,12 @@ class GlobalPresenceBlock(blocks.StructBlock):
 
 class HomePage(Page):
     """Лендинг сайта, главная страница с каруселью и header"""
+    
     global_presence = StreamField(
-        [
-            ('presence', GlobalPresenceBlock())
-        ],
+        [('presence', GlobalPresenceBlock())],
         use_json_field=True,
         blank=True,
-        max_num=1,  
+        max_num=1,
         verbose_name="Блок 'Глобальное присутствие'"
     )
 
@@ -295,12 +294,8 @@ class HomePage(Page):
         verbose_name="Секция партнёрств",
     )
 
-    eyebrow = models.CharField(
-      blank=True, help_text="Подзаголовок над основным заголовком"
-    )
-    heading = models.CharField(
-      blank=True, help_text="Основной заголовок"
-    )
+    eyebrow = models.CharField(blank=True, max_length=255, help_text="Подзаголовок над основным заголовком")
+    heading = models.CharField(blank=True, max_length=255, help_text="Основной заголовок")
     subheading = models.TextField(blank=True, help_text="Подзаголовок или описание")
 
     content = StreamField(
@@ -310,10 +305,7 @@ class HomePage(Page):
                 StructBlock(
                     [
                         ("title", CharBlock(required=True, label="Заголовок")),
-                        (
-                            "image",
-                            ImageChooserBlock(required=True, label="Изображение"),
-                        ),
+                        ("image", ImageChooserBlock(required=True, label="Изображение")),
                     ]
                 ),
             ),
@@ -324,25 +316,22 @@ class HomePage(Page):
         verbose_name="Секции страницы",
     )
 
+    # ГЛАВНОЕ ИСПРАВЛЕНИЕ — НЕ ЛОМАЕМ Wagtail!
     content_panels = Page.content_panels + [
-         FieldPanel('global_presence'),
-
-        
-        
-        MultiFieldPanel(
-            [
-                FieldPanel("header_section"),
-            ],
-            heading="Главный блок",
-        ),
-        
-        
-        MultiFieldPanel(
-            [
-                FieldPanel("partnership_section"),
-            ],
-            heading="Секция партнёрств",
-        ),
+        FieldPanel('global_presence'),
+        MultiFieldPanel([FieldPanel("header_section")], heading="Главный блок"),
+        MultiFieldPanel([FieldPanel("partnership_section")], heading="Секция партнёрств"),
+        # Добавь сюда остальные поля, если хочешь видеть их в админке:
+        FieldPanel("hero_slides"),
+        FieldPanel("case_study_section"),
+        FieldPanel("achievements"),
+        FieldPanel("partners"),
+        FieldPanel("certificates"),
+        FieldPanel("awards"),
+        FieldPanel("content"),
+        FieldPanel("eyebrow"),
+        FieldPanel("heading"),
+        FieldPanel("subheading"),
     ]
 
     api_fields = [
@@ -352,43 +341,33 @@ class HomePage(Page):
         APIField("partners"),
         APIField("awards"),
         APIField("partnership_section"),
-        APIField("content_panels"),
         APIField("content"),
     ]
 
     def get_services(self, count=6):
-        """Получить последние услуги из связанной SingleServicePage"""
         from services.models import SingleServicePage
-
         return SingleServicePage.objects.live().order_by("-date")[:count]
 
     def get_cases(self, count=6):
-        """Получить последние кейсы"""
         from cases.models import CaseStudyPage
-
         return CaseStudyPage.objects.live().order_by("-project_date")[:count]
 
     def get_context(self, request, *args, **kwargs):
-
         context = super().get_context(request, *args, **kwargs)
         context["cases"] = self.get_cases()
         context["form"] = FeedbackForm()
+        
         try:
             from cases.models import INDUSTRY_CHOICES
-
             context["INDUSTRY_CHOICES"] = INDUSTRY_CHOICES
         except (ImportError, Exception):
             context["INDUSTRY_CHOICES"] = []
 
         context["main_achievements"] = [
-            block
-            for block in self.achievements
-            if block.block_type == "main_achievement"
+            block for block in self.achievements if block.block_type == "main_achievement"
         ]
         context["additional_achievements"] = [
-            block
-            for block in self.achievements
-            if block.block_type == "additional_achievement"
+            block for block in self.achievements if block.block_type == "additional_achievement"
         ]
 
         context["partners"] = self.partners
@@ -399,19 +378,14 @@ class HomePage(Page):
         return context
 
     def get_news(self, count=3):
-        """Получить последние новости"""
         from news.models import NewsPage
-
         return NewsPage.objects.live().order_by("-date")[:count]
 
     def get_news_index(self):
-        """Получить индексную страницу новостей"""
         from news.models import NewsIndexPage
-
         return NewsIndexPage.objects.live().first()
 
     def get_children_of_type(self, model_class):
-        """Получить дочерние страницы определенного типа"""
         return self.get_children().type(model_class).live()
 
     def get_preview_template(self, request, mode_name):
