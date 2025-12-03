@@ -67,7 +67,7 @@ services:
         python manage.py collectstatic --noinput --clear &&
         
         echo '=== WAGTAIL ГОТОВ ===' &&
-        exec gunicorn dio_website_cms.wsgi:application --bind 0.0.0.0:8000 --workers 2
+        exec gunicorn dio_website_cms.wsgi:application --bind 0.0.0.0:8000 --workers 2 --access-logfile - --error-logfile - --log-level debug
       "
     healthcheck:
       test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.settimeout(2); result=s.connect_ex(('localhost',8000)); exit(0 if result==0 else 1)"]
