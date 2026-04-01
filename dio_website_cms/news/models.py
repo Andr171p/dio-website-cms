@@ -5,7 +5,11 @@ from wagtail.fields import RichTextField
 from wagtail.search import index
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from wagtail import blocks
+from wagtail.blocks import URLBlock
+from wagtail.embeds.blocks import EmbedBlock
+from wagtail.blocks import (
+    CharBlock, RichTextBlock, StructBlock    
+)
 
 # Константы для категорий
 NEWS_CATEGORY_CHOICES = [
@@ -17,9 +21,18 @@ NEWS_CATEGORY_CHOICES = [
 ]
 
 
+
+class TextBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок")
+    content = RichTextBlock(required=False, label="Контент")
+
+    class Meta:
+        icon = "doc-full"
+        label = "Текстовая секция"
+
 class NewsPage(Page):
     """Страница отдельной новости"""
-
+    text = TextBlock()
     date = models.DateField("Дата публикации", default=timezone.now)
     category = models.CharField(
         max_length=100,

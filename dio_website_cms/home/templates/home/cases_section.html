@@ -9,17 +9,24 @@
             <h2 class="heading_h1 max-width_large">Наши кейсы</h2>
         </div>
 
-        <!-- Сетка кейсов 2 колонки -->
-        <div class="w-layout-grid grid_3-col w-node-_34d27092-df6c-f775-92ac-90f7530b4530-a11df62a">
-            {% for case in page.get_cases %}
-            <div class="card opacity-0 translate-y-8" data-animate="fadeInUp" >
-                <div class="card_body_small flex flex-col h-full">
-                     <!-- Логотип клиента -->
-                <div class="flex items-center gap-4 margin-bottom_xsmall">
+       
+
+        <div class="space-y-10">
+    {% for case in page.get_cases %}
+        <a href="{{ case.url }}"
+           class="case-bg case-item block group relative p-8 sm:p-10 rounded-3xl transition-colors duration-300
+                  bg-[#151515] overflow-hidden cursor-pointer
+                  focus-visible:outline focus-visible:outline-4 focus-visible:outline-red-800/30 focus-visible:outline-offset-4">
+            <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                <div class="flex-shrink-0 w-32 h-32 flex items-center justify-center rounded-2xl overflow-hidden">
                     {% if case.customer_logo %}
-                        {% image case.customer_logo width-80 height-80 as case_img %}
-                        <img src="{{ case_img.url }}" alt="{{ case.title }}" 
-                            class="w-16 h-16 rounded-lg object-contain bg-white shadow-sm">
+                        {% image case.customer_logo width-140 height-140 as case_img %}
+                        <img src="{{ case_img.url }}" alt="{{ case.title }}"
+                             class="max-w-full max-h-full object-contain p-4">
+                    {% else %}
+                        <span class="text-5xl font-bold text-red-500">
+                            {{ case.title|first }}
+                        </span>
                     {% endif %}
                     <div>
                         <!-- Технологии -->

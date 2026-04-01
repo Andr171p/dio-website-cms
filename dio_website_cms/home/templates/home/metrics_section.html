@@ -1,0 +1,129 @@
+{% load wagtailcore_tags %}
+
+<section class="section bg-black py-20 overflow-hidden">
+    <div class="container">
+        <div class="margin-bottom margin-xlarge text-center">
+            <h2 class="heading_h2 text-white">{{ block.value.title }}</h2>
+            {% if block.value.description %}
+                <div class="text-size-medium text-color-gray-400 mt-4">{{ block.value.description }}</div>
+            {% endif %}
+        </div>
+
+        <div class="w-layout-grid grid_2-col tablet-1-col gap-xxlarge items-center">
+            <div class="metrics_chart-container p-8 rounded-2xl bg-white-5 border border-white-10 backdrop-blur-md">
+                {% if block.value.chart_type == 'bars' %}
+                    <div class="space-y-8">
+                        {% for item in block.value.data_items %}
+                        <div class="progress-wrapper">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-white font-medium tracking-wide uppercase text-size-small">{{ item.label }}</span>
+                                <span class="text-red-600 font-bold">{{ item.value }}%</span>
+                            </div>
+                            <div class="progress-bg bg-white-10 rounded-full h-1 overflow-hidden">
+                                <div class="progress-fill bg-red-600 h-full w-0 transition-all duration-1000 ease-out" 
+                                     data-value="{{ item.value }}"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <canvas id="chart-{{ block.id }}" class="max-w-full"></canvas>
+                {% endif %}
+            </div>
+
+            <div class="w-layout-grid grid_1-col gap-medium">
+                {% for item in block.value.data_items %}
+                <div class="metric-card p-6 rounded-xl border border-white-10 bg-gradient-to-br from-white-5 to-transparent border-l-4 border-l-red-600 transition-all duration-300 hover:bg-white-10">
+                    <div class="text-size-tiny text-color-gray-500 uppercase tracking-widest mb-1">{{ item.label }}</div>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-size-huge font-bold text-white counter" data-target="{{ item.value }}">0</span>
+                        <span class="text-red-600 font-bold text-size-medium">{% if block.value.chart_type == 'bars' %}%{% else %}+{% endif %}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .bg-white-5 { background-color: rgba(255, 255, 255, 0.05); }
+    .bg-white-10 { background-color: rgba(255, 255, 255, 0.1); }
+    .border-white-10 { border-color: rgba(255, 255, 255, 0.1); }
+    .text-color-gray-400 { color: #a1a1a1; }
+    .text-color-gray-500 { color: #717171; }
+    .text-size-huge { font-size: 2.5rem; line-height: 1.1; }
+
+    .metrics_chart-container {
+        position: relative;
+        min-height: 300px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Анимация прогресс-баров
+    const fills = document.querySelectorAll('.progress-fill');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.width = entry.target.getAttribute('data-value') + '%';
+                animateCounters(); // Запускаем цифры одновременно
+            }
+        });
+    }, { threshold: 0.5 });
+    fills.forEach(f => observer.observe(f));
+
+    // 2. Анимация счетчиков цифр
+    function animateCounters() {
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            const speed = 200;
+            const inc = target / speed;
+            const updateCount = () => {
+                const count = +counter.innerText;
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(updateCount, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            updateCount();
+        });
+    }
+
+    // 3. Chart.js для типов 'line' или 'doughnut'
+    {% if block.value.chart_type != 'bars' %}
+    const ctx = document.getElementById('chart-{{ block.id }}');
+    if (ctx) {
+        new Chart(ctx, {
+            type: '{{ block.value.chart_type }}',
+            data: {
+                labels: [{% for item in block.value.data_items %}"{{ item.label }}",{% endfor %}],
+                datasets: [{
+                    data: [{% for item in block.value.data_items %}{{ item.value }},{% endfor %}],
+                    borderColor: '#920707',
+                    backgroundColor: 'rgba(146, 7, 7, 0.2)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { display: false },
+                    x: { ticks: { color: '#717171' }, grid: { display: false } }
+                }
+            }
+        });
+    }
+    {% endif %}
+});
+</script>

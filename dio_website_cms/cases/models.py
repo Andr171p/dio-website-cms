@@ -3,14 +3,14 @@ from wagtail.models import Page
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.search import index
-from wagtail import blocks
-from wagtail.images.blocks import ImageChooserBlock
-from django.utils import timezone
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from wagtail.blocks import (
+    CharBlock, RichTextBlock, StructBlock    
+)
 
-# from wagtailai.panels import AIPanel, ai_indexable
+from wagtail.contrib.table_block.blocks import TableBlock
 
-# Константы для отраслей
+
 INDUSTRY_CHOICES = [
     ("oil-gas", "Нефтегаз"),
     ("manufacturing", "Производство"),
@@ -21,6 +21,14 @@ INDUSTRY_CHOICES = [
     ("finance", "Финансы"),
     ("healthcare", "Здравоохранение"),
 ]
+
+class TextBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок")
+    content = RichTextBlock(required=False, label="Контент")
+
+    class Meta:
+        icon = "doc-full"
+        label = "Текстовая секция"
 
 
 class CaseStudyPage(Page):
@@ -55,37 +63,64 @@ class CaseStudyPage(Page):
         verbose_name="Основное изображение",
     )
 
-    # Детальное содержание
-    content = StreamField(
-        [
-            ("description", blocks.RichTextBlock(label="Описание проекта")),
-            ("challenge", blocks.RichTextBlock(label="Задача")),
-            ("solution", blocks.RichTextBlock(label="Решение")),
-            ("results", blocks.RichTextBlock(label="Результаты")),
-            (
-                "technologies",
-                blocks.ListBlock(
-                    blocks.CharBlock(label="Технология"),
-                    label="Используемые технологии",
-                ),
-            ),
-            (
-                "metrics",
-                blocks.ListBlock(
-                    blocks.StructBlock(
-                        [
-                            ("value", blocks.CharBlock(label="Значение")),
-                            ("description", blocks.CharBlock(label="Описание метрики")),
-                        ]
-                    ),
-                    label="Ключевые метрики",
-                ),
-            ),
-        ],
-        blank=True,
-        use_json_field=True,
-        verbose_name="Содержание кейса",
-    )
+    content = StreamField([
+        ('table', TableBlock(label="Таблица")),
+
+        ('text_section', TextBlock()),
+        
+
+        ('description', blocks.RichTextBlock(
+            label="Описание проекта",
+            features=['bold', 'italic', 'link',
+        'h2', 'h3', 'h4',
+        'ol', 'ul',
+        'image', 'embed',
+        'code', 'blockquote',
+        'hr', 'document-link',
+        'superscript', 'strikethrough']
+        )),
+        ('challenge', blocks.RichTextBlock(
+            label="Задача",
+            features=['bold', 'italic', 'link',
+        'h2', 'h3', 'h4',
+        'ol', 'ul',
+        'image', 'embed',
+        'code', 'blockquote',
+        'hr', 'document-link',
+        'superscript', 'strikethrough']
+        )),
+        ('solution', blocks.RichTextBlock(
+            label="Решение",
+            features=['bold', 'italic', 'link',
+        'h2', 'h3', 'h4',
+        'ol', 'ul',
+        'image', 'embed',
+        'code', 'blockquote',
+        'hr', 'document-link',
+        'superscript', 'strikethrough']
+        )),
+
+        ('results', blocks.ListBlock(
+            blocks.StructBlock([
+                ('text', blocks.RichTextBlock(
+                    label="Текст результата",
+                    features=['bold', 'italic']
+                )),
+            ], icon='success', label="Результат"),
+            label="Результаты "
+        )),
+        ('technologies', blocks.ListBlock(
+            blocks.CharBlock(label="Технология"),
+            label="Используемые технологии"
+        )),
+        ('metrics', blocks.ListBlock(
+            blocks.StructBlock([
+                ('value', blocks.CharBlock(label="Значение")),
+                ('description', blocks.CharBlock(label="Описание"))
+            ]),
+            label="Ключевые метрики"
+        )),
+    ], blank=True, use_json_field=True, verbose_name="Содержание кейса")
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(

@@ -7,6 +7,19 @@ from wagtail.models import Page
 
 from .blocks import SolutionIntroBlock
 
+from wagtail.blocks import (
+    CharBlock, RichTextBlock, StructBlock    
+)
+
+
+class TextBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок")
+    content = RichTextBlock(required=False, label="Контент")
+
+    class Meta:
+        icon = "doc-full"
+        label = "Текстовая секция"
+
 MAX_ICON_LENGTH = 20
 MAX_HEADLINE_LENGTH = 100
 MAX_TAGLINE_LENGTH = 250

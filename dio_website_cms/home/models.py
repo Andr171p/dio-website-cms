@@ -26,6 +26,20 @@ from modelcluster.models import ClusterableModel
 MAX_HEADLINE_LENGTH = 500
 MAX_SUBHEADLINE_LENGTH = 250
 
+from wagtail.blocks import (
+    CharBlock, RichTextBlock, StructBlock    
+)
+
+
+
+
+class TextBlock(StructBlock):
+    title = CharBlock(required=False, label="Заголовок")
+    content = RichTextBlock(required=False, label="Контент")
+
+    class Meta:
+        icon = "doc-full"
+        label = "Текстовая секция"
 
 # Блок для отображения кейсов на главной
 class CaseStudyBlock(blocks.StructBlock):
@@ -302,64 +316,30 @@ class HomePage(Page):
     )
     subheading = models.TextField(blank=True, help_text="Подзаголовок или описание")
 
+    content = StreamField(
+        [
+            (
+                "hero",
+                StructBlock(
+                    [
+                        ("title", CharBlock(required=True, label="Заголовок")),
+                        ("image", ImageChooserBlock(required=True, label="Изображение")),
+                    ]
+                ),
+            ),
+            ("services_section", ServiceBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+        verbose_name="Секции страницы",
+    )
+
     content_panels = Page.content_panels + [
-        MultiFieldPanel(
-            [
-                FieldPanel("eyebrow"),
-                FieldPanel("heading"),
-                FieldPanel("subheading"),
-            ],
-            heading="Заголовок и описание",
-        ),
-        InlinePanel("faq_items", label="Часто задаваемые вопросы"),
-        MultiFieldPanel(
-            [
-                FieldPanel("header_section"),
-            ],
-            heading="Главный блок",
-        ),
-        # MultiFieldPanel(
-        #     [
-        #         FieldPanel("hero_slides"),
-        #     ],
-        #     heading="Главная карусель",
-        # ),
-        # MultiFieldPanel(
-        #     [
-        #         FieldPanel("case_study_section"),
-        #     ],
-        #     heading="Секция кейсов",
-        # ),
-        MultiFieldPanel(
-            [
-                FieldPanel("achievements"),
-            ],
-            heading="Достижения",
-        ),
-        # MultiFieldPanel(
-        #     [
-        #         FieldPanel("partners"),
-        #     ],
-        #     heading="Партнёры",
-        # ),
-        # MultiFieldPanel(
-        #     [
-        #         FieldPanel("certificates"),
-        #     ],
-        #     heading="Сертификаты",
-        # ),
-        # MultiFieldPanel(
-        #     [
-        #         FieldPanel("awards"),
-        #     ],
-        #     heading="Награды и достижения",
-        # ),
-        MultiFieldPanel(
-            [
-                FieldPanel("partnership_section"),
-            ],
-            heading="Секция партнёрств",
-        ),
+        
+        MultiFieldPanel([FieldPanel("header_section")], heading="Главный блок"),
+        MultiFieldPanel([FieldPanel("partnership_section")], heading="Секция партнёрств"),
+        FieldPanel('global_presence'),
+
     ]
 
     api_fields = [

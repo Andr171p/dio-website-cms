@@ -15,11 +15,11 @@
                 <div class="contact-list ">
                     {% if contact_settings.base.ContactSettings.primary_phone or contact_settings.base.ContactSettings.secondary_phone %}
                     <div class="contact-item py-5 py-5" style="display: flex; align-items: center; gap: 10px;">
-                        <div class="icon is-small">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
-                                <path d="M26 29h-.17C6.18 27.87 3.39 11.29 3 6.23A3 3 0 0 1 5.76 3h5.51a2 2 0 0 1 1.86 1.26L14.65 8a1.92 1.92 0 0 1-.25 1.86l-2.13 3.15a1.55 1.55 0 0 0-.08 1.41l4.07 9a1.93 1.93 0 0 0 1.8 1.15 1.48 1.48 0 0 0 1.44-.91l2-5a1.56 1.56 0 0 1 1.43-1h4.63A1.92 1.92 0 0 1 29 21.58V26A3 3 0 0 1 26 29ZM6 5a1 1 0 0 0-1 1v.08C5.46 12 8.41 26 25.94 27A1 1 0 0 0 27 26v-4.42l-4.62.83-2 5a3.48 3.48 0 0 1-3.38 2.15 3.93 3.93 0 0 1-3.69-2.3l-4.07-9a3.55 3.55 0 0 1 .18-3.24l2.13-3.15A3.92 3.92 0 0 0 13.35 8l-1.52-3.63A1 1 0 0 0 11.27 4H5.76A1 1 0 0 0 5 5Z"></path>
-                            </svg>
-                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-red-900/30 flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              </div>
                         <div>
                             {% if contact_settings.base.ContactSettings.primary_phone %}
                                 <a href="tel:{{ contact_settings.base.ContactSettings.primary_phone }}" class="heading_h2 text-link is-secondary">{{ contact_settings.base.ContactSettings.primary_phone }}</a>
@@ -34,11 +34,11 @@
 
                     {% if contact_settings.base.ContactSettings.primary_email or contact_settings.base.ContactSettings.secondary_email %}
                     <div class="contact-item py-5" style="display: flex; align-items: center; gap: 10px;">
-                        <div class="icon is-small" style="display: flex; align-items: center; gap: 10px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
-                                <path d="M28 6H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Zm-2.2 2L16 14.78 6.2 8ZM4 24V8.91l11.43 7.91a1 1 0 0 0 1.14 0L28 8.91V24Z"></path>
-                            </svg>
-                        </div>
+                         <div class="w-12 h-12 rounded-xl bg-red-900/30 flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
                         <div>
                             {% if contact_settings.base.ContactSettings.primary_email %}
                                 <a href="mailto:{{ contact_settings.base.ContactSettings.primary_email }}" class="heading_h2 text-link is-secondary">{{ contact_settings.base.ContactSettings.primary_email }}</a>
@@ -53,12 +53,12 @@
 
                     {% if contact_settings.base.ContactSettings.address %}
                     <div class="contact-item py-5" style="display: flex; align-items: center; gap: 10px;">
-                        <div class="icon is-small">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
-                                <path d="M16 18a5 5 0 1 1 5-5 5 5 0 0 1-5 5Zm0-8a3 3 0 1 0 3 3 3 3 0 0 0-3-3Z"></path>
-                                <path d="M16 30l-8.44-9.17a28.7 28.7 0 0 1-.56-8.58A12.07 12.07 0 0 1 16 2a12.07 12.07 0 0 1 9 10.25 28.7 28.7 0 0 1-.56 8.58ZM8.83 18.83L16 26.85l7.17-8.02a26.7 26.7 0 0 0 .52-7.58A10.06 10.06 0 0 0 16 4a10.06 10.06 0 0 0-7.69 7.25 26.7 26.7 0 0 0 .52 7.58Z"></path>
-                            </svg>
-                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-red-900/30 flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
                         <div>
                             <div class="heading_h2  text-color_secondary">{{ contact_settings.base.ContactSettings.address }}</div>
                         </div>
@@ -67,12 +67,11 @@
 
                     {% if contact_settings.base.ContactSettings.working_hours %}
                     <div class="contact-item py-5" style="display: flex; align-items: center; gap: 10px;">
-                        <div class="icon is-small">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 32 32" fill="currentColor">
-                                <path d="M16 30a14 14 0 1 1 14-14 14 14 0 0 1-14 14Zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4Z"></path>
-                                <path d="M20.59 22L15 16.41V7h2v8.58l5 5.01L20.59 22z"></path>
-                            </svg>
-                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-red-900/30 flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
                         <div>
                             <div class="heading_h2  text-color_secondary">{{ contact_settings.base.ContactSettings.working_hours }}</div>
                         </div>

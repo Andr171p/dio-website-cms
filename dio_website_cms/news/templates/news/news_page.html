@@ -18,10 +18,58 @@
                     <p class="text-blue-100 text-lg lg:text-xl leading-relaxed max-w-prose animate-fadeIn" style="animation-delay: 0.2s;">
                         {{ page.excerpt|striptags }}
                     </p>
-                    <div class="flex gap-4 animate-fadeIn" style="animation-delay: 0.3s;">
-                        <a href="/news" class="inline-block bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-blue-50 hover:shadow-xl transition-all duration-300">
-                            Все новости
-                        </a>
+                </div>
+            {% endif %}
+            {% elif block.block_type == 'text_section' %}
+                                    <h2 class="text-3xl lg:text-4xl font-bold mb-8 text-center lg:text-left section-title">{{ block.value.title }}</h2>
+                                    {% if block.value.content %}
+                                        <div class="rich-content ">
+                                        {{ block.value.content|richtext }}
+                                        </div>
+                                    {% endif %}
+                                    {% endif %}
+        </div>
+    </section>
+
+    <section class="section  pt-2">
+        <div class="container mx-auto max-w-5xl px-4 lg:px-8">
+            <div class=" rich-content prose news-content">
+                {{ page.content|richtext }}
+            </div>
+            
+            
+        </div>
+        
+    </section>
+
+    {% if page.table %}
+        <section class="section is-secondary py-12">
+            <div class="container mx-auto px-4 lg:px-8">
+            {% if block.value.title %}
+                <h2 class="heading_h2 mb-8 text-center">{{ block.value.title }}</h2>
+            {% endif %}
+            
+            <div class="overflow-x-auto">
+                <div class="custom-table-wrapper">
+                {% include_block block %}
+                </div>
+            </div>
+            </div>
+        </section>
+        {% endif %}
+
+    {% if page.gallery %}
+    <section class="section py-16">
+        <div class="container mx-auto max-w-5xl px-4 lg:px-8">
+            <h2 class="text-2xl lg:text-3xl  mb-8">Фотогалерея</h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for item in page.gallery %}
+                {% image item.value.image fill-400x300 as gallery_image %}
+                <div class="group cursor-pointer" onclick="openFullscreenModal({{ forloop.counter0 }})">
+                    <div class="aspect-w-4 aspect-h-3 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <img src="{{ gallery_image.url }}" alt="" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     </div>
                 </div>
                 <!-- Изображение -->
