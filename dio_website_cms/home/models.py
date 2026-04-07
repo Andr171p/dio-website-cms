@@ -105,6 +105,12 @@ class CertificateBlock(blocks.StructBlock):
         max_length=200, required=True, label="Название сертификата"
     )
 
+    image = ImageChooserBlock(
+        required=True,
+        label="Изображение сертификата",
+        help_text="Рекомендуемый размер: (1200×1600 px)"
+    )
+
     class Meta:
         icon = "award"
         label = "Сертификат"
