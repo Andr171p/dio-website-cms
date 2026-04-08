@@ -1,0 +1,130 @@
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+<section id="certificates-section" class="section pt-10">
+    <div class="container">
+        <div class="header mb-12">
+            <div class="eyebrow">Сертификаты</div>
+            <h2 class="heading_h2 max-width_large">Статусы и сертификаты</h2>
+        </div>
+
+        <div class="certificates-grid">
+            {% for certificate in page.get_certificates %}
+            <div class="certificate-card">
+                <h3 class="certificate-title">{{ certificate.title }}</h3>
+
+                <div class="certificate-image-wrap">
+                    {% if certificate.thumbnail %}
+                    {% image certificate.thumbnail width-500 height-320 as cert_img %}
+                    <img src="{{ cert_img.url }}" alt="{{ certificate.title }}" class="certificate-image">
+                    {% else %}
+                    <div class="certificate-placeholder">
+                        {{ certificate.title|first }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-24 text-gray-600 col-span-full">
+                <h3 class="text-3xl font-bold mb-4 text-gray-800">Сертификатов пока нет</h3>
+                <p class="max-w-md mx-auto text-lg">Скоро здесь появятся наши сертификаты.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-12">
+            <a href="/certificates/"
+                class="button is-secondary w-button px-6 py-3 rounded-xl border border-white/50 text-white font-medium hover:bg-white hover:text-red-900 inline-flex items-center">
+                Все сертификаты
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .certificates-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 0.8fr));
+        gap: 35px 50px;
+    }
+
+    .certificate-card {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .certificate-image-wrap {
+        background: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 15px;
+        min-height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: auto;
+    }
+
+    .certificate-image {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+        display: block;
+    }
+
+    .certificate-title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.35;
+        color: #f3f4f6;
+    }
+
+    .certificate-placeholder {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #dc2626;
+    }
+
+    @media (max-width: 991px) {
+        .certificates-grid {
+            grid-template-columns: repeat(2, minmax(0, 0.9fr));
+            gap: 35px 45px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .certificates-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .certificate-title {
+            min-height: auto;
+        }
+
+        .certificate-image-wrap {
+            padding: 0px;
+        }
+    }
+
+    /* .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+    }
+
+    @media (max-width: 768px) {
+        #certificates-section .case-item > div {
+            flex-direction: column !important;
+            text-align: center;
+        }
+
+        #certificates-section .text-left {
+            text-align: center;
+        }
+    } */
+</style>

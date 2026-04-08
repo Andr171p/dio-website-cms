@@ -357,6 +357,27 @@ class HomePage(Page):
     def get_cases(self, count=6):
         from cases.models import CaseStudyPage
         return CaseStudyPage.objects.live().order_by("-project_date")[:count]
+    
+    def get_certificates(self, count=6):
+        from certificates.models import CertificatesIndexPage
+
+        certificates_page = CertificatesIndexPage.objects.live().first()
+        if not certificates_page:
+            return []
+        
+        certificates = [
+            block.value
+            for block in certificates_page.body
+            if block.block_type == "certificate"
+        ]
+        
+        certificates.sort(
+            key=lambda cert: cert.get("issue_date"),
+            reverse=True,
+        )
+        
+        return certificates[:count]
+
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
