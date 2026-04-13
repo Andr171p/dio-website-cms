@@ -3,8 +3,10 @@ from wagtail.fields import RichTextField
 from wagtail.models import Page
 
 
-class PrivacyPage(Page):
-    """Страница политики конфиденциальности"""
+class PrivacyPolicyPage(Page):
+    """Страница политики конфиденциальности."""
+
+    template = "privacy/privacy_page.html"
 
     body = RichTextField(blank=True, verbose_name="Содержимое страницы")
 
