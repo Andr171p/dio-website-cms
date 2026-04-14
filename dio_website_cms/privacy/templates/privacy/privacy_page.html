@@ -7,9 +7,21 @@
     <div class="w-full">
       <h1 class="heading_h2 !mb-10">{{ page.title }}</h1>
 
-      <div class="rich-content heading_h5">
-        {{ page.body|richtext }}
-      </div>
+      {% if page.content %}
+        {% for block in page.content %}
+          {% if block.block_type == "text" %}
+            <div class="rich-content">
+              {{ block.value|richtext }}
+            </div>
+          {% elif block.block_type == "table" %}
+            <div class="overflow-x-auto">
+              <div class="custom-table-wrapper">
+                {% include_block block %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
     </div>
   </div>
 </section>
