@@ -375,10 +375,9 @@ class HomePage(Page):
             key=lambda cert: cert.get("issue_date"),
             reverse=True,
         )
-        
+
         return certificates[:count]
-
-
+    
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
         context["cases"] = self.get_cases()

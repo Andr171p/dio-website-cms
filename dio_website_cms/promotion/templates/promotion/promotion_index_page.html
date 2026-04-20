@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags static %}
+
+{% block content %}
+<section class="section pt-10">
+    <div class="container">
+        <div class="header mb-0 pt-0">
+            <h2 class="heading_h2 font-bold">Акции</h2>
+            {% if page.intro %}
+            <div class="mt-4 max-w-3xl text-lg leading-relaxed text-gray-300">
+                {{ page.intro|richtext }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="w-layout-grid grid_3-col gap-6 lg:gap-8 mt-12">
+            {% for promotion in promotions %}
+            <a href="{{ promotion.url }}"
+               class="bg-[#151515] case-bg group block overflow-hidden rounded-[28px] shadow-[0_10px_30px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.18)]">
+
+                <div class="h-[280px] md:h-[320px] overflow-hidden">
+                    {% if promotion.image %}
+                    {% image promotion.image fill-800x520 as img %}
+                    <img src="{{ img.url }}"
+                         alt="{{ promotion.title }}"
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    {% endif %}
+                </div>
+
+                <div class="promotion-card-content p-6 md:p-7 flex flex-col gap-4">
+                    {% if promotion.end_date %}
+                    <div class="flex items-center justify-between">
+                        <span class="inline-flex w-fit rounded-full bg-red-600/50 px-4 py-2 text-sm font-semibold">
+                            До {{ promotion.end_date|date:"d.m.Y" }}
+                        </span>
+                    </div>
+                    {% endif %}
+
+                    <div class="space-y-4">
+                        <h3 class="heading_h4 leading-tight line-clamp-3">
+                            {{ promotion.title }}
+                        </h3>
+                        {% if promotion.intro %}
+                        <p class="text-base leading-8 line-clamp-4">
+                            {{ promotion.intro|striptags|truncatewords:24 }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-2 inline-flex items-center gap-1 text-base font-medium underline underline-offset-4 group-hover:text-[#920707] transition-colors">
+                        Читать дальше
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <div class="col-span-3 py-16 text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100/20 text-red-400 rounded-full mb-4 backdrop-blur-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-semibold text-white mb-2">Акций пока нет</h3>
+                <p class="text-gray-400 max-w-md mx-auto">
+                    Скоро здесь появятся актуальные предложения и спецусловия.
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if promotions.has_other_pages %}
+        <div class="mt-12 text-center">
+            <ul class="inline-flex gap-2">
+                {% if promotions.has_previous %}
+                <li>
+                    <a href="{{ request.path }}?page={{ promotions.previous_page_number }}"
+                        class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
+                        Предыдущая
+                    </a>
+
+                </li>
+                {% endif %}
+
+                {% for num in promotions.paginator.page_range %}
+                <li>
+                    <a href="{{ request.path }}?page={{ num }}"
+                       class="px-4 py-2 rounded-full {% if promotions.number == num %}bg-red-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-red-600 hover:text-white transition-all">
+                        {{ num }}
+                    </a>
+                </li>
+                {% endfor %}
+
+                {% if promotions.has_next %}
+                <li>
+                    <a href="{{ request.path }}?page={{ promotions.next_page_number }}"
+                       class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
+                        Следующая
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 3;
+    }
+
+    .line-clamp-4 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        -webkit-line-clamp: 4;
+    }
+
+    /* .promotion-card-content {
+        background-color: #eeeaea;
+    } */
+
+    a:focus-visible {
+        outline: 3px solid rgba(146, 7, 7, 0.3);
+        outline-offset: 3px;
+        border-radius: 1rem;
+    }
+</style>
+
+{% endblock %}
