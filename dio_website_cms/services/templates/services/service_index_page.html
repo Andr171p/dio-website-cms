@@ -115,8 +115,8 @@
             <ul class="inline-flex gap-2">
                 {% if services.has_previous %}
                 <li>
-                    <a href="?page={{ services.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}"
-                       class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
+                    <a href="{{ request.path }}?page={{ services.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}"
+                        class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
                         Предыдущая
                     </a>
                 </li>
@@ -124,7 +124,7 @@
 
                 {% for num in services.paginator.page_range %}
                 <li>
-                    <a href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}"
+                    <a href="{{ request.path }}?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}"
                        class="px-4 py-2 rounded-full {% if services.number == num %}bg-red-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-red-600 hover:text-white transition-all">
                         {{ num }}
                     </a>
@@ -133,7 +133,7 @@
 
                 {% if services.has_next %}
                 <li>
-                    <a href="?page={{ services.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}"
+                    <a href="{{ request.path }}?page={{ services.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}"
                        class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
                         Следующая
                     </a>
