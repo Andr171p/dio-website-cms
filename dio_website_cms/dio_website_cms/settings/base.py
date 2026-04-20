@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "services_1c",
     "certificates",
     "programms",
+    "promotion",
     "privacy",
     "wagtail.contrib.table_block",
     "wagtail.contrib.settings",
