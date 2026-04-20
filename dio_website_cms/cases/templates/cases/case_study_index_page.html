@@ -137,31 +137,6 @@
         <div class="text-center mt-16">
             <div class="inline-flex items-center gap-2 bg-white rounded-2xl p-3 border border-gray-300 shadow-md">
                 {% if cases.has_previous %}
-                <li>
-                    <a href="{{ request.path }}?page={{ cases.previous_page_number }}{% if current_industry %}&industry={{ current_industry }}{% endif %}"
-                        class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
-                        Предыдущая
-                    </a>
-
-                </li>
-                {% endif %}
-
-                {% for num in cases.paginator.page_range %}
-                <li>
-                    <a href="{{ request.path }}?page={{ num }}{% if current_industry %}&industry={{ current_industry }}{% endif %}"
-                       class="px-4 py-2 rounded-full {% if cases.number == num %}bg-red-600 text-white{% else %}bg-gray-200 text-gray-700{% endif %} hover:bg-red-600 hover:text-white transition-all">
-                        {{ num }}
-                    </a>
-                </li>
-                {% endfor %}
-
-                {% if promotions.has_next %}
-                <li>
-                    <a href="{{ request.path }}?page={{ cases.next_page_number }}{% if current_industry %}&industry={{ current_industry }}{% endif %}"
-                       class="px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-600 hover:text-white transition-all">
-                        Следующая
-                    </a>
-                </li>
                 <a href="?page={{ cases.previous_page_number }}{% if current_industry %}&industry={{ current_industry }}{% endif %}"
                    class="px-5 py-2.5 text-sm font-medium rounded-xl transition-all text-gray-700 hover:text-red-600 hover:bg-red-50">
                     Назад
