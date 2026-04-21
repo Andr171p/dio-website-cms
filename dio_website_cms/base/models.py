@@ -4,6 +4,7 @@ from wagtail import blocks
 from wagtail.fields import StreamField
 from wagtail.blocks import  PageChooserBlock, CharBlock, URLBlock, StructBlock, ListBlock, ChoiceBlock
 from wagtail.models import DraftStateMixin, RevisionMixin, PreviewableMixin,Page
+from wagtail.images.blocks import ImageChooserBlock
 from django.contrib.auth.models import User
 from django import forms 
 from wagtail.blocks import CharBlock, StructBlock, ListBlock
@@ -204,13 +205,25 @@ class FooterSettings(DraftStateMixin, RevisionMixin, PreviewableMixin, BaseGener
     )
 
     # Социальные сети
+
     social_links = StreamField([
-        ("social", blocks.StructBlock([
-            ("platform", blocks.CharBlock(max_length=50, label="Платформа")),
-            ("href", blocks.CharBlock(max_length=200, label="Ссылка (например, https://facebook.com или #contact)")),
-            ("icon", blocks.CharBlock(max_length=50, label="Иконка (например, facebook, twitter)")),
-        ], label="Социальная сеть"))
+        ("item", blocks.StructBlock([
+            ("title", blocks.CharBlock(max_length=100, label="Заголовок секции", required=False)),
+            ("links", blocks.ListBlock(blocks.StructBlock([
+                ("text", blocks.CharBlock(max_length=50, label="Название соцсети")),
+                ("href", blocks.CharBlock(max_length=200, label="Ссылка")),
+                ("icon", ImageChooserBlock(label="Иконка (например, facebook, twitter)")),
+            ]))),
+        ], label="Секция соцсетей"))
     ], blank=True, use_json_field=True, verbose_name="Социальные сети")
+
+    # social_links = StreamField([
+    #     ("social", blocks.StructBlock([
+    #         ("platform", blocks.CharBlock(max_length=50, label="Платформа")),
+    #         ("href", blocks.CharBlock(max_length=200, label="Ссылка (например, https://facebook.com или #contact)")),
+    #         ("icon", ImageChooserBlock(label="Иконка (например, facebook, twitter)")),
+    #     ], label="Социальная сеть"))
+    # ], blank=True, use_json_field=True, verbose_name="Социальные сети")
 
     # Секции ссылок
     company_section = StreamField([
