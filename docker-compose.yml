@@ -41,16 +41,14 @@ services:
       context: ./dio_website_cms
       dockerfile: Dockerfile
     volumes:
-      - wagtail_db:/app/db               # здесь лежит db.sqlite3
+      - wagtail_db:/app/data               # здесь лежит db.sqlite3
       - wagtail_static:/app/static       # собранная статика
       - wagtail_media:/app/media         # загруженные пользователями файлы
     env_file:
       - .env
-    # depends_on:
-    #   fastapi-rag:
-    #     condition: service_healthy
+    
     ports:
-      - "8000:8000"
+      - "8010:8000"
     restart: unless-stopped
     command: >
       sh -c "
