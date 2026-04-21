@@ -2546,7 +2546,7 @@ textarea.w-select {
 
 .w-checkbox {
   margin-bottom: 5px;
-  padding-left: 20px;
+  /* padding-left: 20px; */
   display: block;
 }
 
@@ -2561,6 +2561,10 @@ textarea.w-select {
   clear: both;
   grid-area: 1 / 1 / 2 / 2;
   display: table;
+}
+
+.w-checkbox.checkbox-field .checkbox-label {
+  margin-left: 10px;
 }
 
 .w-checkbox-input {
