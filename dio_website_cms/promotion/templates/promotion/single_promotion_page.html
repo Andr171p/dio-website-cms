@@ -21,7 +21,12 @@
         {% endif %}
 
         {% if page.button_link %}
-        <a href="{{ page.button_link }}" class=" animated-btn-tilda">Оставить заявку</a>
+        <button 
+            onclick="closeMobileMenu(); document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });"
+            class="animated-btn-tilda"
+          >
+            Оставить заявку
+          </button>
         {% endif %}
       </div>
 
