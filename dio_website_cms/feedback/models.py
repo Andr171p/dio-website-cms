@@ -7,7 +7,7 @@ from utils import get_tumen_time
 
 
 class FeedbackMessage(models.Model):
-    phone = models.CharField(max_length=20, verbose_name="Телефон")
+    phone = models.CharField(max_length=20, verbose_name="Телефон", null=True,blank=True)
     email = models.EmailField(verbose_name="Email")
     message = models.TextField(verbose_name="Сообщение")
     created_at = models.DateTimeField(default=get_tumen_time, verbose_name="Дата создания")
